@@ -3,31 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kharcha, Business & Len-Den Ultimate</title>
+  <title>Kharcha, Business & Khatabook Pro</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: #0f172a; color: #f8fafc; padding-bottom: 110px; }
+    body { background: #0f172a; color: #f8fafc; padding-bottom: 120px; }
     
-    header { background: #1e293b; padding: 12px 16px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
+    header { background: #1e293b; padding: 12px 14px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
     .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 17px; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
-    .header-btns { display: flex; gap: 6px; align-items: center; }
-    .lang-btn, .profile-btn, .share-head-btn { background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 6px 9px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+    .logo-container { display: flex; align-items: center; gap: 8px; }
+    .shop-logo-img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; border: 1px solid #38bdf8; }
+    .logo-text h1 { font-size: 15px; font-weight: 800; color: #38bdf8; line-height: 1.1; }
+    .logo-text p { font-size: 9px; color: #94a3b8; font-weight: 600; letter-spacing: 0.5px; }
+
+    .header-btns { display: flex; gap: 5px; align-items: center; }
+    .lang-btn, .profile-btn, .share-head-btn { background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 5px 8px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; }
     .share-head-btn { background: #0284c7; border-color: #0284c7; }
-    .install-btn { background: #10b981; color: white; border: none; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; display: none; }
+    .install-btn { background: #10b981; color: white; border: none; padding: 5px 9px; border-radius: 8px; font-weight: 700; font-size: 11px; display: none; }
 
     .container { padding: 12px; max-width: 600px; margin: auto; }
 
     /* Profile Banner */
     .user-greeting { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #334155; padding: 12px 14px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-    .greeting-text h3 { font-size: 15px; color: #f8fafc; display: flex; align-items: center; gap: 6px; }
+    .greeting-text h3 { font-size: 14px; color: #f8fafc; display: flex; align-items: center; gap: 6px; }
     .greeting-text p { font-size: 11px; color: #94a3b8; margin-top: 2px; }
     .upi-pill { display: inline-block; background: #0284c7; color: white; font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 700; margin-top: 3px; }
     .balance-box { text-align: right; }
     .balance-box h4 { font-size: 10px; color: #94a3b8; }
-    .balance-box p { font-size: 15px; font-weight: 700; color: #38bdf8; }
+    .balance-box p { font-size: 14px; font-weight: 700; color: #38bdf8; }
 
     /* Summary Grid */
     .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
@@ -61,6 +65,7 @@
     
     .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .item-left { display: flex; gap: 10px; align-items: center; }
+    .item-dp { width: 38px; height: 38px; border-radius: 19px; object-fit: cover; border: 1.5px solid #38bdf8; }
     .item-icon { font-size: 20px; background: #0f172a; padding: 8px; border-radius: 8px; }
     .item-title { font-weight: 600; font-size: 14px; }
     .item-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
@@ -85,15 +90,17 @@
     .input-group { margin-bottom: 10px; }
     label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
     input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; background: #0f172a; border: 1px solid #475569; color: white; font-size: 13px; }
+    
+    .phone-input-row { display: flex; gap: 6px; }
+    .btn-contact-pick { background: #0284c7; color: white; border: none; padding: 0 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+
     .form-actions { display: flex; gap: 8px; margin-top: 14px; }
     .btn-save { flex: 1; background: #38bdf8; color: #0f172a; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .btn-close { background: #475569; color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
 
-    /* QR */
+    /* QR & Details */
     .qr-card { background: #0f172a; border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 14px; border: 1px solid #334155; }
     .qr-card img { width: 130px; height: 130px; border-radius: 8px; background: white; padding: 6px; margin: 10px auto; display: block; }
-
-    /* Detail View */
     .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 13px; }
     .detail-label { color: #94a3b8; }
     .detail-value { font-weight: 600; color: #f8fafc; }
@@ -102,19 +109,38 @@
 
     /* Tools & Sharing Box */
     .tools-box { background: #1e293b; padding: 14px; border-radius: 12px; border: 1px dashed #334155; margin-top: 20px; }
-    .tools-box h4 { font-size: 13px; margin-bottom: 10px; color: #38bdf8; display: flex; justify-content: space-between; align-items: center; }
+    .tools-box h4 { font-size: 13px; margin-bottom: 10px; color: #38bdf8; }
     .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
     .btn-tool { background: #0f172a; border: 1px solid #475569; color: white; padding: 9px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; text-align: center; }
-    .btn-share-big { width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
+    .btn-pdf { background: #b91c1c; border-color: #ef4444; color: white; }
+    .btn-share-big { width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+    /* Footer Branding */
+    footer { text-align: center; padding: 20px 10px 10px; font-size: 11px; color: #64748b; }
+    footer strong { color: #38bdf8; }
 
     .fab { position: fixed; bottom: 20px; right: 20px; background: #38bdf8; color: #0f172a; width: 56px; height: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 28px; border: none; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); cursor: pointer; font-weight: bold; z-index: 50; }
+
+    /* PRINT / KHATABOOK PDF STYLES */
+    @media print {
+      body { background: white !important; color: black !important; padding: 0 !important; }
+      header, .fab, .tools-box, .tabs, .search-bar, .user-greeting, .summary-grid, .lenden-strip, .modal { display: none !important; }
+      #printableStatement { display: block !important; width: 100% !important; margin: 0 !important; padding: 15px !important; }
+    }
+    #printableStatement { display: none; background: white; color: #1e293b; padding: 20px; }
   </style>
 </head>
 <body>
 
   <header>
     <div class="header-top">
-      <div class="logo">📊 <span id="appTitle">Kharcha & Business</span></div>
+      <div class="logo-container" onclick="openProfile()">
+        <img id="headerShopLogo" src="https://cdn-icons-png.flaticon.com/512/2344/2344132.png" alt="Logo" class="shop-logo-img">
+        <div class="logo-text">
+          <h1 id="appShopName">Kharcha & Business</h1>
+          <p>⚡ Powered by Eevan Ventures</p>
+        </div>
+      </div>
       <div class="header-btns">
         <button id="installAppBtn" class="install-btn">📲 Install</button>
         <button class="share-head-btn" onclick="shareApp()">📤 <span id="lblShare">शेयर</span></button>
@@ -158,18 +184,18 @@
       </div>
     </div>
 
-    <!-- Len-Den & Shop Strip -->
+    <!-- Len-Den Strip -->
     <div class="lenden-strip">
       <div class="lenden-card get">
         <div>
-          <h5 id="lblToReceive">बाजार से लेने हैं</h5>
+          <h5 id="lblToReceive">बाजार से लेने हैं (क्रेडिट)</h5>
           <p id="totalReceive" style="color:#34d399;">₹0</p>
         </div>
         <span style="font-size:18px;">🤝</span>
       </div>
       <div class="lenden-card give">
         <div>
-          <h5 id="lblToPay">देने हैं (Payable)</h5>
+          <h5 id="lblToPay">देने हैं (डेबिट)</h5>
           <p id="totalPay" style="color:#f87171;">₹0</p>
         </div>
         <span style="font-size:18px;">🤲</span>
@@ -194,20 +220,33 @@
     <!-- Items List -->
     <div id="itemList"></div>
 
-    <!-- Export & Tools Box -->
+    <!-- Export & Khatabook Tools Box -->
     <div class="tools-box">
-      <h4 id="lblTools">📑 टूल्स, स्टेटमेंट और शेयर</h4>
+      <h4 id="lblTools">📑 स्टेटमेंट, रिपोर्ट & शेयर</h4>
       <div class="tools-grid">
-        <button class="btn-tool" onclick="exportToExcel()">📊 Excel स्टेटमेंट</button>
+        <button class="btn-tool btn-pdf" onclick="generateKhatabookPDF()">📄 Khatabook PDF रसीद</button>
+        <button class="btn-tool" onclick="exportToExcel()">📊 Excel (.CSV) शीट</button>
+      </div>
+      <div class="tools-grid">
         <button class="btn-tool" onclick="exportData()">💾 पूरा बैकअप लें</button>
+        <button class="btn-tool" onclick="shareApp()">📤 ऐप शेयर करें</button>
       </div>
       <button class="btn-share-big" onclick="shareApp()">
-        <span>📤</span> <span id="lblShareBig">दोस्तों और व्यापारियों को शेयर करें (Share App)</span>
+        <span>📤</span> <span id="lblShareBig">व्यापारियों और दोस्तों को शेयर करें</span>
       </button>
     </div>
+
+    <!-- Footer Branding -->
+    <footer>
+      <p>Powered by <strong>Eevan Ventures</strong></p>
+      <p style="margin-top:2px;">100% सुरक्षित और स्वदेशी | Made in India 🇮🇳</p>
+    </footer>
   </div>
 
   <button class="fab" onclick="openEntryModal()">+</button>
+
+  <!-- PRINTABLE KHATABOOK PDF CONTAINER (Used by window.print()) -->
+  <div id="printableStatement"></div>
 
   <!-- ENTRY MODAL -->
   <div id="entryModal" class="modal">
@@ -235,14 +274,26 @@
           <select id="entryPreset" onchange="handlePresetChange()"></select>
         </div>
 
+        <!-- Phone with Direct Contact Picker -->
         <div class="input-group" id="phoneGroup">
-          <label id="lblPhone">मोबाइल नंबर (Customer / Person Phone)</label>
-          <input type="tel" id="entryPhone" placeholder="उदा: 9876543210" oninput="autoLookupContact(this.value)">
+          <label id="lblPhone">मोबाइल नंबर (फोनबुक से चुनें या टाइप करें)</label>
+          <div class="phone-input-row">
+            <input type="tel" id="entryPhone" placeholder="उदा: 9876543210" oninput="autoLookupContact(this.value)">
+            <button type="button" class="btn-contact-pick" onclick="pickContact()">📇 फोनबुक</button>
+          </div>
         </div>
 
+        <!-- Customer / Person / Bank Name -->
         <div class="input-group" id="customTitleGroup">
-          <label id="lblCustomName">व्यक्ति या सामान का नाम</label>
+          <label id="lblCustomName">व्यक्ति या पार्टी का नाम</label>
           <input type="text" id="entryCustomTitle" placeholder="उदा: राहुल शर्मा">
+        </div>
+
+        <!-- Customer Photo / DP Input -->
+        <div class="input-group" id="dpGroup">
+          <label>📷 ग्राहक की फोटो / DP (पहचान के लिए - Optional)</label>
+          <input type="file" id="entryPhotoInput" accept="image/*" onchange="handlePhotoUpload(this)">
+          <input type="hidden" id="entryPhotoData">
         </div>
 
         <div class="input-group" id="itemDescGroup" style="display:none;">
@@ -290,20 +341,26 @@
     </div>
   </div>
 
-  <!-- PROFILE MODAL -->
+  <!-- PROFILE MODAL WITH BUSINESS LOGO & POWERED BY -->
   <div id="profileModal" class="modal">
     <div class="modal-box">
-      <h3>👤 मेरी पूरी प्रोफ़ाइल (Business & Personal Profile)</h3>
+      <h3>👤 मेरी दुकान / पर्सनल प्रोफ़ाइल</h3>
+      <p style="font-size:11px; color:#38bdf8; margin-bottom:12px;">⚡ Powered by Eevan Ventures</p>
       
       <div class="qr-card" id="qrContainer" style="display:none;">
-        <h4 style="font-size:13px; color:#38bdf8;" id="qrOwnerName">राहुल कुमार</h4>
+        <h4 style="font-size:13px; color:#38bdf8;" id="qrOwnerName">व्यापारी नाम</h4>
         <img id="upiQrImg" src="" alt="UPI QR Code">
         <p style="font-size:11px; color:#34d399; font-weight:700;" id="qrUpiText"></p>
         <p style="font-size:10px; color:#94a3b8;">(स्कैन करके कोई भी सीधे बैंक में पेमेंट भेज सकता है)</p>
       </div>
 
       <div class="input-group">
-        <label>आपका नाम या दुकान का नाम (Name / Shop Name)</label>
+        <label>🖼️ दुकान / व्यापार का लोगो या फोटो (Logo / Photo)</label>
+        <input type="file" id="shopLogoInput" accept="image/*" onchange="handleLogoUpload(this)">
+      </div>
+
+      <div class="input-group">
+        <label>दुकान या आपका नाम (Shop / Business Name)</label>
         <input type="text" id="profName" placeholder="उदा: राहुल ट्रेडर्स">
       </div>
       <div class="input-group">
@@ -319,7 +376,7 @@
         <input type="email" id="profEmail" placeholder="उदा: rahul@gmail.com">
       </div>
       <div class="input-group">
-        <label>पता (Shop / Home Address)</label>
+        <label>दुकान का पता (Address)</label>
         <input type="text" id="profAddress" placeholder="उदा: मेन मार्केट, जयपुर">
       </div>
       <div class="input-group">
@@ -349,32 +406,33 @@
     let lang = localStorage.getItem('kh_lang') || 'hi';
     let data = JSON.parse(localStorage.getItem('my_hisab_data')) || [];
     let profile = JSON.parse(localStorage.getItem('my_hisab_profile')) || {
-      name: 'दोस्त',
+      name: 'Kharcha & Business',
       phone: '',
       upi: '',
       email: '',
       address: '',
+      logo: '',
       budget: 0
     };
     let currentCategory = 'all';
 
     const t = {
       hi: {
-        appTitle: "खर्चा & बिजनेस प्रो", langBtn: "English", greet: "नमस्ते", budget: "मासिक आय", rem: "बचत / शेष राशि",
-        bills: "कुल बिल", emi: "कुल EMI", sip: "कुल SIP", ins: "प्रीमियम", toReceive: "बाजार से लेने हैं", toPay: "देने हैं (Payable)",
+        langBtn: "English", greet: "नमस्ते", budget: "मासिक आय", rem: "बचत / शेष राशि",
+        bills: "कुल बिल", emi: "कुल EMI", sip: "कुल SIP", ins: "प्रीमियम", toReceive: "बाजार से लेने हैं (क्रेडिट)", toPay: "देने हैं (डेबिट)",
         search: "🔍 नाम, बैंक, सामान या मोबाइल खोजें...", all: "सभी (All)", modalAdd: "नई एंट्री जोड़ें",
         cat: "कैटेगरी चुनें", provider: "कंपनी / बैंक चुनें", customPerson: "ग्राहक / व्यक्ति का नाम", customBank: "हाथ से नाम लिखें",
         phone: "मोबाइल नंबर (ऑटो-फिल सुविधा)", amt: "कुल राशि (Amount ₹)", date: "तारीख / ड्यू / डिलीवरी", cancel: "कैंसिल",
-        save: "सेव करें", tools: "📑 टूल्स, स्टेटमेंट और शेयर", shareBtn: "शेयर करें",
+        save: "सेव करें", tools: "📑 स्टेटमेंट, रिपोर्ट & शेयर", shareBtn: "शेयर करें",
         paid: "✓ चुकता / डिलीवर", overdue: "⚠️ Overdue!", duesoon: "⏳ Due Soon", upcoming: "Pending"
       },
       en: {
-        appTitle: "Kharcha & Business", langBtn: "हिंदी", greet: "Hello", budget: "Monthly Income", rem: "Remaining Savings",
-        bills: "Total Bills", emi: "Total EMI", sip: "Total SIP", ins: "Premium", toReceive: "To Receive", toPay: "To Pay",
+        langBtn: "हिंदी", greet: "Hello", budget: "Monthly Income", rem: "Remaining Savings",
+        bills: "Total Bills", emi: "Total EMI", sip: "Total SIP", ins: "Premium", toReceive: "To Receive (Credit)", toPay: "To Pay (Debit)",
         search: "🔍 Search name, bank, item or phone...", all: "All", modalAdd: "Add New Entry",
         cat: "Select Category", provider: "Select Provider", customPerson: "Customer / Person Name", customBank: "Custom Name",
         phone: "Mobile Number (Auto-lookup)", amt: "Total Amount (₹)", date: "Date / Due / Delivery", cancel: "Cancel",
-        save: "Save Entry", tools: "📑 Tools, Statement & Share", shareBtn: "Share App",
+        save: "Save Entry", tools: "📑 Statement, Report & Share", shareBtn: "Share App",
         paid: "✓ Done / Delivered", overdue: "⚠️ Overdue!", duesoon: "⏳ Due Soon", upcoming: "Pending"
       }
     };
@@ -388,10 +446,9 @@
 
     function applyLang() {
       const cur = t[lang];
-      document.getElementById('appTitle').innerText = cur.appTitle;
       document.getElementById('langTxt').innerText = cur.langBtn;
       document.getElementById('lblShare').innerText = lang === 'hi' ? 'शेयर' : 'Share';
-      document.getElementById('lblShareBig').innerText = lang === 'hi' ? 'दोस्तों और व्यापारियों को शेयर करें (Share App)' : 'Share App with Friends & Shopkeepers';
+      document.getElementById('lblShareBig').innerText = lang === 'hi' ? 'व्यापारियों और दोस्तों को शेयर करें' : 'Share App with Friends & Shopkeepers';
       document.getElementById('budgetText').innerText = `${cur.budget}: ₹${(profile.budget || 0).toLocaleString('en-IN')}`;
       document.getElementById('lblRem').innerText = cur.rem;
       document.getElementById('lblBills').innerText = cur.bills;
@@ -410,7 +467,12 @@
       document.getElementById('btnCancel').innerText = cur.cancel;
       document.getElementById('btnSave').innerText = cur.save;
       document.getElementById('lblTools').innerText = cur.tools;
-      document.getElementById('greetUser').innerText = `${cur.greet}, ${profile.name || 'दोस्त'} 👋`;
+      document.getElementById('greetUser').innerText = `${cur.greet}, ${profile.name || 'व्यापारी'} 👋`;
+
+      document.getElementById('appShopName').innerText = profile.name || 'Kharcha & Business';
+      if (profile.logo) {
+        document.getElementById('headerShopLogo').src = profile.logo;
+      }
 
       const quickUpi = document.getElementById('quickUpi');
       if (profile.upi) {
@@ -421,16 +483,91 @@
       }
     }
 
-    // SHARE APP FUNCTIONALITY
+    // DIRECT PHONEBOOK CONTACT PICKER
+    async function pickContact() {
+      if ('contacts' in navigator && 'ContactsManager' in window) {
+        try {
+          const props = ['name', 'tel'];
+          const contacts = await navigator.contacts.select(props, { multiple: false });
+          if (contacts && contacts.length > 0) {
+            const c = contacts[0];
+            if (c.name && c.name.length > 0) {
+              document.getElementById('entryCustomTitle').value = c.name[0];
+            }
+            if (c.tel && c.tel.length > 0) {
+              let phone = c.tel[0].replace(/\s+/g, '').replace(/-/g, '');
+              document.getElementById('entryPhone').value = phone;
+            }
+          }
+        } catch (err) {
+          console.log("Contact pick error/cancel:", err);
+        }
+      } else {
+        alert(lang === 'hi' 
+          ? 'आपके ब्राउज़र में डायरेक्ट फोनबुक सपोर्ट नहीं है। कृपया मोबाइल नंबर हाथ से टाइप करें।' 
+          : 'Direct phonebook is not supported on this browser. Please type manually.');
+      }
+    }
+
+    // CUSTOMER DP UPLOAD HANDLER (Compress & convert to Base64)
+    function handlePhotoUpload(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const maxDim = 120;
+            let w = img.width, h = img.height;
+            if (w > h) { if (w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; } }
+            else { if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; } }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            document.getElementById('entryPhotoData').value = canvas.toDataURL('image/jpeg', 0.7);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // SHOP LOGO UPLOAD HANDLER
+    function handleLogoUpload(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const maxDim = 150;
+            let w = img.width, h = img.height;
+            if (w > h) { if (w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; } }
+            else { if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; } }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            profile.logo = canvas.toDataURL('image/jpeg', 0.8);
+            document.getElementById('headerShopLogo').src = profile.logo;
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // SHARE APP
     function shareApp() {
       const appUrl = "https://eevanventures-sketch.github.io/Kharcha-hisab/";
-      const title = "Kharcha & Business App";
+      const shop = profile.name || "Kharcha & Business";
       const text = lang === 'hi'
-        ? `नमस्ते! 🙏\nमैंने घर के खर्चे, बिजली/मोबाइल बिल, लोन EMI, SIP, दुकान के आर्डर और उधार (लेन-देन) का हिसाब रखने के लिए यह बहुत ही उपयोगी और फ्री ऐप इस्तेमाल करना शुरू किया है।\n\nआप भी इसे अपने फोन में फ्री इंस्टॉल कर सकते हैं:\n👉 लिंक: ${appUrl}\n(यह 100% प्राइवेट और सुरक्षित है!)`
-        : `Hello! 🙏\nCheck out this super useful free app to track Daily Expenses, Bills, EMI, SIP, Shop Orders & Len-Den with WhatsApp Reminders!\n\nInstall it on your phone for free:\n👉 Link: ${appUrl}`;
+        ? `नमस्ते! 🙏\nअपने घर का खर्च, दुकान का हिसाब, उधार (लेन-देन) और बिल का पूरा हिसाब रखें "${shop}" ऐप से (Powered by Eevan Ventures)।\n\nइसे अपने फोन में फ्री इंस्टॉल करें:\n👉 ${appUrl}\n(यह 100% प्राइवेट और सुरक्षित है!)`
+        : `Hello! 🙏\nCheck out "${shop}" (Powered by Eevan Ventures) to manage expenses, bills, EMI & Khatabook with WhatsApp reminders!\n👉 ${appUrl}`;
 
       if (navigator.share) {
-        navigator.share({ title: title, text: text, url: appUrl }).catch(() => {});
+        navigator.share({ title: shop, text: text, url: appUrl }).catch(() => {});
       } else {
         const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
         window.open(waUrl, '_blank');
@@ -451,7 +588,7 @@
     }
 
     function openProfile() {
-      document.getElementById('profName').value = profile.name === 'दोस्त' ? '' : (profile.name || '');
+      document.getElementById('profName').value = profile.name || '';
       document.getElementById('profPhone').value = profile.phone || '';
       document.getElementById('profUpi').value = profile.upi || '';
       document.getElementById('profEmail').value = profile.email || '';
@@ -461,7 +598,7 @@
       const qrContainer = document.getElementById('qrContainer');
       if (profile.upi) {
         qrContainer.style.display = 'block';
-        document.getElementById('qrOwnerName').innerText = profile.name || 'My UPI QR';
+        document.getElementById('qrOwnerName').innerText = profile.name || 'व्यापारी QR';
         document.getElementById('qrUpiText').innerText = profile.upi;
         const upiString = encodeURIComponent(`upi://pay?pa=${profile.upi}&pn=${encodeURIComponent(profile.name || 'Business')}&cu=INR`);
         document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${upiString}`;
@@ -473,14 +610,20 @@
     }
 
     function saveProfile() {
-      const name = document.getElementById('profName').value.trim() || (lang === 'hi' ? 'दोस्त' : 'Friend');
+      const name = document.getElementById('profName').value.trim() || 'Kharcha & Business';
       const phone = document.getElementById('profPhone').value.trim();
       const upi = document.getElementById('profUpi').value.trim();
       const email = document.getElementById('profEmail').value.trim();
       const address = document.getElementById('profAddress').value.trim();
       const budget = parseFloat(document.getElementById('profBudget').value) || 0;
 
-      profile = { name, phone, upi, email, address, budget };
+      profile.name = name;
+      profile.phone = phone;
+      profile.upi = upi;
+      profile.email = email;
+      profile.address = address;
+      profile.budget = budget;
+
       localStorage.setItem('my_hisab_profile', JSON.stringify(profile));
       closeModal('profileModal');
       applyLang();
@@ -490,6 +633,7 @@
     function openEntryModal() {
       document.getElementById('entryForm').reset();
       document.getElementById('entryDate').valueAsDate = new Date();
+      document.getElementById('entryPhotoData').value = '';
       updateSubOptions();
       document.getElementById('entryModal').classList.add('active');
     }
@@ -503,6 +647,7 @@
       const presetGroup = document.getElementById('presetGroup');
       const customGroup = document.getElementById('customTitleGroup');
       const phoneGroup = document.getElementById('phoneGroup');
+      const dpGroup = document.getElementById('dpGroup');
       const itemDescGroup = document.getElementById('itemDescGroup');
       const policyNoGroup = document.getElementById('policyNoGroup');
       const advanceGroup = document.getElementById('advanceGroup');
@@ -516,6 +661,7 @@
         presetGroup.style.display = 'none';
         customGroup.style.display = 'block';
         phoneGroup.style.display = 'block';
+        dpGroup.style.display = 'block';
         itemDescGroup.style.display = 'block';
         advanceGroup.style.display = 'block';
         document.getElementById('lblCustomName').innerText = "ग्राहक का नाम (Customer Name)";
@@ -526,6 +672,7 @@
         presetGroup.style.display = 'block';
         customGroup.style.display = 'none';
         phoneGroup.style.display = 'none';
+        dpGroup.style.display = 'none';
         policyNoGroup.style.display = 'block';
         document.getElementById('lblProvider').innerText = "बीमा कंपनी चुनें (Insurance Company)";
         document.getElementById('lblDate').innerText = "प्रीमियम भरने की तारीख (Due Date)";
@@ -535,6 +682,7 @@
         presetGroup.style.display = 'none';
         customGroup.style.display = 'block';
         phoneGroup.style.display = 'block';
+        dpGroup.style.display = 'block';
         document.getElementById('lblCustomName').innerText = t[lang].customPerson;
         document.getElementById('lblDate').innerText = "वापसी / ड्यू तारीख (Due Date)";
         document.getElementById('lblAmt').innerText = "राशि ₹ (Amount)";
@@ -542,6 +690,7 @@
       } else {
         presetGroup.style.display = 'block';
         phoneGroup.style.display = 'none';
+        dpGroup.style.display = 'none';
         document.getElementById('lblCustomName').innerText = t[lang].customBank;
         document.getElementById('lblDate').innerText = "अंतिम तारीख / ड्यू डेट";
         document.getElementById('lblAmt').innerText = "राशि ₹ (Amount)";
@@ -593,6 +742,7 @@
       }
 
       const phone = document.getElementById('entryPhone').value.trim();
+      const photo = document.getElementById('entryPhotoData').value;
       const amount = parseFloat(document.getElementById('entryAmount').value);
       const advance = parseFloat(document.getElementById('entryAdvance').value) || 0;
       const itemDesc = document.getElementById('entryItemDesc').value.trim();
@@ -604,6 +754,7 @@
         category: cat,
         title: title,
         phone: phone,
+        photo: photo,
         amount: amount,
         advance: advance,
         itemDesc: itemDesc,
@@ -650,7 +801,7 @@
       if(cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
 
       const upiText = profile.upi ? `\n💳 UPI ID: ${profile.upi}` : '';
-      const senderName = profile.name && profile.name !== 'दोस्त' ? ` - ${profile.name}` : '';
+      const senderName = profile.name ? `\n- ${profile.name} (Powered by Eevan Ventures)` : '';
 
       let text = '';
       if (item.category === 'shop_order') {
@@ -660,9 +811,7 @@
         text = `नमस्ते ${item.title} जी! 🙏\nयह एक दोस्ताना रिमाइंडर है कि आपके पास ₹${item.amount.toLocaleString('en-IN')} का भुगतान बाकी है (तारीख: ${item.date})।${upiText}\nकृपया समय पर ट्रांसफर करने का कष्ट करें। धन्यवाद!${senderName}`;
       }
 
-      const encoded = encodeURIComponent(text);
-      const url = cleanPhone ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encoded}` : `https://api.whatsapp.com/send?text=${encoded}`;
-      window.open(url, '_blank');
+      window.open(cleanPhone ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(text)}` : `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function sendSMSReminder(id, event) {
@@ -674,9 +823,9 @@
       let text = '';
       if (item.category === 'shop_order') {
         const balance = item.amount - (item.advance || 0);
-        text = `नमस्ते ${item.title} जी! आपका आर्डर (${item.itemDesc||'सामान'}) डिलीवरी तारीख ${item.date} को तैयार है। बाकी राशि: Rs.${balance}। धन्यवाद!`;
+        text = `नमस्ते ${item.title} जी! आपका आर्डर (${item.itemDesc||'सामान'}) डिलीवरी तारीख ${item.date} को तैयार है। बाकी राशि: Rs.${balance}। - ${profile.name}`;
       } else {
-        text = `नमस्ते ${item.title} जी! रिमाइंडर: ₹${item.amount} का भुगतान बाकी है (तारीख: ${item.date})। धन्यवाद!`;
+        text = `नमस्ते ${item.title} जी! रिमाइंडर: ₹${item.amount} का भुगतान बाकी है (तारीख: ${item.date})। - ${profile.name}`;
       }
 
       window.location.href = `sms:${cleanPhone}?body=${encodeURIComponent(text)}`;
@@ -716,6 +865,7 @@
       }
 
       document.getElementById('detailContent').innerHTML = `
+        ${item.photo ? `<div style="text-align:center; margin-bottom:10px;"><img src="${item.photo}" style="width:70px; height:70px; border-radius:35px; object-fit:cover; border:2px solid #38bdf8;"></div>` : ''}
         <div class="detail-row"><span class="detail-label">कैटेगरी:</span><span class="detail-value">${catNames[item.category] || item.category}</span></div>
         <div class="detail-row"><span class="detail-label">नाम / पार्टी:</span><span class="detail-value">${item.title}</span></div>
         ${item.phone ? `<div class="detail-row"><span class="detail-label">मोबाइल:</span><span class="detail-value"><a href="tel:${item.phone}" style="color:#38bdf8;">📞 ${item.phone}</a></span></div>` : ''}
@@ -818,17 +968,7 @@
         return;
       }
 
-      const icons = { 
-        credit_card: '💳', 
-        utility: '⚡', 
-        telecom: '📱', 
-        emi: '🏦', 
-        sip: '📈', 
-        insurance: '🛡️',
-        shop_order: '📦',
-        lend_given: '🤝', 
-        lend_taken: '🤲' 
-      };
+      const icons = { credit_card: '💳', utility: '⚡', telecom: '📱', emi: '🏦', sip: '📈', insurance: '🛡️', shop_order: '📦', lend_given: '🤝', lend_taken: '🤲' };
 
       filtered.forEach(item => {
         const dueInfo = getDueStatus(item.date, item.status);
@@ -848,6 +988,10 @@
           if(isLendTaken) subText += ` • <span style="color:#f87171;font-weight:600;">देने हैं</span>`;
         }
 
+        const avatarHtml = item.photo 
+          ? `<img src="${item.photo}" class="item-dp" alt="DP">`
+          : `<span class="item-icon">${icons[item.category] || '📄'}</span>`;
+
         const card = document.createElement('div');
         card.className = `item-card ${dueInfo.cls}`;
         card.onclick = () => showDetail(item.id);
@@ -855,7 +999,7 @@
         card.innerHTML = `
           <div class="item-header">
             <div class="item-left">
-              <span class="item-icon">${icons[item.category] || '📄'}</span>
+              ${avatarHtml}
               <div>
                 <div class="item-title">${item.title}</div>
                 <div class="item-sub">${subText}</div>
@@ -889,6 +1033,127 @@
       });
     }
 
+    // KHATABOOK STYLE PRINTABLE PDF STATEMENT
+    function generateKhatabookPDF() {
+      if(data.length === 0) {
+        alert(lang === 'hi' ? 'कोई हिसाब डेटा नहीं है!' : 'No data to generate statement!');
+        return;
+      }
+
+      let totalDebit = 0;  // दिया / Due (Red)
+      let totalCredit = 0; // मिला / Advance / To Pay (Green)
+
+      let rowsHtml = '';
+      data.forEach(d => {
+        let debit = 0;
+        let credit = 0;
+
+        if (d.category === 'lend_given') {
+          debit = d.amount; // You gave
+        } else if (d.category === 'lend_taken') {
+          credit = d.amount; // You received
+        } else if (d.category === 'shop_order') {
+          credit = d.advance || 0;
+          debit = d.amount - (d.advance || 0);
+        } else {
+          debit = d.amount;
+        }
+
+        if (d.status !== 'paid') {
+          totalDebit += debit;
+          totalCredit += credit;
+        }
+
+        const isPaid = d.status === 'paid';
+        rowsHtml += `
+          <tr style="border-bottom: 1px solid #e2e8f0; font-size: 13px;">
+            <td style="padding: 10px 8px;">${d.date}</td>
+            <td style="padding: 10px 8px;">
+              <strong>${d.title}</strong><br>
+              <small style="color: #64748b;">${d.phone || ''} ${d.itemDesc ? '• ' + d.itemDesc : ''}</small>
+            </td>
+            <td style="padding: 10px 8px; text-align: right; color: #dc2626; font-weight: 700;">
+              ${debit > 0 ? '₹' + debit.toLocaleString('en-IN') : '-'}
+            </td>
+            <td style="padding: 10px 8px; text-align: right; color: #16a34a; font-weight: 700;">
+              ${credit > 0 ? '₹' + credit.toLocaleString('en-IN') : '-'}
+            </td>
+            <td style="padding: 10px 8px; text-align: center;">
+              <span style="display:inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; background: ${isPaid ? '#dcfce7' : '#fee2e2'}; color: ${isPaid ? '#15803d' : '#b91c1c'};">
+                ${isPaid ? 'चुका दिया' : 'बाकी'}
+              </span>
+            </td>
+          </tr>
+        `;
+      });
+
+      const printable = document.getElementById('printableStatement');
+      printable.innerHTML = `
+        <div style="max-width: 800px; margin: auto; font-family: sans-serif; color: #0f172a;">
+          <!-- Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0284c7; padding-bottom: 15px; margin-bottom: 15px;">
+            <div>
+              <h2 style="color: #0284c7; margin-bottom: 4px; font-size: 22px;">${profile.name || 'Kharcha & Business'}</h2>
+              <p style="font-size: 12px; color: #64748b;">${profile.phone ? '📞 ' + profile.phone : ''} ${profile.address ? ' | 📍 ' + profile.address : ''}</p>
+              <p style="font-size: 11px; color: #0284c7; font-weight: bold; margin-top: 2px;">⚡ Powered by Eevan Ventures</p>
+            </div>
+            <div style="text-align: right;">
+              <h3 style="color: #334155; font-size: 16px; margin-bottom: 2px;">खाताबही / हिसाब रसीद</h3>
+              <p style="font-size: 11px; color: #64748b;">तारीख: ${new Date().toLocaleDateString('hi-IN')}</p>
+              ${profile.upi ? `<p style="font-size: 11px; color: #16a34a; font-weight: bold;">UPI: ${profile.upi}</p>` : ''}
+            </div>
+          </div>
+
+          <!-- Summary Strip -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <div style="text-align: center;">
+              <span style="font-size: 11px; color: #64748b;">कुल लेना बाकी (Debit)</span><br>
+              <strong style="color: #dc2626; font-size: 16px;">₹${totalDebit.toLocaleString('en-IN')}</strong>
+            </div>
+            <div style="text-align: center;">
+              <span style="font-size: 11px; color: #64748b;">कुल जमा / एडवांस (Credit)</span><br>
+              <strong style="color: #16a34a; font-size: 16px;">₹${totalCredit.toLocaleString('en-IN')}</strong>
+            </div>
+            <div style="text-align: center;">
+              <span style="font-size: 11px; color: #64748b;">शुद्ध बाकी (Net Due)</span><br>
+              <strong style="color: #0284c7; font-size: 16px;">₹${(totalDebit - totalCredit).toLocaleString('en-IN')}</strong>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+            <thead>
+              <tr style="background: #0284c7; color: white; font-size: 12px; text-align: left;">
+                <th style="padding: 10px 8px;">तारीख</th>
+                <th style="padding: 10px 8px;">विवरण / ग्राहक</th>
+                <th style="padding: 10px 8px; text-align: right;">दिया / डेबिट (₹)</th>
+                <th style="padding: 10px 8px; text-align: right;">मिला / क्रेडिट (₹)</th>
+                <th style="padding: 10px 8px; text-align: center;">स्थिति</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
+          <!-- Footer Signature -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+            <div>
+              <p style="font-size: 11px; color: #64748b;">यह एक कम्प्यूटर जनरेटेड हिसाब रसीद है।</p>
+              <p style="font-size: 10px; color: #94a3b8;">Technology Partner: <strong>Eevan Ventures</strong></p>
+            </div>
+            <div style="text-align: center;">
+              <div style="width: 140px; border-bottom: 1px solid #334155; margin-bottom: 4px;"></div>
+              <span style="font-size: 12px; font-weight: bold; color: #334155;">अधिकृत हस्ताक्षर</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      window.print();
+    }
+
+    // EXCEL EXPORT (.CSV)
     function exportToExcel() {
       if(data.length === 0) {
         alert(lang === 'hi' ? 'कोई हिसाब डेटा नहीं है!' : 'No data to export!');
@@ -899,15 +1164,9 @@
       csv += "तारीख (Date),कैटेगरी (Category),नाम / पार्टी (Name),सामान / विवरण (Item),मोबाइल नंबर (Phone),कुल राशि (₹),एडवांस (₹),स्थिति (Status)\n";
 
       const catMap = {
-        shop_order: "दुकान आर्डर",
-        insurance: "इंश्योरेंस प्रीमियम",
-        lend_given: "उधार दिया (लेने हैं)",
-        lend_taken: "उधार लिया (देने हैं)",
-        credit_card: "क्रेडिट कार्ड",
-        utility: "बिजली/पानी बिल",
-        telecom: "फोन/रिचार्ज",
-        emi: "लोन EMI",
-        sip: "SIP/निवेश"
+        shop_order: "दुकान आर्डर", insurance: "इंश्योरेंस", lend_given: "उधार दिया (लेने हैं)",
+        lend_taken: "उधार लिया (देने हैं)", credit_card: "क्रेडिट कार्ड", utility: "बिजली/पानी बिल",
+        telecom: "फोन/रिचार्ज", emi: "लोन EMI", sip: "SIP/निवेश"
       };
 
       data.forEach(d => {
@@ -923,7 +1182,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
-      link.setAttribute("download", `Kharcha_Business_Statement_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `Kharcha_Statement_${new Date().toISOString().slice(0,10)}.csv`);
       link.click();
     }
 
@@ -936,7 +1195,7 @@
       dlAnchor.click();
     }
 
-    // PWA Install
+    // PWA Install Prompt
     let deferredPrompt;
     const installBtn = document.getElementById('installAppBtn');
     window.addEventListener('beforeinstallprompt', (e) => {
