@@ -3,98 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kharcha Hisab & Len-Den Pro</title>
+  <title>Kharcha, Business & Len-Den Ultimate</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: #0f172a; color: #f8fafc; padding-bottom: 100px; }
+    body { background: #0f172a; color: #f8fafc; padding-bottom: 110px; }
     
     header { background: #1e293b; padding: 12px 16px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
     .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 18px; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
+    .logo { font-size: 17px; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
     .header-btns { display: flex; gap: 6px; align-items: center; }
-    .lang-btn, .profile-btn { background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; }
+    .lang-btn, .profile-btn, .share-head-btn { background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 6px 9px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+    .share-head-btn { background: #0284c7; border-color: #0284c7; }
     .install-btn { background: #10b981; color: white; border: none; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; display: none; }
 
     .container { padding: 12px; max-width: 600px; margin: auto; }
 
     /* Profile Banner */
-    .user-greeting { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #334155; padding: 10px 14px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .greeting-text h3 { font-size: 14px; color: #f8fafc; }
-    .greeting-text p { font-size: 11px; color: #94a3b8; }
+    .user-greeting { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #334155; padding: 12px 14px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .greeting-text h3 { font-size: 15px; color: #f8fafc; display: flex; align-items: center; gap: 6px; }
+    .greeting-text p { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .upi-pill { display: inline-block; background: #0284c7; color: white; font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 700; margin-top: 3px; }
     .balance-box { text-align: right; }
     .balance-box h4 { font-size: 10px; color: #94a3b8; }
-    .balance-box p { font-size: 14px; font-weight: 700; color: #38bdf8; }
+    .balance-box p { font-size: 15px; font-weight: 700; color: #38bdf8; }
 
     /* Summary Grid */
-    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
-    .summary-card { background: #1e293b; padding: 8px 6px; border-radius: 10px; border: 1px solid #334155; text-align: center; }
-    .summary-card h4 { font-size: 10px; color: #94a3b8; margin-bottom: 3px; }
-    .summary-card p { font-size: 13px; font-weight: 700; }
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
+    .summary-card { background: #1e293b; padding: 8px 4px; border-radius: 10px; border: 1px solid #334155; text-align: center; }
+    .summary-card h4 { font-size: 9px; color: #94a3b8; margin-bottom: 3px; }
+    .summary-card p { font-size: 12px; font-weight: 700; }
     .summary-card.bills p { color: #f87171; }
     .summary-card.emi p { color: #fbbf24; }
     .summary-card.sip p { color: #34d399; }
+    .summary-card.ins p { color: #38bdf8; }
 
-    /* Len-Den Mini Strip */
+    /* Len-Den Strip */
     .lenden-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
     .lenden-card { background: #1e293b; padding: 8px 12px; border-radius: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
     .lenden-card.get { border-left: 4px solid #10b981; }
     .lenden-card.give { border-left: 4px solid #ef4444; }
     .lenden-card h5 { font-size: 10px; color: #94a3b8; }
-    .lenden-card p { font-size: 14px; font-weight: 700; }
+    .lenden-card p { font-size: 13px; font-weight: 700; }
 
     /* Search & Filter */
-    .search-bar { width: 100%; padding: 9px 12px; border-radius: 10px; background: #1e293b; border: 1px solid #334155; color: white; font-size: 13px; margin-bottom: 10px; }
+    .search-bar { width: 100%; padding: 10px 12px; border-radius: 10px; background: #1e293b; border: 1px solid #334155; color: white; font-size: 13px; margin-bottom: 10px; }
     .tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; scrollbar-width: none; }
     .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 6px 12px; border-radius: 20px; font-size: 11px; white-space: nowrap; cursor: pointer; }
     .tab-btn.active { background: #38bdf8; color: #0f172a; font-weight: 700; border-color: #38bdf8; }
 
-    /* Cards */
-    .item-card { background: #1e293b; border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+    /* Item Card */
+    .item-card { background: #1e293b; border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid #334155; cursor: pointer; }
     .item-card.overdue { border-left: 5px solid #ef4444; background: rgba(239, 68, 68, 0.08); }
     .item-card.duesoon { border-left: 5px solid #f59e0b; }
     .item-card.paid { border-left: 5px solid #10b981; opacity: 0.65; }
+    
+    .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .item-left { display: flex; gap: 10px; align-items: center; }
     .item-icon { font-size: 20px; background: #0f172a; padding: 8px; border-radius: 8px; }
     .item-title { font-weight: 600; font-size: 14px; }
     .item-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-    .item-right { text-align: right; }
-    .item-amount { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-    .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; cursor: pointer; }
+    .item-amount { font-weight: 700; font-size: 15px; }
+
+    .item-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 8px; margin-top: 6px; }
+    .badges-group { display: flex; gap: 4px; align-items: center; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; }
     .badge.paid { background: #064e3b; color: #34d399; }
     .badge.overdue { background: #7f1d1d; color: #fca5a5; }
     .badge.duesoon { background: #78350f; color: #fcd34d; }
-    .badge.upcoming { background: #1e293b; color: #94a3b8; border: 1px solid #475569; }
-    
-    .btn-wa { background: #25D366; color: white; border: none; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; margin-right: 4px; }
-    .btn-del { background: none; border: none; color: #64748b; font-size: 13px; cursor: pointer; margin-left: 4px; }
+    .badge.upcoming { background: #0f172a; color: #94a3b8; border: 1px solid #475569; }
 
-    /* Modal / Form */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; padding: 14px; }
+    .btn-wa { background: #25D366; color: white; border: none; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; }
+    .btn-sms { background: #0284c7; color: white; border: none; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; }
+
+    /* Modals */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 14px; }
     .modal.active { display: flex; }
     .modal-box { background: #1e293b; width: 100%; max-width: 480px; padding: 18px; border-radius: 14px; border: 1px solid #334155; max-height: 90vh; overflow-y: auto; }
     .modal-box h3 { margin-bottom: 12px; font-size: 16px; color: #38bdf8; }
     .input-group { margin-bottom: 10px; }
     label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
-    input, select { width: 100%; padding: 9px; border-radius: 8px; background: #0f172a; border: 1px solid #475569; color: white; font-size: 13px; }
+    input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; background: #0f172a; border: 1px solid #475569; color: white; font-size: 13px; }
     .form-actions { display: flex; gap: 8px; margin-top: 14px; }
     .btn-save { flex: 1; background: #38bdf8; color: #0f172a; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .btn-close { background: #475569; color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
 
-    /* Footer / FAB */
-    .fab { position: fixed; bottom: 20px; right: 20px; background: #38bdf8; color: #0f172a; width: 54px; height: 54px; border-radius: 27px; display: flex; align-items: center; justify-content: center; font-size: 26px; border: none; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); cursor: pointer; font-weight: bold; z-index: 50; }
-    .backup-box { display: flex; justify-content: space-between; margin-top: 25px; padding: 12px; background: #1e293b; border-radius: 10px; border: 1px dashed #334155; }
-    .btn-backup { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+    /* QR */
+    .qr-card { background: #0f172a; border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 14px; border: 1px solid #334155; }
+    .qr-card img { width: 130px; height: 130px; border-radius: 8px; background: white; padding: 6px; margin: 10px auto; display: block; }
+
+    /* Detail View */
+    .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 13px; }
+    .detail-label { color: #94a3b8; }
+    .detail-value { font-weight: 600; color: #f8fafc; }
+    .detail-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+    .btn-action-full { padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; border: none; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
+
+    /* Tools & Sharing Box */
+    .tools-box { background: #1e293b; padding: 14px; border-radius: 12px; border: 1px dashed #334155; margin-top: 20px; }
+    .tools-box h4 { font-size: 13px; margin-bottom: 10px; color: #38bdf8; display: flex; justify-content: space-between; align-items: center; }
+    .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .btn-tool { background: #0f172a; border: 1px solid #475569; color: white; padding: 9px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; text-align: center; }
+    .btn-share-big { width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
+
+    .fab { position: fixed; bottom: 20px; right: 20px; background: #38bdf8; color: #0f172a; width: 56px; height: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 28px; border: none; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); cursor: pointer; font-weight: bold; z-index: 50; }
   </style>
 </head>
 <body>
 
   <header>
     <div class="header-top">
-      <div class="logo">📊 <span id="appTitle">Kharcha & Len-Den</span></div>
+      <div class="logo">📊 <span id="appTitle">Kharcha & Business</span></div>
       <div class="header-btns">
         <button id="installAppBtn" class="install-btn">📲 Install</button>
+        <button class="share-head-btn" onclick="shareApp()">📤 <span id="lblShare">शेयर</span></button>
         <button class="lang-btn" onclick="toggleLang()">🌐 <span id="langTxt">English</span></button>
         <button class="profile-btn" onclick="openProfile()">👤</button>
       </div>
@@ -103,10 +126,11 @@
 
   <div class="container">
     <!-- Profile Greeting -->
-    <div class="user-greeting">
+    <div class="user-greeting" onclick="openProfile()">
       <div class="greeting-text">
         <h3 id="greetUser">नमस्ते!</h3>
-        <p id="budgetText">मासिक बजट: ₹0</p>
+        <p id="budgetText">मासिक आय: ₹0</p>
+        <span id="quickUpi" class="upi-pill" style="display:none;"></span>
       </div>
       <div class="balance-box">
         <h4 id="lblRem">बचत / शेष राशि</h4>
@@ -114,7 +138,7 @@
       </div>
     </div>
 
-    <!-- Summary (Bills, EMI, SIP) -->
+    <!-- Summary (Bills, EMI, SIP, Insurance) -->
     <div class="summary-grid">
       <div class="summary-card bills">
         <h4 id="lblBills">कुल बिल</h4>
@@ -128,32 +152,38 @@
         <h4 id="lblSIP">कुल SIP</h4>
         <p id="totalSIP">₹0</p>
       </div>
+      <div class="summary-card ins">
+        <h4 id="lblIns">प्रीमियम</h4>
+        <p id="totalInsurance">₹0</p>
+      </div>
     </div>
 
-    <!-- Len-Den Strip -->
+    <!-- Len-Den & Shop Strip -->
     <div class="lenden-strip">
       <div class="lenden-card get">
         <div>
-          <h5 id="lblToReceive">लेने हैं (Receivable)</h5>
+          <h5 id="lblToReceive">बाजार से लेने हैं</h5>
           <p id="totalReceive" style="color:#34d399;">₹0</p>
         </div>
-        <span style="font-size:20px;">🤝</span>
+        <span style="font-size:18px;">🤝</span>
       </div>
       <div class="lenden-card give">
         <div>
           <h5 id="lblToPay">देने हैं (Payable)</h5>
           <p id="totalPay" style="color:#f87171;">₹0</p>
         </div>
-        <span style="font-size:20px;">🤲</span>
+        <span style="font-size:18px;">🤲</span>
       </div>
     </div>
 
     <!-- Search -->
-    <input type="text" id="searchInput" class="search-bar" placeholder="🔍 नाम या बैंक से खोजें..." oninput="render()">
+    <input type="text" id="searchInput" class="search-bar" placeholder="🔍 नाम, बैंक, सामान या मोबाइल खोजें..." oninput="render()">
 
-    <!-- Tabs -->
+    <!-- Tabs Filter Bar -->
     <div class="tabs">
       <button class="tab-btn active" onclick="filterItems('all', this)" id="tabAll">सभी (All)</button>
+      <button class="tab-btn" onclick="filterItems('shop_order', this)">📦 दुकान / ऑर्डर</button>
+      <button class="tab-btn" onclick="filterItems('insurance', this)">🛡️ इंश्योरेंस</button>
       <button class="tab-btn" onclick="filterItems('lenden', this)">🤝 लेन-देन (उधार)</button>
       <button class="tab-btn" onclick="filterItems('credit_card', this)">💳 क्रेडिट कार्ड</button>
       <button class="tab-btn" onclick="filterItems('utility', this)">⚡ बिल & रिचार्ज</button>
@@ -164,13 +194,16 @@
     <!-- Items List -->
     <div id="itemList"></div>
 
-    <!-- Backup & Restore -->
-    <div class="backup-box">
-      <div>
-        <p style="font-size:12px; font-weight:600;" id="lblBackup">डेटा बैकअप (Safe Backup)</p>
-        <p style="font-size:10px; color:#94a3b8;" id="lblBackupSub">फोन खोने पर भी डेटा सुरक्षित रखें</p>
+    <!-- Export & Tools Box -->
+    <div class="tools-box">
+      <h4 id="lblTools">📑 टूल्स, स्टेटमेंट और शेयर</h4>
+      <div class="tools-grid">
+        <button class="btn-tool" onclick="exportToExcel()">📊 Excel स्टेटमेंट</button>
+        <button class="btn-tool" onclick="exportData()">💾 पूरा बैकअप लें</button>
       </div>
-      <button class="btn-backup" onclick="exportData()">📥 बैकअप लें</button>
+      <button class="btn-share-big" onclick="shareApp()">
+        <span>📤</span> <span id="lblShareBig">दोस्तों और व्यापारियों को शेयर करें (Share App)</span>
+      </button>
     </div>
   </div>
 
@@ -185,6 +218,8 @@
         <div class="input-group">
           <label id="lblCat">कैटेगरी (Category)</label>
           <select id="entryCategory" onchange="updateSubOptions()" required>
+            <option value="shop_order">📦 दुकान / कारोबार (सामान ऑर्डर & डिलीवरी)</option>
+            <option value="insurance">🛡️ इंश्योरेंस प्रीमियम (Life / Health / Term / Bike-Car)</option>
             <option value="lend_given">🤝 पैसे दिए (मुझे वापस लेने हैं - Udhar Given)</option>
             <option value="lend_taken">🤲 पैसे लिए (मुझे वापस देने हैं - Udhar Taken)</option>
             <option value="credit_card">💳 क्रेडिट कार्ड बिल (Credit Card)</option>
@@ -195,31 +230,43 @@
           </select>
         </div>
 
-        <!-- Bank / Preset Dropdown (Hidden if Len-Den) -->
         <div class="input-group" id="presetGroup">
-          <label id="lblProvider">बैंक / कंपनी चुनें</label>
+          <label id="lblProvider">कंपनी या बैंक चुनें</label>
           <select id="entryPreset" onchange="handlePresetChange()"></select>
         </div>
 
-        <!-- Custom / Person Name -->
+        <div class="input-group" id="phoneGroup">
+          <label id="lblPhone">मोबाइल नंबर (Customer / Person Phone)</label>
+          <input type="tel" id="entryPhone" placeholder="उदा: 9876543210" oninput="autoLookupContact(this.value)">
+        </div>
+
         <div class="input-group" id="customTitleGroup">
-          <label id="lblCustomName">व्यक्ति का नाम (Person Name)</label>
+          <label id="lblCustomName">व्यक्ति या सामान का नाम</label>
           <input type="text" id="entryCustomTitle" placeholder="उदा: राहुल शर्मा">
         </div>
 
-        <!-- Mobile / WhatsApp Number (Only for Len-Den) -->
-        <div class="input-group" id="phoneGroup">
-          <label id="lblPhone">व्हाट्सएप नंबर (Payment Reminder भेजने के लिए)</label>
-          <input type="tel" id="entryPhone" placeholder="उदा: 9876543210 (10 अंक)">
+        <div class="input-group" id="itemDescGroup" style="display:none;">
+          <label>सामान का विवरण / क्या बुक किया (Item Booked)</label>
+          <input type="text" id="entryItemDesc" placeholder="उदा: 2 जोड़ी कपड़े / सोफा सेट / किराना">
+        </div>
+
+        <div class="input-group" id="policyNoGroup" style="display:none;">
+          <label>पॉलिसी नंबर या गाड़ी नंबर (Policy / Reg. No.)</label>
+          <input type="text" id="entryPolicyNo" placeholder="उदा: 123456789 या RJ14-AB-1234">
         </div>
 
         <div class="input-group">
-          <label id="lblAmt">राशि (Amount ₹)</label>
+          <label id="lblAmt">कुल राशि (Total Amount ₹)</label>
           <input type="number" id="entryAmount" placeholder="उदा: 5000" required>
         </div>
 
+        <div class="input-group" id="advanceGroup" style="display:none;">
+          <label>एडवांस पेमेंट मिला ₹ (Advance Received)</label>
+          <input type="number" id="entryAdvance" placeholder="उदा: 2000">
+        </div>
+
         <div class="input-group">
-          <label id="lblDate">तारीख / वापसी की तारीख (Due Date)</label>
+          <label id="lblDate">तारीख / ड्यू डेट / डिलीवरी तारीख</label>
           <input type="date" id="entryDate" required>
         </div>
 
@@ -231,21 +278,58 @@
     </div>
   </div>
 
+  <!-- DETAIL MODAL -->
+  <div id="detailModal" class="modal">
+    <div class="modal-box">
+      <h3 id="lblDetailTitle">📋 पूरा विवरण</h3>
+      <div id="detailContent"></div>
+      <div class="detail-actions-grid" id="detailActions"></div>
+      <div style="margin-top:14px; text-align:right;">
+        <button type="button" class="btn-close" onclick="closeModal('detailModal')">बंद करें (Close)</button>
+      </div>
+    </div>
+  </div>
+
   <!-- PROFILE MODAL -->
   <div id="profileModal" class="modal">
     <div class="modal-box">
-      <h3>मेरी प्रोफ़ाइल (My Profile)</h3>
+      <h3>👤 मेरी पूरी प्रोफ़ाइल (Business & Personal Profile)</h3>
+      
+      <div class="qr-card" id="qrContainer" style="display:none;">
+        <h4 style="font-size:13px; color:#38bdf8;" id="qrOwnerName">राहुल कुमार</h4>
+        <img id="upiQrImg" src="" alt="UPI QR Code">
+        <p style="font-size:11px; color:#34d399; font-weight:700;" id="qrUpiText"></p>
+        <p style="font-size:10px; color:#94a3b8;">(स्कैन करके कोई भी सीधे बैंक में पेमेंट भेज सकता है)</p>
+      </div>
+
       <div class="input-group">
-        <label>आपका नाम (Your Name)</label>
-        <input type="text" id="profName" placeholder="उदा: राहुल कुमार">
+        <label>आपका नाम या दुकान का नाम (Name / Shop Name)</label>
+        <input type="text" id="profName" placeholder="उदा: राहुल ट्रेडर्स">
       </div>
       <div class="input-group">
-        <label>मंथली सैलरी / इनकम ₹ (Monthly Budget)</label>
-        <input type="number" id="profBudget" placeholder="उदा: 50000">
+        <label>मोबाइल नंबर (Phone Number)</label>
+        <input type="tel" id="profPhone" placeholder="उदा: 9876543210">
       </div>
+      <div class="input-group">
+        <label>UPI ID (GooglePay / PhonePe / Paytm / BHIM)</label>
+        <input type="text" id="profUpi" placeholder="उदा: rahul@okhdfcbank">
+      </div>
+      <div class="input-group">
+        <label>जीमेल / ईमेल (Email ID)</label>
+        <input type="email" id="profEmail" placeholder="उदा: rahul@gmail.com">
+      </div>
+      <div class="input-group">
+        <label>पता (Shop / Home Address)</label>
+        <input type="text" id="profAddress" placeholder="उदा: मेन मार्केट, जयपुर">
+      </div>
+      <div class="input-group">
+        <label>मासिक सैलरी / दुकान की इनकम ₹ (Monthly Budget)</label>
+        <input type="number" id="profBudget" placeholder="उदा: 60000">
+      </div>
+
       <div class="form-actions">
         <button type="button" class="btn-close" onclick="closeModal('profileModal')">बंद करें</button>
-        <button type="button" class="btn-save" onclick="saveProfile()">सेव करें</button>
+        <button type="button" class="btn-save" onclick="saveProfile()">सेव करें (Save)</button>
       </div>
     </div>
   </div>
@@ -255,30 +339,43 @@
     const telecomList = ["Jio Prepaid/Postpaid", "Airtel", "Vi (Vodafone Idea)", "BSNL", "Tata Play (DTH)", "Airtel Digital TV", "Dish TV", "Other (अन्य)"];
     const sipList = ["Parag Parikh Flexi Cap", "Nippon India Small Cap", "Quant Small Cap", "SBI Mutual Fund", "HDFC Top 100", "ICICI Prudential", "Mirae Asset Large Cap", "Motilal Oswal", "Groww Balance", "Zerodha Coin", "Other (अन्य)"];
     const utilityList = ["Bijli Bill (Electricity)", "Pani Bill (Water)", "Gas Cylinder / Piped Gas", "WiFi / Broadband", "House Rent", "Other (अन्य)"];
+    const insuranceList = [
+      "LIC of India (जीवन बीमा)", "Star Health Insurance (हेल्थ)", "Care Health Insurance (हेल्थ)", 
+      "HDFC Life (टर्म / लाइफ)", "Tata AIG (गाड़ी / हेल्थ)", "Bajaj Allianz (मोटर / हेल्थ)", 
+      "ICICI Lombard (गाड़ी / जनरल)", "SBI Life Insurance", "Max Life Insurance", 
+      "New India Assurance", "Other (अन्य बीमा)"
+    ];
 
     let lang = localStorage.getItem('kh_lang') || 'hi';
     let data = JSON.parse(localStorage.getItem('my_hisab_data')) || [];
-    let profile = JSON.parse(localStorage.getItem('my_hisab_profile')) || { name: 'दोस्त', budget: 0 };
+    let profile = JSON.parse(localStorage.getItem('my_hisab_profile')) || {
+      name: 'दोस्त',
+      phone: '',
+      upi: '',
+      email: '',
+      address: '',
+      budget: 0
+    };
     let currentCategory = 'all';
 
     const t = {
       hi: {
-        appTitle: "खर्चा & लेन-देन", langBtn: "English", greet: "नमस्ते", budget: "मासिक बजट", rem: "बचत / शेष राशि",
-        bills: "कुल बिल", emi: "कुल EMI", sip: "कुल SIP", toReceive: "लेने हैं (Receivable)", toPay: "देने हैं (Payable)",
-        search: "🔍 नाम, बैंक या व्यक्ति खोजें...", all: "सभी (All)", modalAdd: "नई एंट्री जोड़ें",
-        cat: "कैटेगरी चुनें", provider: "बैंक / कंपनी चुनें", customPerson: "व्यक्ति का नाम", customBank: "हाथ से नाम लिखें",
-        phone: "व्हाट्सएप नंबर (Reminder के लिए)", amt: "रुपये (Amount ₹)", date: "तारीख / ड्यू डेट", cancel: "कैंसिल",
-        save: "सेव करें", backup: "डेटा बैकअप (Safe Backup)", backupSub: "फोन खोने पर भी डेटा सुरक्षित रखें",
-        paid: "✓ चुकता (Settled)", overdue: "⚠️ Overdue!", duesoon: "⏳ Due Soon", upcoming: "Pending"
+        appTitle: "खर्चा & बिजनेस प्रो", langBtn: "English", greet: "नमस्ते", budget: "मासिक आय", rem: "बचत / शेष राशि",
+        bills: "कुल बिल", emi: "कुल EMI", sip: "कुल SIP", ins: "प्रीमियम", toReceive: "बाजार से लेने हैं", toPay: "देने हैं (Payable)",
+        search: "🔍 नाम, बैंक, सामान या मोबाइल खोजें...", all: "सभी (All)", modalAdd: "नई एंट्री जोड़ें",
+        cat: "कैटेगरी चुनें", provider: "कंपनी / बैंक चुनें", customPerson: "ग्राहक / व्यक्ति का नाम", customBank: "हाथ से नाम लिखें",
+        phone: "मोबाइल नंबर (ऑटो-फिल सुविधा)", amt: "कुल राशि (Amount ₹)", date: "तारीख / ड्यू / डिलीवरी", cancel: "कैंसिल",
+        save: "सेव करें", tools: "📑 टूल्स, स्टेटमेंट और शेयर", shareBtn: "शेयर करें",
+        paid: "✓ चुकता / डिलीवर", overdue: "⚠️ Overdue!", duesoon: "⏳ Due Soon", upcoming: "Pending"
       },
       en: {
-        appTitle: "Kharcha & Len-Den", langBtn: "हिंदी", greet: "Hello", budget: "Monthly Budget", rem: "Remaining Savings",
-        bills: "Total Bills", emi: "Total EMI", sip: "Total SIP", toReceive: "To Receive", toPay: "To Pay",
-        search: "🔍 Search name, bank or person...", all: "All", modalAdd: "Add New Entry",
-        cat: "Select Category", provider: "Select Bank / Provider", customPerson: "Person's Name", customBank: "Custom Name",
-        phone: "WhatsApp Number (For Reminder)", amt: "Amount (₹)", date: "Due Date", cancel: "Cancel",
-        save: "Save Entry", backup: "Data Backup (Safe Backup)", backupSub: "Keep data safe even if phone changes",
-        paid: "✓ Settled", overdue: "⚠️ Overdue!", duesoon: "⏳ Due Soon", upcoming: "Pending"
+        appTitle: "Kharcha & Business", langBtn: "हिंदी", greet: "Hello", budget: "Monthly Income", rem: "Remaining Savings",
+        bills: "Total Bills", emi: "Total EMI", sip: "Total SIP", ins: "Premium", toReceive: "To Receive", toPay: "To Pay",
+        search: "🔍 Search name, bank, item or phone...", all: "All", modalAdd: "Add New Entry",
+        cat: "Select Category", provider: "Select Provider", customPerson: "Customer / Person Name", customBank: "Custom Name",
+        phone: "Mobile Number (Auto-lookup)", amt: "Total Amount (₹)", date: "Date / Due / Delivery", cancel: "Cancel",
+        save: "Save Entry", tools: "📑 Tools, Statement & Share", shareBtn: "Share App",
+        paid: "✓ Done / Delivered", overdue: "⚠️ Overdue!", duesoon: "⏳ Due Soon", upcoming: "Pending"
       }
     };
 
@@ -293,38 +390,97 @@
       const cur = t[lang];
       document.getElementById('appTitle').innerText = cur.appTitle;
       document.getElementById('langTxt').innerText = cur.langBtn;
-      document.getElementById('budgetText').innerText = `${cur.budget}: ₹${profile.budget.toLocaleString('en-IN')}`;
+      document.getElementById('lblShare').innerText = lang === 'hi' ? 'शेयर' : 'Share';
+      document.getElementById('lblShareBig').innerText = lang === 'hi' ? 'दोस्तों और व्यापारियों को शेयर करें (Share App)' : 'Share App with Friends & Shopkeepers';
+      document.getElementById('budgetText').innerText = `${cur.budget}: ₹${(profile.budget || 0).toLocaleString('en-IN')}`;
       document.getElementById('lblRem').innerText = cur.rem;
       document.getElementById('lblBills').innerText = cur.bills;
       document.getElementById('lblEMI').innerText = cur.emi;
       document.getElementById('lblSIP').innerText = cur.sip;
+      document.getElementById('lblIns').innerText = cur.ins;
       document.getElementById('lblToReceive').innerText = cur.toReceive;
       document.getElementById('lblToPay').innerText = cur.toPay;
       document.getElementById('searchInput').placeholder = cur.search;
       document.getElementById('tabAll').innerText = cur.all;
       document.getElementById('modalHeading').innerText = cur.modalAdd;
       document.getElementById('lblCat').innerText = cur.cat;
-      document.getElementById('lblProvider').innerText = cur.provider;
       document.getElementById('lblPhone').innerText = cur.phone;
       document.getElementById('lblAmt').innerText = cur.amt;
       document.getElementById('lblDate').innerText = cur.date;
       document.getElementById('btnCancel').innerText = cur.cancel;
       document.getElementById('btnSave').innerText = cur.save;
-      document.getElementById('lblBackup').innerText = cur.backup;
-      document.getElementById('lblBackupSub').innerText = cur.backupSub;
-      document.getElementById('greetUser').innerText = `${cur.greet}, ${profile.name} 👋`;
+      document.getElementById('lblTools').innerText = cur.tools;
+      document.getElementById('greetUser').innerText = `${cur.greet}, ${profile.name || 'दोस्त'} 👋`;
+
+      const quickUpi = document.getElementById('quickUpi');
+      if (profile.upi) {
+        quickUpi.style.display = 'inline-block';
+        quickUpi.innerText = `UPI: ${profile.upi}`;
+      } else {
+        quickUpi.style.display = 'none';
+      }
+    }
+
+    // SHARE APP FUNCTIONALITY
+    function shareApp() {
+      const appUrl = "https://eevanventures-sketch.github.io/Kharcha-hisab/";
+      const title = "Kharcha & Business App";
+      const text = lang === 'hi'
+        ? `नमस्ते! 🙏\nमैंने घर के खर्चे, बिजली/मोबाइल बिल, लोन EMI, SIP, दुकान के आर्डर और उधार (लेन-देन) का हिसाब रखने के लिए यह बहुत ही उपयोगी और फ्री ऐप इस्तेमाल करना शुरू किया है।\n\nआप भी इसे अपने फोन में फ्री इंस्टॉल कर सकते हैं:\n👉 लिंक: ${appUrl}\n(यह 100% प्राइवेट और सुरक्षित है!)`
+        : `Hello! 🙏\nCheck out this super useful free app to track Daily Expenses, Bills, EMI, SIP, Shop Orders & Len-Den with WhatsApp Reminders!\n\nInstall it on your phone for free:\n👉 Link: ${appUrl}`;
+
+      if (navigator.share) {
+        navigator.share({ title: title, text: text, url: appUrl }).catch(() => {});
+      } else {
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+        window.open(waUrl, '_blank');
+      }
+    }
+
+    function autoLookupContact(enteredPhone) {
+      const clean = enteredPhone.trim().replace(/\D/g, '');
+      if (clean.length >= 5) {
+        const match = data.find(item => item.phone && item.phone.replace(/\D/g, '').includes(clean));
+        if (match) {
+          const nameInput = document.getElementById('entryCustomTitle');
+          if (!nameInput.value || nameInput.value === match.title) {
+            nameInput.value = match.title;
+          }
+        }
+      }
     }
 
     function openProfile() {
-      document.getElementById('profName').value = profile.name === 'दोस्त' ? '' : profile.name;
+      document.getElementById('profName').value = profile.name === 'दोस्त' ? '' : (profile.name || '');
+      document.getElementById('profPhone').value = profile.phone || '';
+      document.getElementById('profUpi').value = profile.upi || '';
+      document.getElementById('profEmail').value = profile.email || '';
+      document.getElementById('profAddress').value = profile.address || '';
       document.getElementById('profBudget').value = profile.budget || '';
+
+      const qrContainer = document.getElementById('qrContainer');
+      if (profile.upi) {
+        qrContainer.style.display = 'block';
+        document.getElementById('qrOwnerName').innerText = profile.name || 'My UPI QR';
+        document.getElementById('qrUpiText').innerText = profile.upi;
+        const upiString = encodeURIComponent(`upi://pay?pa=${profile.upi}&pn=${encodeURIComponent(profile.name || 'Business')}&cu=INR`);
+        document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${upiString}`;
+      } else {
+        qrContainer.style.display = 'none';
+      }
+
       document.getElementById('profileModal').classList.add('active');
     }
 
     function saveProfile() {
       const name = document.getElementById('profName').value.trim() || (lang === 'hi' ? 'दोस्त' : 'Friend');
+      const phone = document.getElementById('profPhone').value.trim();
+      const upi = document.getElementById('profUpi').value.trim();
+      const email = document.getElementById('profEmail').value.trim();
+      const address = document.getElementById('profAddress').value.trim();
       const budget = parseFloat(document.getElementById('profBudget').value) || 0;
-      profile = { name, budget };
+
+      profile = { name, phone, upi, email, address, budget };
       localStorage.setItem('my_hisab_profile', JSON.stringify(profile));
       closeModal('profileModal');
       applyLang();
@@ -347,39 +503,71 @@
       const presetGroup = document.getElementById('presetGroup');
       const customGroup = document.getElementById('customTitleGroup');
       const phoneGroup = document.getElementById('phoneGroup');
+      const itemDescGroup = document.getElementById('itemDescGroup');
+      const policyNoGroup = document.getElementById('policyNoGroup');
+      const advanceGroup = document.getElementById('advanceGroup');
       const presetSelect = document.getElementById('entryPreset');
 
-      if (cat === 'lend_given' || cat === 'lend_taken') {
+      itemDescGroup.style.display = 'none';
+      policyNoGroup.style.display = 'none';
+      advanceGroup.style.display = 'none';
+
+      if (cat === 'shop_order') {
+        presetGroup.style.display = 'none';
+        customGroup.style.display = 'block';
+        phoneGroup.style.display = 'block';
+        itemDescGroup.style.display = 'block';
+        advanceGroup.style.display = 'block';
+        document.getElementById('lblCustomName').innerText = "ग्राहक का नाम (Customer Name)";
+        document.getElementById('lblDate').innerText = "सामान डिलीवरी तारीख (Delivery Date)";
+        document.getElementById('lblAmt').innerText = "कुल बिल राशि ₹ (Total Bill)";
+        document.getElementById('entryCustomTitle').required = true;
+      } else if (cat === 'insurance') {
+        presetGroup.style.display = 'block';
+        customGroup.style.display = 'none';
+        phoneGroup.style.display = 'none';
+        policyNoGroup.style.display = 'block';
+        document.getElementById('lblProvider').innerText = "बीमा कंपनी चुनें (Insurance Company)";
+        document.getElementById('lblDate').innerText = "प्रीमियम भरने की तारीख (Due Date)";
+        document.getElementById('lblAmt').innerText = "प्रीमियम राशि ₹ (Premium Amount)";
+        populatePreset(insuranceList);
+      } else if (cat === 'lend_given' || cat === 'lend_taken') {
         presetGroup.style.display = 'none';
         customGroup.style.display = 'block';
         phoneGroup.style.display = 'block';
         document.getElementById('lblCustomName').innerText = t[lang].customPerson;
+        document.getElementById('lblDate').innerText = "वापसी / ड्यू तारीख (Due Date)";
+        document.getElementById('lblAmt').innerText = "राशि ₹ (Amount)";
         document.getElementById('entryCustomTitle').required = true;
       } else {
         presetGroup.style.display = 'block';
         phoneGroup.style.display = 'none';
         document.getElementById('lblCustomName').innerText = t[lang].customBank;
+        document.getElementById('lblDate').innerText = "अंतिम तारीख / ड्यू डेट";
+        document.getElementById('lblAmt').innerText = "राशि ₹ (Amount)";
         
-        let list = [];
-        if(cat === 'credit_card' || cat === 'emi') list = bankList;
-        else if(cat === 'telecom') list = telecomList;
-        else if(cat === 'sip') list = sipList;
-        else if(cat === 'utility') list = utilityList;
-
-        presetSelect.innerHTML = '';
-        list.forEach(item => {
-          const opt = document.createElement('option');
-          opt.value = item;
-          opt.innerText = item;
-          presetSelect.appendChild(opt);
-        });
-        handlePresetChange();
+        if(cat === 'credit_card' || cat === 'emi') populatePreset(bankList);
+        else if(cat === 'telecom') populatePreset(telecomList);
+        else if(cat === 'sip') populatePreset(sipList);
+        else if(cat === 'utility') populatePreset(utilityList);
       }
+    }
+
+    function populatePreset(list) {
+      const presetSelect = document.getElementById('entryPreset');
+      presetSelect.innerHTML = '';
+      list.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.innerText = item;
+        presetSelect.appendChild(opt);
+      });
+      handlePresetChange();
     }
 
     function handlePresetChange() {
       const cat = document.getElementById('entryCategory').value;
-      if (cat === 'lend_given' || cat === 'lend_taken') return;
+      if (cat === 'lend_given' || cat === 'lend_taken' || cat === 'shop_order') return;
       const preset = document.getElementById('entryPreset').value;
       const customGroup = document.getElementById('customTitleGroup');
       if(preset.includes("Other")) {
@@ -396,7 +584,7 @@
       const cat = document.getElementById('entryCategory').value;
       let title = "";
 
-      if(cat === 'lend_given' || cat === 'lend_taken') {
+      if(cat === 'lend_given' || cat === 'lend_taken' || cat === 'shop_order') {
         title = document.getElementById('entryCustomTitle').value.trim();
       } else {
         const preset = document.getElementById('entryPreset').value;
@@ -406,6 +594,9 @@
 
       const phone = document.getElementById('entryPhone').value.trim();
       const amount = parseFloat(document.getElementById('entryAmount').value);
+      const advance = parseFloat(document.getElementById('entryAdvance').value) || 0;
+      const itemDesc = document.getElementById('entryItemDesc').value.trim();
+      const policyNo = document.getElementById('entryPolicyNo').value.trim();
       const date = document.getElementById('entryDate').value;
 
       data.push({
@@ -414,6 +605,9 @@
         title: title,
         phone: phone,
         amount: amount,
+        advance: advance,
+        itemDesc: itemDesc,
+        policyNo: policyNo,
         date: date,
         status: 'unpaid'
       });
@@ -423,16 +617,19 @@
       render();
     }
 
-    function toggleStatus(id) {
+    function toggleStatus(id, event) {
+      if(event) event.stopPropagation();
       data = data.map(item => item.id === id ? { ...item, status: item.status === 'paid' ? 'unpaid' : 'paid' } : item);
       localStorage.setItem('my_hisab_data', JSON.stringify(data));
       render();
     }
 
-    function deleteItem(id) {
+    function deleteItem(id, event) {
+      if(event) event.stopPropagation();
       if(confirm(lang === 'hi' ? 'क्या आप इसे हटाना चाहते हैं?' : 'Do you want to delete this?')) {
         data = data.filter(item => item.id !== id);
         localStorage.setItem('my_hisab_data', JSON.stringify(data));
+        closeModal('detailModal');
         render();
       }
     }
@@ -444,18 +641,112 @@
       render();
     }
 
-    function sendWhatsAppReminder(name, phone, amount, date) {
-      let cleanPhone = phone ? phone.replace(/\D/g, '') : '';
+    function sendWhatsAppReminder(id, event) {
+      if(event) event.stopPropagation();
+      const item = data.find(d => d.id === id);
+      if(!item) return;
+
+      let cleanPhone = item.phone ? item.phone.replace(/\D/g, '') : '';
       if(cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
 
-      const text = encodeURIComponent(
-        lang === 'hi'
-          ? `नमस्ते ${name} जी! 🙏\nयह एक दोस्ताना रिमाइंडर है कि आपके पास ₹${amount.toLocaleString('en-IN')} का भुगतान बाकी है (तारीख: ${date})।\nकृपया समय पर ट्रांसफर करने का कष्ट करें। धन्यवाद!`
-          : `Hello ${name}! 🙏\nThis is a friendly reminder regarding pending payment of ₹${amount.toLocaleString('en-IN')} (Due date: ${date}).\nPlease clear it at your earliest convenience. Thank you!`
-      );
+      const upiText = profile.upi ? `\n💳 UPI ID: ${profile.upi}` : '';
+      const senderName = profile.name && profile.name !== 'दोस्त' ? ` - ${profile.name}` : '';
 
-      const url = cleanPhone ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${text}` : `https://api.whatsapp.com/send?text=${text}`;
+      let text = '';
+      if (item.category === 'shop_order') {
+        const balance = item.amount - (item.advance || 0);
+        text = `नमस्ते ${item.title} जी! 🙏\nआपकी दुकान/ऑर्डर का अपडेट:\n📦 सामान: ${item.itemDesc || 'ऑर्डर'}\n📅 डिलीवरी तारीख: ${item.date}\n💰 कुल बिल: ₹${item.amount.toLocaleString('en-IN')}\n✅ एडवांस मिला: ₹${(item.advance||0).toLocaleString('en-IN')}\n⚠️ शेष बकाया: ₹${balance.toLocaleString('en-IN')}${upiText}\nधन्यवाद!${senderName}`;
+      } else {
+        text = `नमस्ते ${item.title} जी! 🙏\nयह एक दोस्ताना रिमाइंडर है कि आपके पास ₹${item.amount.toLocaleString('en-IN')} का भुगतान बाकी है (तारीख: ${item.date})।${upiText}\nकृपया समय पर ट्रांसफर करने का कष्ट करें। धन्यवाद!${senderName}`;
+      }
+
+      const encoded = encodeURIComponent(text);
+      const url = cleanPhone ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encoded}` : `https://api.whatsapp.com/send?text=${encoded}`;
       window.open(url, '_blank');
+    }
+
+    function sendSMSReminder(id, event) {
+      if(event) event.stopPropagation();
+      const item = data.find(d => d.id === id);
+      if(!item) return;
+
+      let cleanPhone = item.phone ? item.phone.replace(/\D/g, '') : '';
+      let text = '';
+      if (item.category === 'shop_order') {
+        const balance = item.amount - (item.advance || 0);
+        text = `नमस्ते ${item.title} जी! आपका आर्डर (${item.itemDesc||'सामान'}) डिलीवरी तारीख ${item.date} को तैयार है। बाकी राशि: Rs.${balance}। धन्यवाद!`;
+      } else {
+        text = `नमस्ते ${item.title} जी! रिमाइंडर: ₹${item.amount} का भुगतान बाकी है (तारीख: ${item.date})। धन्यवाद!`;
+      }
+
+      window.location.href = `sms:${cleanPhone}?body=${encodeURIComponent(text)}`;
+    }
+
+    function showDetail(id) {
+      const item = data.find(d => d.id === id);
+      if(!item) return;
+
+      const dueInfo = getDueStatus(item.date, item.status);
+      const isShop = item.category === 'shop_order';
+      const isLend = item.category === 'lend_given' || item.category === 'lend_taken';
+
+      const catNames = {
+        shop_order: "📦 दुकान आर्डर & डिलीवरी",
+        insurance: "🛡️ इंश्योरेंस प्रीमियम",
+        lend_given: "🤝 उधार दिया (लेने हैं)",
+        lend_taken: "🤲 उधार लिया (देने हैं)",
+        credit_card: "💳 क्रेडिट कार्ड",
+        utility: "⚡ बिजली / पानी बिल",
+        telecom: "📱 फोन / रिचार्ज",
+        emi: "🏦 लोन EMI",
+        sip: "📈 SIP / म्यूचुअल फंड"
+      };
+
+      let extraRows = '';
+      if (isShop) {
+        const balance = item.amount - (item.advance || 0);
+        extraRows = `
+          <div class="detail-row"><span class="detail-label">सामान / ऑर्डर:</span><span class="detail-value">${item.itemDesc || '-'}</span></div>
+          <div class="detail-row"><span class="detail-label">एडवांस मिला:</span><span class="detail-value" style="color:#34d399;">₹${(item.advance||0).toLocaleString('en-IN')}</span></div>
+          <div class="detail-row"><span class="detail-label">बाकी बैलेंस:</span><span class="detail-value" style="color:#ef4444; font-weight:800;">₹${balance.toLocaleString('en-IN')}</span></div>
+        `;
+      }
+      if (item.policyNo) {
+        extraRows += `<div class="detail-row"><span class="detail-label">पॉलिसी/गाड़ी नं:</span><span class="detail-value">${item.policyNo}</span></div>`;
+      }
+
+      document.getElementById('detailContent').innerHTML = `
+        <div class="detail-row"><span class="detail-label">कैटेगरी:</span><span class="detail-value">${catNames[item.category] || item.category}</span></div>
+        <div class="detail-row"><span class="detail-label">नाम / पार्टी:</span><span class="detail-value">${item.title}</span></div>
+        ${item.phone ? `<div class="detail-row"><span class="detail-label">मोबाइल:</span><span class="detail-value"><a href="tel:${item.phone}" style="color:#38bdf8;">📞 ${item.phone}</a></span></div>` : ''}
+        ${extraRows}
+        <div class="detail-row"><span class="detail-label">कुल राशि:</span><span class="detail-value" style="color:#38bdf8; font-size:16px;">₹${item.amount.toLocaleString('en-IN')}</span></div>
+        <div class="detail-row"><span class="detail-label">तारीख / ड्यू:</span><span class="detail-value">${item.date}</span></div>
+        <div class="detail-row"><span class="detail-label">स्थिति (Status):</span><span class="detail-value">${dueInfo.text}</span></div>
+      `;
+
+      let actionsHtml = `
+        <button class="btn-action-full" style="background:#10b981; color:white;" onclick="toggleStatus(${item.id}); closeModal('detailModal');">
+          ${item.status === 'paid' ? '↩️ Unpaid करें' : '✓ पूर्ण (Delivered/Paid)'}
+        </button>
+        <button class="btn-action-full" style="background:#ef4444; color:white;" onclick="deleteItem(${item.id})">
+          🗑️ डिलीट करें
+        </button>
+      `;
+
+      if(isShop || isLend) {
+        actionsHtml = `
+          <button class="btn-action-full" style="background:#25D366; color:white;" onclick="sendWhatsAppReminder(${item.id})">
+            💬 WhatsApp
+          </button>
+          <button class="btn-action-full" style="background:#0284c7; color:white;" onclick="sendSMSReminder(${item.id})">
+            📩 SMS भेजें
+          </button>
+        ` + actionsHtml;
+      }
+
+      document.getElementById('detailActions').innerHTML = actionsHtml;
+      document.getElementById('detailModal').classList.add('active');
     }
 
     function getDueStatus(dateStr, status) {
@@ -476,26 +767,31 @@
       const search = document.getElementById('searchInput').value.toLowerCase();
       listEl.innerHTML = '';
 
-      let billTotal = 0, emiTotal = 0, sipTotal = 0, toReceive = 0, toPay = 0;
+      let billTotal = 0, emiTotal = 0, sipTotal = 0, insTotal = 0, toReceive = 0, toPay = 0;
 
       data.forEach(item => {
         if(item.status !== 'paid') {
           if(item.category === 'credit_card' || item.category === 'utility' || item.category === 'telecom') billTotal += item.amount;
           if(item.category === 'emi') emiTotal += item.amount;
           if(item.category === 'sip') sipTotal += item.amount;
+          if(item.category === 'insurance') insTotal += item.amount;
           if(item.category === 'lend_given') toReceive += item.amount;
           if(item.category === 'lend_taken') toPay += item.amount;
+          if(item.category === 'shop_order') {
+            toReceive += (item.amount - (item.advance || 0));
+          }
         }
       });
 
       document.getElementById('totalBills').innerText = '₹' + billTotal.toLocaleString('en-IN');
       document.getElementById('totalEMI').innerText = '₹' + emiTotal.toLocaleString('en-IN');
       document.getElementById('totalSIP').innerText = '₹' + sipTotal.toLocaleString('en-IN');
+      document.getElementById('totalInsurance').innerText = '₹' + insTotal.toLocaleString('en-IN');
       document.getElementById('totalReceive').innerText = '₹' + toReceive.toLocaleString('en-IN');
       document.getElementById('totalPay').innerText = '₹' + toPay.toLocaleString('en-IN');
 
-      const totalOutflow = billTotal + emiTotal + sipTotal + toPay;
-      const remaining = profile.budget > 0 ? (profile.budget - totalOutflow) : 0;
+      const totalOutflow = billTotal + emiTotal + sipTotal + insTotal + toPay;
+      const remaining = (profile.budget || 0) > 0 ? (profile.budget - totalOutflow) : 0;
       document.getElementById('remBalance').innerText = '₹' + remaining.toLocaleString('en-IN');
       document.getElementById('remBalance').style.color = remaining < 0 ? '#ef4444' : '#34d399';
 
@@ -507,7 +803,12 @@
       }
 
       if(search) {
-        filtered = filtered.filter(d => d.title.toLowerCase().includes(search));
+        filtered = filtered.filter(d => 
+          d.title.toLowerCase().includes(search) || 
+          (d.phone && d.phone.includes(search)) ||
+          (d.itemDesc && d.itemDesc.toLowerCase().includes(search)) ||
+          (d.policyNo && d.policyNo.toLowerCase().includes(search))
+        );
       }
 
       filtered.sort((a,b) => new Date(a.date) - new Date(b.date));
@@ -517,41 +818,70 @@
         return;
       }
 
-      const icons = { credit_card: '💳', utility: '⚡', telecom: '📱', emi: '🏦', sip: '📈', lend_given: '🤝', lend_taken: '🤲' };
+      const icons = { 
+        credit_card: '💳', 
+        utility: '⚡', 
+        telecom: '📱', 
+        emi: '🏦', 
+        sip: '📈', 
+        insurance: '🛡️',
+        shop_order: '📦',
+        lend_given: '🤝', 
+        lend_taken: '🤲' 
+      };
 
       filtered.forEach(item => {
         const dueInfo = getDueStatus(item.date, item.status);
+        const isShop = item.category === 'shop_order';
         const isLendGiven = item.category === 'lend_given';
         const isLendTaken = item.category === 'lend_taken';
-        
+
         let subText = `📅 ${item.date}`;
-        if(isLendGiven) subText += ` • <span style="color:#34d399;font-weight:600;">लेने हैं</span>`;
-        if(isLendTaken) subText += ` • <span style="color:#f87171;font-weight:600;">देने हैं</span>`;
+        if(isShop) {
+          const bal = item.amount - (item.advance || 0);
+          subText = `📦 ${item.itemDesc || 'ऑर्डर'} • डिलीवरी: ${item.date} • <span style="color:#ef4444;">बाकी: ₹${bal.toLocaleString('en-IN')}</span>`;
+        } else if(item.category === 'insurance' && item.policyNo) {
+          subText += ` • पॉलिसी: ${item.policyNo}`;
+        } else {
+          if(item.phone) subText += ` • 📞 ${item.phone}`;
+          if(isLendGiven) subText += ` • <span style="color:#34d399;font-weight:600;">लेने हैं</span>`;
+          if(isLendTaken) subText += ` • <span style="color:#f87171;font-weight:600;">देने हैं</span>`;
+        }
 
         const card = document.createElement('div');
         card.className = `item-card ${dueInfo.cls}`;
+        card.onclick = () => showDetail(item.id);
+        
         card.innerHTML = `
-          <div class="item-left">
-            <span class="item-icon">${icons[item.category] || '📄'}</span>
-            <div>
-              <div class="item-title">${item.title}</div>
-              <div class="item-sub">${subText}</div>
+          <div class="item-header">
+            <div class="item-left">
+              <span class="item-icon">${icons[item.category] || '📄'}</span>
+              <div>
+                <div class="item-title">${item.title}</div>
+                <div class="item-sub">${subText}</div>
+              </div>
             </div>
-          </div>
-          <div class="item-right">
-            <div class="item-amount" style="color:${isLendGiven ? '#34d399' : (isLendTaken ? '#f87171' : '#f8fafc')}">
+            <div class="item-amount" style="color:${isShop || isLendGiven ? '#34d399' : (isLendTaken ? '#f87171' : '#f8fafc')}">
               ₹${item.amount.toLocaleString('en-IN')}
             </div>
-            <div>
-              ${isLendGiven && item.status !== 'paid' ? `
-                <button class="btn-wa" onclick="sendWhatsAppReminder('${item.title}', '${item.phone || ''}', ${item.amount}, '${item.date}')">
-                  💬 WhatsApp
-                </button>
-              ` : ''}
-              <span class="badge ${dueInfo.cls}" onclick="toggleStatus(${item.id})">
+          </div>
+          <div class="item-actions">
+            <div class="badges-group">
+              <span class="badge ${dueInfo.cls}" onclick="toggleStatus(${item.id}, event)">
                 ${dueInfo.text}
               </span>
-              <button class="btn-del" onclick="deleteItem(${item.id})">🗑️</button>
+              <span style="font-size:10px; color:#64748b;">(टैप करें)</span>
+            </div>
+            <div>
+              ${(isShop || isLendGiven) && item.status !== 'paid' ? `
+                <button class="btn-wa" onclick="sendWhatsAppReminder(${item.id}, event)">
+                  💬 WA
+                </button>
+                <button class="btn-sms" onclick="sendSMSReminder(${item.id}, event)">
+                  📩 SMS
+                </button>
+              ` : ''}
+              <button class="btn-del" style="background:none; border:none; color:#64748b; font-size:14px;" onclick="deleteItem(${item.id}, event)">🗑️</button>
             </div>
           </div>
         `;
@@ -559,11 +889,50 @@
       });
     }
 
+    function exportToExcel() {
+      if(data.length === 0) {
+        alert(lang === 'hi' ? 'कोई हिसाब डेटा नहीं है!' : 'No data to export!');
+        return;
+      }
+
+      let csv = "\uFEFF";
+      csv += "तारीख (Date),कैटेगरी (Category),नाम / पार्टी (Name),सामान / विवरण (Item),मोबाइल नंबर (Phone),कुल राशि (₹),एडवांस (₹),स्थिति (Status)\n";
+
+      const catMap = {
+        shop_order: "दुकान आर्डर",
+        insurance: "इंश्योरेंस प्रीमियम",
+        lend_given: "उधार दिया (लेने हैं)",
+        lend_taken: "उधार लिया (देने हैं)",
+        credit_card: "क्रेडिट कार्ड",
+        utility: "बिजली/पानी बिल",
+        telecom: "फोन/रिचार्ज",
+        emi: "लोन EMI",
+        sip: "SIP/निवेश"
+      };
+
+      data.forEach(d => {
+        const cat = catMap[d.category] || d.category;
+        const itemInfo = d.itemDesc || d.policyNo || "-";
+        const phone = d.phone || "-";
+        const adv = d.advance || 0;
+        const status = d.status === 'paid' ? 'Paid / Delivered' : 'Pending';
+        csv += `"${d.date}","${cat}","${d.title}","${itemInfo}","${phone}","${d.amount}","${adv}","${status}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Kharcha_Business_Statement_${new Date().toISOString().slice(0,10)}.csv`);
+      link.click();
+    }
+
     function exportData() {
-      const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+      const backupObj = { profile, data };
+      const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj));
       const dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", jsonStr);
-      dlAnchor.setAttribute("download", `Kharcha_Lenden_Backup_${new Date().toISOString().slice(0,10)}.json`);
+      dlAnchor.setAttribute("download", `Kharcha_Ultimate_Backup_${new Date().toISOString().slice(0,10)}.json`);
       dlAnchor.click();
     }
 
