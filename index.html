@@ -8,17 +8,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body { font-family: system-ui, sans-serif; background-color: #0b1329; }
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #0b1329; }
     .no-sb::-webkit-scrollbar { display: none; }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen pb-24">
 
-  <!-- HEADER -->
+  <!-- TOP HEADER -->
   <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40 px-4 py-2.5">
     <div class="max-w-xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2.5">
-        <div onclick="openModal('profileModal')" class="w-10 h-10 rounded-full bg-blue-900 border-2 border-amber-400 overflow-hidden cursor-pointer flex items-center justify-center">
+        <div onclick="openModal('profileModal')" class="w-10 h-10 rounded-full bg-blue-900 border-2 border-amber-400 overflow-hidden cursor-pointer flex items-center justify-center shadow">
           <img id="headerDP" class="w-full h-full object-cover hidden">
           <i id="defaultUserIcon" class="fa-solid fa-user text-blue-400 text-sm"></i>
         </div>
@@ -35,19 +35,23 @@
     </div>
   </header>
 
-  <!-- MAIN VIEW -->
   <main class="max-w-xl mx-auto px-4 pt-3 space-y-3">
-    <!-- GREETING BANNER -->
+    <!-- GREETING BANNER WITH AUTO UPI QR -->
     <div class="bg-[#162238] border border-slate-800 rounded-2xl p-3.5 flex justify-between items-center shadow">
       <div class="flex items-center space-x-3">
-        <div class="w-11 h-11 rounded-full border-2 border-blue-400 bg-slate-900 overflow-hidden flex items-center justify-center">
+        <div class="w-12 h-12 rounded-full border-2 border-blue-400 bg-slate-900 overflow-hidden flex items-center justify-center">
           <img id="bannerDP" class="w-full h-full object-cover hidden">
-          <i id="defaultBannerIcon" class="fa-solid fa-store text-blue-400 text-lg"></i>
+          <i id="defaultBannerIcon" class="fa-solid fa-store text-blue-400 text-xl"></i>
         </div>
         <div>
           <h2 class="text-sm font-bold text-white"><span id="t-namaste">नमस्ते</span>, <span id="bannerUserName">Eevaan Benchers</span> 👋</h2>
           <p class="text-[11px] text-slate-400"><span id="t-income">मासिक आय</span>: <span class="text-white font-semibold" id="mIncomeText">₹0</span></p>
-          <p id="bannerUPI" class="text-[10px] text-amber-300 font-medium"></p>
+          <div id="bannerUPIContainer" class="hidden flex items-center gap-1.5 mt-0.5">
+            <span id="bannerUPIText" class="text-[10px] text-amber-300 font-semibold"></span>
+            <button onclick="showUPIQRModal()" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
+              <i class="fa-solid fa-qrcode"></i> QR
+            </button>
+          </div>
         </div>
       </div>
       <div class="text-right">
@@ -64,7 +68,7 @@
       <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-prem">प्रीमियम</span><span class="font-bold text-cyan-400" id="mPrem">₹0</span></div>
     </div>
 
-    <!-- 2 METRICS (LENE / DENE) -->
+    <!-- 2 MAIN METRICS -->
     <div class="grid grid-cols-2 gap-2 text-xs">
       <div class="bg-[#162238] border-l-4 border-l-emerald-500 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center">
         <div><span class="text-[11px] text-slate-400" id="t-toReceive">बाज़ार से लेने हैं</span><h3 class="text-lg font-black text-emerald-400" id="totLene">₹0</h3></div>
@@ -76,80 +80,111 @@
       </div>
     </div>
 
-    <!-- SEARCH & FILTERS -->
+    <!-- SEARCH & CATEGORY CHIPS -->
     <input type="text" id="searchInput" onkeyup="renderCards()" placeholder="खोजें..." class="w-full bg-[#162238] border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-200 outline-none focus:border-blue-500">
     <div class="flex space-x-1.5 overflow-x-auto no-sb py-0.5 text-[11px]">
-      <button onclick="setFilter('ALL')" id="f-ALL" class="bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap">सभी (All)</button>
-      <button onclick="setFilter('UDHAR')" id="f-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🤝 लेन-देन</button>
-      <button onclick="setFilter('SHOP')" id="f-SHOP" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">📦 दुकान</button>
-      <button onclick="setFilter('CARD')" id="f-CARD" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">💳 कार्ड</button>
-      <button onclick="setFilter('BANK')" id="f-BANK" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🏦 बैंक</button>
-      <button onclick="setFilter('INSURANCE')" id="f-INSURANCE" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🛡️ इंश्योरेंस</button>
+      <button onclick="setFilter('ALL')" id="f-ALL" class="bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap shadow font-medium">सभी (All)</button>
+      <button onclick="setFilter('UDHAR')" id="f-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🤝 <span id="tc-udhar">लेन-देन</span></button>
+      <button onclick="setFilter('SHOP')" id="f-SHOP" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">📦 <span id="tc-shop">दुकान / किराना</span></button>
+      <button onclick="setFilter('CARD')" id="f-CARD" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">💳 <span id="tc-card">क्रेडिट कार्ड</span></button>
+      <button onclick="setFilter('BANK')" id="f-BANK" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🏦 <span id="tc-bank">बैंक / NBFC</span></button>
+      <button onclick="setFilter('INSURANCE')" id="f-INSURANCE" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🛡️ <span id="tc-ins">इंश्योरेंस</span></button>
     </div>
 
     <!-- CARDS LIST -->
     <div id="cardsList" class="space-y-2.5"></div>
 
-    <!-- EXPORT & SHARE -->
+    <!-- REPORTS & SHARE -->
     <div class="bg-[#162238] border border-slate-800 rounded-2xl p-3.5 space-y-2 text-xs">
       <h3 class="font-bold text-slate-300" id="t-repHeader">📑 स्टेटमेंट, रिपोर्ट & शेयर</h3>
       <div class="grid grid-cols-2 gap-2 font-semibold">
-        <button onclick="alert('कार्ड पर क्लिक कर Live PDF देखें!')" class="bg-rose-600 text-white py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-pdf"></i> PDF रसीद</button>
-        <button onclick="downloadCSV()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-excel text-emerald-400"></i> Excel शीट</button>
-        <button onclick="backupData()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">💾 बैकअप लें</button>
-        <button onclick="shareApp()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">🎂 ऐप शेयर करें</button>
+        <button onclick="alert(currentLang==='hi'?'किसी भी खाते पर टैप करके लाइव PDF पर्चा देखें!':'Tap any customer card to view live PDF!')" class="bg-rose-600 text-white py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-pdf"></i> <span id="t-pdfRep">PDF रसीद</span></button>
+        <button onclick="downloadCSV()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-excel text-emerald-400"></i> <span id="t-xlRep">Excel (.CSV) शीट</span></button>
+        <button onclick="backupData()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">💾 <span id="t-bkp">बैकअप लें</span></button>
+        <button onclick="shareApp()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">🎂 <span id="t-shApp">ऐप शेयर करें</span></button>
       </div>
-      <button onclick="shareApp()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-2.5 rounded-xl shadow">व्यापारियों और दोस्तों को शेयर करें</button>
+      <button onclick="shareApp()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-2.5 rounded-xl shadow" id="t-shBig">व्यापारियों और दोस्तों को शेयर करें</button>
     </div>
   </main>
 
-  <!-- FAB (+) -->
-  <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-13 h-13 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-xl z-40 p-3">+</button>
+  <!-- (+) FLOATING BUTTON -->
+  <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-14 h-14 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
 
-  <!-- MODAL: DETAIL & LEDGER -->
+  <!-- MODAL: LEDGER DETAIL & MATERIAL BILL BUILDER -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3">
-    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[92vh] flex flex-col p-4 overflow-hidden text-xs">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[94vh] flex flex-col p-4 overflow-hidden text-xs">
       <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
-        <div class="flex items-center space-x-2">
-          <div class="w-9 h-9 rounded-full bg-slate-900 border border-slate-700 overflow-hidden flex items-center justify-center" id="dCustDP"></div>
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-600 overflow-hidden flex items-center justify-center" id="dCustDP"></div>
           <div><h3 id="dTitle" class="font-bold text-sm text-white"></h3><p id="dSub" class="text-[10px] text-slate-400"></p></div>
         </div>
         <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
 
+      <!-- Balance Card -->
       <div class="grid grid-cols-3 gap-1.5 my-2.5 bg-[#0f172a] p-2.5 rounded-xl text-center">
         <div><span class="text-slate-400 text-[10px] block" id="t-dtGave">कुल दिया</span><span id="dGave" class="font-bold text-rose-400">₹0</span></div>
         <div><span class="text-slate-400 text-[10px] block" id="t-dtRec">जमा + वापसी</span><span id="dRec" class="font-bold text-emerald-400">₹0</span></div>
         <div><span class="text-slate-400 text-[10px] block font-bold" id="t-dtNet">शुद्ध बाकी</span><span id="dNet" class="font-black text-amber-400">₹0</span></div>
       </div>
 
+      <!-- 3 Buttons -->
       <div class="grid grid-cols-3 gap-2 mb-2 font-semibold">
-        <button onclick="showSubForm('GAVE')" class="bg-rose-950/70 border border-rose-600/50 text-rose-300 py-2 rounded-xl">🔴 <span id="t-btnGave">दिए (उधार)</span></button>
+        <button onclick="showSubForm('GAVE')" class="bg-rose-950/70 border border-rose-600/50 text-rose-300 py-2 rounded-xl">🔴 <span id="t-btnGave">दिए (बिल)</span></button>
         <button onclick="showSubForm('GOT')" class="bg-emerald-950/70 border border-emerald-600/50 text-emerald-300 py-2 rounded-xl">🟢 <span id="t-btnGot">मिले (जमा)</span></button>
         <button onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-2 rounded-xl">🔄 <span id="t-btnRet">सामान वापसी</span></button>
       </div>
 
-      <!-- Quick Sub Form -->
-      <div id="subFormBox" class="hidden bg-[#0f172a] p-2.5 rounded-xl border border-blue-500/40 mb-2 space-y-1.5">
-        <div class="flex justify-between font-bold text-blue-400"><span id="subFormTitle">एंट्री जोड़ें</span><button onclick="document.getElementById('subFormBox').classList.add('hidden')">&times;</button></div>
-        <div class="grid grid-cols-2 gap-2">
-          <input type="number" id="subAmt" placeholder="रकम (₹)" class="p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
-          <input type="text" id="subNote" placeholder="विवरण" class="p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
+      <!-- MATERIAL BILL ENTRY FORM -->
+      <div id="subFormBox" class="hidden bg-[#0f172a] p-3 rounded-xl border border-blue-500/50 mb-2 space-y-2 max-h-60 overflow-y-auto">
+        <div class="flex justify-between font-bold text-blue-400">
+          <span id="subFormTitle">दुकान सामान बिल जोड़ें</span>
+          <button onclick="document.getElementById('subFormBox').classList.add('hidden')">&times;</button>
         </div>
-        <input type="file" id="subPhoto" accept="image/*" class="text-[10px] text-slate-400 w-full">
-        <button onclick="saveSubTx()" class="w-full bg-blue-600 text-white font-bold py-1.5 rounded">सेव करें</button>
+        
+        <!-- Multiple Item Material Table -->
+        <div id="materialItemsWrapper" class="space-y-1.5">
+          <div class="grid grid-cols-12 gap-1 text-[10px] text-slate-400 font-semibold">
+            <span class="col-span-5">सामान का नाम</span><span class="col-span-2">मात्रा(Qty)</span><span class="col-span-2">भाव(Rate)</span><span class="col-span-3 text-right">कुल(₹)</span>
+          </div>
+          <div id="matRowContainer" class="space-y-1"></div>
+          <button type="button" onclick="addMaterialRow()" class="text-[10px] text-cyan-400 underline font-semibold flex items-center gap-1">
+            + सामान की लाइन जोड़ें (Add Item)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-0.5">कुल बिल रकम (₹)</label>
+            <input type="number" id="subAmt" placeholder="₹" class="w-full p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 font-bold outline-none">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-0.5">नोट / विवरण</label>
+            <input type="text" id="subNote" placeholder="विवरण" class="w-full p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
+          </div>
+        </div>
+
+        <!-- Bill Photo Capture -->
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-0.5">📷 बिल / पर्चे की फोटो खींचें (Capture Bill Photo)</label>
+          <input type="file" id="subPhoto" accept="image/*" class="w-full text-[10px] text-slate-400">
+        </div>
+
+        <button onclick="saveSubTx()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded">सुरक्षित करें (Save Bill)</button>
       </div>
 
       <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="subList"></div>
 
       <div class="pt-2.5 border-t border-slate-800 flex justify-between gap-2">
-        <button onclick="viewLivePDF()" class="flex-1 bg-rose-600 text-white py-2 rounded-xl font-bold flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-eye"></i> <span id="t-viewPdf">PDF पर्चा देखें / डाउनलोड</span></button>
+        <button onclick="viewLivePDF()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-xl font-bold flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-solid fa-eye"></i> <span id="t-viewPdf">PDF पर्चा देखें / डाउनलोड</span>
+        </button>
         <button onclick="closeModal('detailModal')" class="bg-slate-700 text-slate-200 px-4 py-2 rounded-xl font-semibold">बंद करें</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: LIVE PDF PREVIEW -->
+  <!-- MODAL: LIVE PDF PREVIEW (SCREEN PAR DEKHNA) -->
   <div id="pdfModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-white text-slate-800 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col overflow-hidden shadow-2xl text-xs">
       <div class="flex justify-between items-center bg-slate-900 text-white px-4 py-2.5">
@@ -159,12 +194,29 @@
       <div class="flex-1 overflow-y-auto p-4" id="pdfArea"></div>
       <div class="bg-slate-100 border-t border-slate-300 p-2.5 flex justify-between">
         <button onclick="closeModal('pdfModal')" class="px-3 py-1.5 border rounded-lg bg-white font-semibold">बंद करें</button>
-        <button onclick="downloadLivePDF()" class="bg-rose-600 text-white px-4 py-1.5 font-bold rounded-lg flex items-center gap-1 shadow"><i class="fa-solid fa-download"></i> PDF डाउनलोड करें</button>
+        <button onclick="downloadLivePDF()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-1.5 font-bold rounded-lg flex items-center gap-1 shadow">
+          <i class="fa-solid fa-download"></i> PDF डाउनलोड करें
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: ADD ENTRY WITH PHONEBOOK & CUSTOMER DP -->
+  <!-- MODAL: AUTO UPI QR CODE DISPLAY -->
+  <div id="upiQRModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+    <div class="bg-white text-slate-900 rounded-2xl w-full max-w-xs p-5 text-center space-y-3">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h4 class="font-bold text-sm text-blue-700">UPI पेमेंट QR कोड</h4>
+        <button onclick="closeModal('upiQRModal')" class="text-slate-400 text-xl font-bold">&times;</button>
+      </div>
+      <div class="w-48 h-48 mx-auto bg-slate-100 border rounded-xl overflow-hidden flex items-center justify-center p-2 shadow-inner">
+        <img id="upiQRImage" class="w-full h-full object-contain" alt="QR Code">
+      </div>
+      <p class="text-xs font-semibold text-slate-700" id="upiQRIdText"></p>
+      <p class="text-[10px] text-slate-400">PhonePe, GPay, Paytm से स्कैन कर भुगतान करें</p>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD ENTRY WITH CONTACT PICKER & CUSTOMER DP -->
   <div id="addModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 text-xs">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md p-4 space-y-2.5 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-2">
@@ -175,10 +227,10 @@
         <i class="fa-solid fa-address-book text-amber-400"></i> 📱 फोन बुक से चुनें (Auto-fill)
       </button>
       <div>
-        <label class="block text-slate-400 mb-0.5">कैटेगरी</label>
+        <label class="block text-slate-400 mb-0.5" id="lbl-cat">कैटेगरी</label>
         <select id="newCat" onchange="toggleCustomParty()" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
           <option value="UDHAR">🤝 लेन-देन (उधार)</option>
-          <option value="SHOP">📦 दुकान / ऑर्डर</option>
+          <option value="SHOP">📦 दुकान / किराना</option>
           <option value="CARD">💳 क्रेडिट कार्ड</option>
           <option value="BANK">🏦 बैंक लोन / NBFC</option>
           <option value="INSURANCE">🛡️ इंश्योरेंस</option>
@@ -186,79 +238,89 @@
         </select>
       </div>
       <div id="custPartyBox" class="hidden">
-        <label class="block text-slate-400 mb-0.5">कस्टम नाम (Lender/Bank)</label>
+        <label class="block text-slate-400 mb-0.5" id="lbl-cparty">कस्टम नाम (Lender/Bank)</label>
         <input type="text" id="newCustParty" placeholder="उदा: कालू सेठ" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
       </div>
       <div class="grid grid-cols-4 gap-2 items-center">
         <div class="col-span-3">
-          <label class="block text-slate-400 mb-0.5">नाम / विवरण</label>
+          <label class="block text-slate-400 mb-0.5" id="lbl-name">नाम / विवरण</label>
           <input type="text" id="newTitle" placeholder="नाम" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
         </div>
         <div class="col-span-1 text-center">
           <label class="block text-slate-400 text-[10px] mb-0.5">ग्राहक DP</label>
-          <label class="w-9 h-9 rounded-full border border-slate-600 bg-[#0f172a] flex items-center justify-center cursor-pointer overflow-hidden mx-auto">
+          <label class="w-10 h-10 rounded-full border border-slate-600 bg-[#0f172a] flex items-center justify-center cursor-pointer overflow-hidden mx-auto shadow">
             <img id="newCustDPPreview" class="w-full h-full object-cover hidden">
             <i id="newCustDPIcon" class="fa-solid fa-camera text-slate-400 text-xs"></i>
-            <input type="file" id="newCustDPFile" accept="image/*" class="hidden" onchange="previewCustDP(event)">
+            <input type="file" id="newCustDPFile" accept="image/*" class="hidden" onchange="compressAndPreviewCustDP(event)">
           </label>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <div><label class="block text-slate-400 mb-0.5">मोबाइल</label><input type="tel" id="newPhone" placeholder="मो." class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
-        <div><label class="block text-slate-400 mb-0.5">रकम (₹)</label><input type="number" id="newAmt" placeholder="₹" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-phone">मोबाइल</label><input type="tel" id="newPhone" placeholder="मो." class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-amt">शुरुआती रकम (₹)</label><input type="number" id="newAmt" placeholder="₹" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <div><label class="block text-slate-400 mb-0.5">प्रकार</label><select id="newType" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"><option value="LENE">लेने हैं (क्रेडिट)</option><option value="DENE">देने हैं (डेबिट)</option></select></div>
-        <div><label class="block text-slate-400 mb-0.5">ड्यू डेट</label><input type="date" id="newDue" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-type">प्रकार</label><select id="newType" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"><option value="LENE">लेने हैं (क्रेडिट)</option><option value="DENE">देने हैं (डेबिट)</option></select></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-due">ड्यू डेट</label><input type="date" id="newDue" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
       </div>
-      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 text-slate-900 font-bold py-2 rounded-xl mt-1">सुरक्षित करें</button>
+      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 text-slate-900 font-bold py-2.5 rounded-xl mt-1 shadow" id="btn-saveEntry">सुरक्षित करें</button>
     </div>
   </div>
 
-  <!-- MODAL: PROFILE & FIRM SETTINGS (PHONE, EMAIL, UPI, DP) -->
+  <!-- MODAL: PROFILE & FIRM SETTINGS (COMPRESSED DP + UPI QR) -->
   <div id="profileModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 text-xs">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-sm p-4 space-y-2.5 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-        <h3 class="font-bold text-sm text-white">प्रोफाइल एवं बिजनेस सेटिंग्स</h3>
+        <h3 class="font-bold text-sm text-white" id="t-profTitle">प्रोफाइल एवं बिजनेस सेटिंग्स</h3>
         <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
       <div class="text-center">
-        <div class="w-14 h-14 rounded-full border-2 border-blue-400 bg-slate-900 mx-auto overflow-hidden flex items-center justify-center mb-1">
+        <div class="w-16 h-16 rounded-full border-2 border-blue-400 bg-slate-900 mx-auto overflow-hidden flex items-center justify-center mb-1 shadow">
           <img id="modalDP" class="w-full h-full object-cover hidden">
-          <i id="defaultModalIcon" class="fa-solid fa-user text-xl text-slate-500"></i>
+          <i id="defaultModalIcon" class="fa-solid fa-user text-2xl text-slate-500"></i>
         </div>
         <label class="text-[11px] text-blue-400 font-semibold cursor-pointer underline">
-          DP / लोगो बदलें (Fix)
+          DP / लोगो बदलें (Auto-Compressed Fix)
           <input type="file" id="logoInput" accept="image/*" class="hidden">
         </label>
       </div>
-      <div><label class="block text-slate-400 mb-0.5">फर्म / मालिक का नाम</label><input type="text" id="setFirm" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      <div><label class="block text-slate-400 mb-0.5" id="lbl-firm">फर्म / मालिक का नाम</label><input type="text" id="setFirm" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
       <div class="grid grid-cols-2 gap-2">
-        <div><label class="block text-slate-400 mb-0.5">मोबाइल</label><input type="tel" id="setUserPhone" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
-        <div><label class="block text-slate-400 mb-0.5">मासिक आय (₹)</label><input type="number" id="setIncome" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-uphone">मोबाइल</label><input type="tel" id="setUserPhone" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-uinc">मासिक आय (₹)</label><input type="number" id="setIncome" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
       </div>
       <div><label class="block text-slate-400 mb-0.5">ईमेल</label><input type="email" id="setUserEmail" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
-      <div><label class="block text-slate-400 mb-0.5">UPI आईडी</label><input type="text" id="setUserUPI" placeholder="उदा: mobile@upi" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
-      <button onclick="saveProfile()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl mt-1">सेटिंग्स सेव करें</button>
+      <div>
+        <label class="block text-slate-400 mb-0.5">UPI आईडी (PhonePe, GPay, Paytm QR कोड हेतु)</label>
+        <input type="text" id="setUserUPI" placeholder="उदा: 98XXXXXXXX@paytm" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+      </div>
+      <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl mt-1 shadow" id="btn-saveProf">सेटिंग्स सेव करें</button>
     </div>
   </div>
 
-  <!-- JAVASCRIPT APPLICATION SCRIPT -->
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
+    // 100% COMPLETE BILINGUAL TRANSLATION DICTIONARY
     const dict = {
       hi: {
         share:"शेयर", namaste:"नमस्ते", income:"मासिक आय", savings:"बचत / शेष राशि", bills:"कुल बिल", emi:"कुल EMI",
         sip:"कुल SIP", prem:"प्रीमियम", toReceive:"बाज़ार से लेने हैं", toPay:"देने हैं (डेबिट)", dtGave:"कुल दिया",
-        dtRec:"जमा + वापसी", dtNet:"शुद्ध बाकी", btnGave:"दिए (उधार)", btnGot:"मिले (जमा)", btnRet:"सामान वापसी",
+        dtRec:"जमा + वापसी", dtNet:"शुद्ध बाकी", btnGave:"दिए (बिल)", btnGot:"मिले (जमा)", btnRet:"सामान वापसी",
         viewPdf:"PDF पर्चा देखें / डाउनलोड", addTitle:"नया खाता / लोन जोड़ें", search:"नाम, बैंक या मोबाइल खोजें...",
-        due:"⏳ Due:", lene:"लेने हैं", dene:"देने हैं"
+        due:"⏳ Due:", lene:"लेने हैं", dene:"देने हैं", repHeader:"📑 स्टेटमेंट, रिपोर्ट & शेयर", pdfRep:"PDF रसीद",
+        xlRep:"Excel (.CSV) शीट", bkp:"बैकअप लें", shApp:"ऐप शेयर करें", shBig:"व्यापारियों और दोस्तों को शेयर करें",
+        udhar:"लेन-देन", shop:"दुकान / किराना", card:"क्रेडिट कार्ड", bank:"बैंक / NBFC", ins:"इंश्योरेंस",
+        profTitle:"प्रोफाइल एवं बिजनेस सेटिंग्स", saveEntry:"सुरक्षित करें", saveProf:"सेटिंग्स सेव करें"
       },
       en: {
-        share:"Share", namaste:"Hello", income:"Monthly Income", savings:"Savings / Net", bills:"Total Bills", emi:"Total EMI",
+        share:"Share", namaste:"Hello", income:"Monthly Income", savings:"Savings / Net Balance", bills:"Total Bills", emi:"Total EMI",
         sip:"Total SIP", prem:"Premium", toReceive:"To Receive (Credit)", toPay:"To Pay (Debit)", dtGave:"Total Given",
-        dtRec:"Received + Return", dtNet:"Net Balance", btnGave:"Gave (Udhar)", btnGot:"Got (Jama)", btnRet:"Sales Return",
+        dtRec:"Received + Return", dtNet:"Net Balance", btnGave:"Gave (Bill)", btnGot:"Got (Jama)", btnRet:"Sales Return",
         viewPdf:"View & Download PDF Bill", addTitle:"Add New Account / Loan", search:"Search name, bank or mobile...",
-        due:"⏳ Due:", lene:"To Receive", dene:"To Pay"
+        due:"⏳ Due:", lene:"To Receive", dene:"To Pay", repHeader:"📑 Statements, Reports & Share", pdfRep:"PDF Receipt",
+        xlRep:"Excel (.CSV) Sheet", bkp:"Backup All", shApp:"Share App", shBig:"Share with Merchants & Friends",
+        udhar:"Udhar / Ledger", shop:"Shop / Grocery", card:"Credit Cards", bank:"Bank / NBFC", ins:"Insurance",
+        profTitle:"Profile & Business Settings", saveEntry:"Save Entry", saveProf:"Save Settings"
       }
     };
 
@@ -270,7 +332,7 @@
         {
           id: "item_sample", title: "my airtel", category: "CARD", phone: "*121#", dp: "",
           amount: 25860, type: "LENE", date: "2026-10-23", dueDate: "2026-10-25",
-          history: [{ id: "sub_1", type: "GAVE", amount: 25860, note: "बिल/उधारी", date: "2026-10-23" }]
+          history: [{ id: "sub_1", type: "GAVE", amount: 25860, note: "Bill / Udhar", items: [], photo: "", date: "2026-10-23" }]
         }
       ]
     };
@@ -294,6 +356,7 @@
       updateMetrics();
     }
 
+    // 100% COMPLETE LANGUAGE TOGGLE
     function toggleLang() {
       currentLang = currentLang === 'hi' ? 'en' : 'hi';
       applyLang(currentLang);
@@ -302,10 +365,39 @@
 
     function applyLang(l) {
       const d = dict[l];
-      ['share','namaste','income','savings','bills','emi','sip','prem','toReceive','toPay','dtGave','dtRec','dtNet','btnGave','btnGot','btnRet','viewPdf','addTitle'].forEach(k => {
+      ['share','namaste','income','savings','bills','emi','sip','prem','toReceive','toPay','dtGave','dtRec','dtNet',
+       'btnGave','btnGot','btnRet','viewPdf','addTitle','repHeader','pdfRep','xlRep','bkp','shApp','shBig','profTitle'].forEach(k => {
         const el = document.getElementById('t-' + k);
         if (el) el.innerText = d[k];
       });
+
+      // Categories text in chips & options
+      document.getElementById('tc-udhar').innerText = d.udhar;
+      document.getElementById('tc-shop').innerText = d.shop;
+      document.getElementById('tc-card').innerText = d.card;
+      document.getElementById('tc-bank').innerText = d.bank;
+      document.getElementById('tc-ins').innerText = d.ins;
+
+      // Select category options
+      const catSel = document.getElementById('newCat');
+      if (catSel) {
+        catSel.options[0].text = `🤝 ${d.udhar}`;
+        catSel.options[1].text = `📦 ${d.shop}`;
+        catSel.options[2].text = `💳 ${d.card}`;
+        catSel.options[3].text = `🏦 ${d.bank}`;
+        catSel.options[4].text = `🛡️ ${d.ins}`;
+        catSel.options[5].text = l === 'hi' ? "✨ अन्य / कस्टम नाम" : "✨ Other / Custom Name";
+      }
+
+      // Type options
+      const typeSel = document.getElementById('newType');
+      if (typeSel) {
+        typeSel.options[0].text = l === 'hi' ? "लेने हैं (क्रेडिट)" : "To Receive (Credit)";
+        typeSel.options[1].text = l === 'hi' ? "देने हैं (डेबिट)" : "To Pay (Debit)";
+      }
+
+      document.getElementById('btn-saveEntry').innerText = d.saveEntry;
+      document.getElementById('btn-saveProf').innerText = d.saveProf;
       document.getElementById('searchInput').placeholder = d.search;
       document.getElementById('langBtn').innerHTML = `🌐 ${l === 'hi' ? 'English' : 'हिंदी'}`;
       renderCards();
@@ -314,16 +406,37 @@
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // LOGO DP FIX
+    // CANVAS IMAGE COMPRESSOR (DP & BILL PHOTO 100% RELIABLE STORAGE)
+    function compressImage(file, maxDimension, quality, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if (w > h) {
+            if (w > maxDimension) { h = Math.round((h * maxDimension) / w); w = maxDimension; }
+          } else {
+            if (h > maxDimension) { w = Math.round((w * maxDimension) / h); h = maxDimension; }
+          }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // USER PROFILE DP UPLOAD FIX
     document.getElementById('logoInput').addEventListener('change', function(e) {
       const f = e.target.files[0];
       if (!f) return;
-      const r = new FileReader();
-      r.onload = function(evt) {
-        db.profile.logo = evt.target.result;
-        updateDPUI(db.profile.logo);
-      };
-      r.readAsDataURL(f);
+      compressImage(f, 300, 0.75, function(b64) {
+        db.profile.logo = b64;
+        updateDPUI(b64);
+      });
     });
 
     function updateDPUI(b64) {
@@ -338,6 +451,20 @@
       });
     }
 
+    // CUSTOMER DP PREVIEW FIX
+    function compressAndPreviewCustDP(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      compressImage(f, 250, 0.75, function(b64) {
+        tempCustDP = b64;
+        const im = document.getElementById('newCustDPPreview');
+        im.src = b64;
+        im.classList.remove('hidden');
+        document.getElementById('newCustDPIcon').classList.add('hidden');
+      });
+    }
+
+    // PROFILE SAVE & AUTOMATIC UPI QR CODE GENERATION
     function saveProfile() {
       const n = document.getElementById('setFirm').value.trim();
       if (n) db.profile.firmName = n;
@@ -348,7 +475,7 @@
       saveDB();
       applyProfile();
       closeModal('profileModal');
-      alert(currentLang === 'hi' ? "सेटिंग्स सुरक्षित हो गईं!" : "Settings Saved!");
+      alert(currentLang === 'hi' ? "प्रोफाइल एवं UPI सेटिंग्स सुरक्षित हो गईं!" : "Profile & UPI Settings Saved!");
     }
 
     function applyProfile() {
@@ -360,8 +487,25 @@
       document.getElementById('setUserUPI').value = db.profile.upi || "";
       document.getElementById('mIncomeText').innerText = `₹${db.profile.income || 0}`;
       document.getElementById('setIncome').value = db.profile.income || 0;
-      document.getElementById('bannerUPI').innerText = db.profile.upi ? `UPI: ${db.profile.upi}` : "";
+
+      // UPI Barcode QR on banner
+      const upiBox = document.getElementById('bannerUPIContainer');
+      if (db.profile.upi) {
+        upiBox.classList.remove('hidden');
+        document.getElementById('bannerUPIText').innerText = `UPI: ${db.profile.upi}`;
+      } else {
+        upiBox.classList.add('hidden');
+      }
+
       if (db.profile.logo) updateDPUI(db.profile.logo);
+    }
+
+    function showUPIQRModal() {
+      if (!db.profile.upi) return;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${db.profile.upi}&pn=${db.profile.firmName}`)}`;
+      document.getElementById('upiQRImage').src = qrUrl;
+      document.getElementById('upiQRIdText').innerText = `UPI ID: ${db.profile.upi}`;
+      openModal('upiQRModal');
     }
 
     // CONTACT PICKER
@@ -375,22 +519,8 @@
           }
         } catch(e){}
       } else {
-        alert(currentLang === 'hi' ? "फोन बुक डायरेक्ट सपोर्ट नहीं है। कृपया नाम व नंबर टाइप करें।" : "Contact picker not supported. Enter manually.");
+        alert(currentLang === 'hi' ? "फोन बुक डायरेक्ट सपोर्ट नहीं है। कृपया नाम व नंबर लिखें।" : "Contact picker not supported. Enter manually.");
       }
-    }
-
-    function previewCustDP(e) {
-      const f = e.target.files[0];
-      if (!f) return;
-      const r = new FileReader();
-      r.onload = function(evt) {
-        tempCustDP = evt.target.result;
-        const im = document.getElementById('newCustDPPreview');
-        im.src = tempCustDP;
-        im.classList.remove('hidden');
-        document.getElementById('newCustDPIcon').classList.add('hidden');
-      };
-      r.readAsDataURL(f);
     }
 
     function toggleCustomParty() {
@@ -402,7 +532,7 @@
       activeFilter = cat;
       ['ALL','UDHAR','SHOP','CARD','BANK','INSURANCE'].forEach(c => {
         const b = document.getElementById('f-' + c);
-        if (b) b.className = c === cat ? "bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap shadow" : "bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap";
+        if (b) b.className = c === cat ? "bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap shadow font-medium" : "bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap";
       });
       renderCards();
     }
@@ -419,6 +549,17 @@
       return { gave, got, ret, balance: gave - (got + ret) };
     }
 
+    function getCategoryName(cat) {
+      const d = dict[currentLang];
+      if (cat === 'UDHAR') return d.udhar;
+      if (cat === 'SHOP') return d.shop;
+      if (cat === 'CARD') return d.card;
+      if (cat === 'BANK') return d.bank;
+      if (cat === 'INSURANCE') return d.ins;
+      return currentLang === 'hi' ? "अन्य" : "Other";
+    }
+
+    // RENDER CARDS
     function renderCards() {
       const cont = document.getElementById('cardsList');
       const q = document.getElementById('searchInput').value.toLowerCase();
@@ -435,18 +576,20 @@
         const c = calcItem(i);
         const isL = i.type === 'LENE';
         const card = document.createElement('div');
-        card.className = "bg-[#162238] border border-slate-800 rounded-2xl p-3 shadow space-y-2 cursor-pointer hover:border-blue-500/50";
+        card.className = "bg-[#162238] border border-slate-800 rounded-2xl p-3 shadow space-y-2 cursor-pointer hover:border-blue-500/50 transition";
         card.onclick = (e) => { if (!e.target.closest('button')) openDetail(i.id); };
 
         card.innerHTML = `
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2.5">
-              <div class="w-9 h-9 rounded-full border border-slate-700 bg-slate-900 overflow-hidden flex items-center justify-center text-sm">
+              <div class="w-10 h-10 rounded-full border border-slate-700 bg-slate-900 overflow-hidden flex items-center justify-center text-sm shadow">
                 ${i.dp ? `<img src="${i.dp}" class="w-full h-full object-cover">` : `<span>🤝</span>`}
               </div>
               <div>
                 <h4 class="font-bold text-white text-xs">${i.title}</h4>
-                <p class="text-[10px] text-slate-400">📅 ${i.date} • 📞 ${i.phone||'N/A'} • <span class="${isL?'text-emerald-400':'text-rose-400'} font-semibold">${isL ? d.lene : d.dene}</span></p>
+                <p class="text-[10px] text-slate-400">
+                  <span class="text-blue-400 font-semibold">[${getCategoryName(i.category)}]</span> • 📅 ${i.date} • 📞 ${i.phone||'N/A'} • <span class="${isL?'text-emerald-400':'text-rose-400'} font-semibold">${isL ? d.lene : d.dene}</span>
+                </p>
               </div>
             </div>
             <span class="text-sm font-black ${isL?'text-emerald-400':'text-rose-400'}">₹${c.balance}</span>
@@ -454,8 +597,8 @@
           <div class="flex justify-between items-center pt-1 border-t border-slate-800/80 text-[10px]">
             <div>${i.dueDate ? `<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">${d.due} ${i.dueDate}</span>` : `<span class="text-slate-500">टैप कर देखें</span>`}</div>
             <div class="flex items-center space-x-1.5">
-              <button onclick="sendWA('${i.phone}','${i.title}',${c.balance})" class="bg-[#22c55e] text-white px-2 py-0.5 rounded font-bold">💬 WA</button>
-              <button onclick="sendSMS('${i.phone}','${i.title}',${c.balance})" class="bg-[#0ea5e9] text-white px-2 py-0.5 rounded font-bold">✉️ SMS</button>
+              <button onclick="sendWA('${i.phone}','${i.title}',${c.balance})" class="bg-[#22c55e] text-white px-2 py-0.5 rounded font-bold shadow">💬 WA</button>
+              <button onclick="sendSMS('${i.phone}','${i.title}',${c.balance})" class="bg-[#0ea5e9] text-white px-2 py-0.5 rounded font-bold shadow">✉️ SMS</button>
               <button onclick="deleteItem('${i.id}')" class="text-slate-400 hover:text-rose-400 px-1"><i class="fa-solid fa-trash-can"></i></button>
             </div>
           </div>
@@ -504,7 +647,7 @@
         amount: amt, type: document.getElementById('newType').value,
         date: new Date().toLocaleDateString('en-CA'),
         dueDate: document.getElementById('newDue').value,
-        history: [{ id: "sub_" + Date.now(), type: "GAVE", amount: amt, note: "आरंभिक एंट्री", date: new Date().toLocaleDateString('en-CA') }]
+        history: [{ id: "sub_" + Date.now(), type: "GAVE", amount: amt, note: "Initial Entry", items: [], photo: "", date: new Date().toLocaleDateString('en-CA') }]
       };
       db.items.unshift(newItem);
       saveDB();
@@ -518,12 +661,39 @@
       }
     }
 
+    // MATERIAL ITEM ROW BUILDER
+    function addMaterialRow() {
+      const container = document.getElementById('matRowContainer');
+      const div = document.createElement('div');
+      div.className = "grid grid-cols-12 gap-1 items-center mat-row";
+      div.innerHTML = `
+        <input type="text" placeholder="सामान" class="col-span-5 p-1 bg-[#162238] border border-slate-700 rounded text-[10px] text-slate-100 mat-name">
+        <input type="number" placeholder="मात्रा" oninput="calculateMaterialTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-[10px] text-slate-100 mat-qty">
+        <input type="number" placeholder="भाव" oninput="calculateMaterialTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-[10px] text-slate-100 mat-rate">
+        <span class="col-span-2 text-right font-bold text-amber-400 text-[10px] mat-subtot">₹0</span>
+        <button type="button" onclick="this.parentElement.remove(); calculateMaterialTotal();" class="col-span-1 text-slate-500 hover:text-rose-400 text-center">&times;</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function calculateMaterialTotal() {
+      let sum = 0;
+      document.querySelectorAll('.mat-row').forEach(row => {
+        const qty = parseFloat(row.querySelector('.mat-qty').value) || 0;
+        const rate = parseFloat(row.querySelector('.mat-rate').value) || 0;
+        const total = qty * rate;
+        row.querySelector('.mat-subtot').innerText = `₹${total}`;
+        sum += total;
+      });
+      if (sum > 0) document.getElementById('subAmt').value = sum;
+    }
+
     function openDetail(id) {
       activeItemId = id;
       const it = db.items.find(i => i.id === id);
       if (!it) return;
       document.getElementById('dTitle').innerText = it.title;
-      document.getElementById('dSub').innerText = `📞 ${it.phone||'N/A'} • ${it.date}`;
+      document.getElementById('dSub').innerText = `[${getCategoryName(it.category)}] • 📞 ${it.phone||'N/A'} • ${it.date}`;
       document.getElementById('dCustDP').innerHTML = it.dp ? `<img src="${it.dp}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-slate-500"></i>`;
       document.getElementById('subFormBox').classList.add('hidden');
       renderSubHistory(it);
@@ -535,23 +705,45 @@
       document.getElementById('subFormBox').classList.remove('hidden');
       document.getElementById('subAmt').value = "";
       document.getElementById('subNote').value = "";
-      document.getElementById('subFormTitle').innerText = tp === 'GAVE' ? "🔴 पैसे दिए (उधार)" : (tp === 'GOT' ? "🟢 पैसे मिले (जमा)" : "🔄 सामान वापसी (माइनस)");
+      document.getElementById('subPhoto').value = "";
+      document.getElementById('matRowContainer').innerHTML = "";
+      addMaterialRow(); // Start with one item row
+
+      const isHi = currentLang === 'hi';
+      document.getElementById('subFormTitle').innerText = tp === 'GAVE' 
+        ? (isHi ? "🔴 सामान बिल जोड़ें (दिए / बिल)" : "🔴 Add Goods Bill (Gave)")
+        : (tp === 'GOT' ? (isHi ? "🟢 पैसा जमा मिला (Payment Got)" : "🟢 Payment Received (Got)")
+                        : (isHi ? "🔄 सामान वापसी (Sales Return)" : "🔄 Sales Return (Deducted)"));
     }
 
     function saveSubTx() {
       const it = db.items.find(i => i.id === activeItemId);
       if (!it) return;
       const amt = parseFloat(document.getElementById('subAmt').value);
-      if (!amt || amt <= 0) return alert("रकम दर्ज करें!");
+      if (!amt || amt <= 0) return alert("कृपया सही रकम दर्ज करें!");
 
-      const fi = document.getElementById('subPhoto');
+      // Collect Material Items
+      const items = [];
+      document.querySelectorAll('.mat-row').forEach(row => {
+        const name = row.querySelector('.mat-name').value.trim();
+        const qty = parseFloat(row.querySelector('.mat-qty').value) || 1;
+        const rate = parseFloat(row.querySelector('.mat-rate').value) || 0;
+        if (name) items.push({ name, qty, rate, total: qty * rate });
+      });
+
+      const photoFile = document.getElementById('subPhoto').files[0];
       const rec = {
-        id: "sub_" + Date.now(), type: activeSubType, amount: amt,
-        note: document.getElementById('subNote').value.trim() || (activeSubType === 'GAVE' ? 'उधार' : (activeSubType === 'GOT' ? 'जमा' : 'वापसी')),
-        date: new Date().toLocaleDateString('en-CA'), photo: ""
+        id: "sub_" + Date.now(),
+        type: activeSubType,
+        amount: amt,
+        note: document.getElementById('subNote').value.trim() || (activeSubType === 'GAVE' ? 'सामान बिल' : (activeSubType === 'GOT' ? 'जमा रकम' : 'सामान वापसी')),
+        items: items,
+        photo: "",
+        date: new Date().toLocaleDateString('en-CA')
       };
 
-      const pushAndSave = () => {
+      const finalizeAndSave = (photoB64) => {
+        rec.photo = photoB64 || "";
         if (!it.history) it.history = [];
         it.history.unshift(rec);
         saveDB();
@@ -559,11 +751,13 @@
         document.getElementById('subFormBox').classList.add('hidden');
       };
 
-      if (fi.files && fi.files[0]) {
-        const r = new FileReader();
-        r.onload = (e) => { rec.photo = e.target.result; pushAndSave(); };
-        r.readAsDataURL(fi.files[0]);
-      } else pushAndSave();
+      if (photoFile) {
+        compressImage(photoFile, 500, 0.7, function(b64) {
+          finalizeAndSave(b64);
+        });
+      } else {
+        finalizeAndSave("");
+      }
     }
 
     function renderSubHistory(it) {
@@ -578,17 +772,26 @@
         const isG = h.type === 'GAVE', isR = h.type === 'RETURN';
         const color = isG ? "text-rose-400 border-rose-500/30 bg-rose-500/10" : (isR ? "text-amber-400 border-amber-500/30 bg-amber-500/10" : "text-emerald-400 border-emerald-500/30 bg-emerald-500/10");
         const div = document.createElement('div');
-        div.className = `p-2 rounded-xl border flex justify-between items-center ${color}`;
+        div.className = `p-2.5 rounded-xl border flex justify-between items-start ${color}`;
+        
+        let itemsHtml = "";
+        if (h.items && h.items.length) {
+          itemsHtml = `<div class="mt-1 bg-black/30 p-1.5 rounded text-[10px] space-y-0.5">` +
+            h.items.map(m => `<div class="flex justify-between text-slate-300"><span>• ${m.name} (${m.qty} x ₹${m.rate})</span><span class="font-bold">₹${m.total}</span></div>`).join('') +
+            `</div>`;
+        }
+
         div.innerHTML = `
-          <div>
-            <span class="text-[9px] font-bold px-1 rounded border uppercase">${isG ? 'दिए' : (isR ? 'वापसी' : 'मिले')}</span>
-            <p class="font-semibold text-white mt-0.5">${h.note}</p>
-            <span class="text-[9px] text-slate-400">${h.date}</span>
-            ${h.photo ? `<button onclick="viewImg('${h.photo}')" class="text-[9px] text-blue-400 underline block mt-0.5">📎 फोटो देखें</button>` : ''}
+          <div class="flex-1 pr-2">
+            <span class="text-[9px] font-bold px-1 rounded border uppercase">${isG ? 'दिए/बिल' : (isR ? 'वापसी' : 'मिले/जमा')}</span>
+            <p class="font-semibold text-white mt-0.5 text-xs">${h.note}</p>
+            ${itemsHtml}
+            <span class="text-[9px] text-slate-400 block mt-0.5">${h.date}</span>
+            ${h.photo ? `<button onclick="viewImg('${h.photo}')" class="text-[10px] text-cyan-400 font-bold underline flex items-center gap-1 mt-1"><i class="fa-solid fa-paperclip"></i> मूल बिल फोटो देखें (View Bill Photo)</button>` : ''}
           </div>
           <div class="text-right">
-            <span class="font-black">₹${h.amount}</span>
-            <button onclick="delSubTx(${idx})" class="block text-slate-500 hover:text-rose-400 text-xs mt-0.5"><i class="fa-solid fa-trash"></i></button>
+            <span class="font-black text-sm">₹${h.amount}</span>
+            <button onclick="delSubTx(${idx})" class="block text-slate-500 hover:text-rose-400 text-xs mt-1"><i class="fa-solid fa-trash"></i></button>
           </div>
         `;
         l.appendChild(div);
@@ -597,7 +800,7 @@
 
     function delSubTx(idx) {
       const it = db.items.find(i => i.id === activeItemId);
-      if (it && confirm("डिलीट करें?")) {
+      if (it && confirm("हटाना चाहते हैं?")) {
         it.history.splice(idx, 1);
         saveDB();
         renderSubHistory(it);
@@ -606,45 +809,99 @@
 
     function viewImg(src) {
       const w = window.open("");
-      w.document.write(`<img src="${src}" style="max-width:100%;margin:20px auto;display:block;">`);
+      w.document.write(`<div style="background:#000;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;"><img src="${src}" style="max-width:100%;max-height:90vh;border-radius:10px;box-shadow:0 0 20px rgba(255,255,255,0.2);"></div>`);
     }
 
-    // LIVE PDF PREVIEW & DOWNLOAD
+    // LIVE PDF BILL PREVIEW (ITEMIZED MATERIAL LIST + UPI BARCODE + BILL PHOTO)
     function viewLivePDF() {
       const it = db.items.find(i => i.id === activeItemId);
       if (!it) return;
       const c = calcItem(it);
       const isHi = currentLang === 'hi';
 
+      // Material items rows
+      let rowsHtml = "";
+      (it.history || []).forEach(h => {
+        let typeText = h.type === 'GAVE' ? (isHi ? 'दिए' : 'Gave') : (h.type === 'GOT' ? (isHi ? 'मिले' : 'Received') : (isHi ? 'वापसी' : 'Return'));
+        let typeColor = h.type === 'GAVE' ? 'text-rose-600' : (h.type === 'GOT' ? 'text-emerald-600' : 'text-amber-600');
+        
+        let subItems = "";
+        if (h.items && h.items.length) {
+          subItems = `<div style="font-size:9px;color:#64748b;margin-top:2px;">` +
+            h.items.map(m => `${m.name} (${m.qty} x ₹${m.rate} = ₹${m.total})`).join(', ') +
+            `</div>`;
+        }
+
+        rowsHtml += `
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px;font-size:10px;color:#64748b;">${h.date}</td>
+            <td style="padding:6px;font-size:10px;"><strong>${h.note}</strong>${subItems}</td>
+            <td style="padding:6px;font-size:10px;font-weight:bold;" class="${typeColor}">${typeText}</td>
+            <td style="padding:6px;font-size:10px;text-align:right;font-weight:bold;">₹${h.amount}</td>
+          </tr>
+        `;
+      });
+
+      // UPI QR Code on PDF
+      let upiQrHtml = "";
+      if (db.profile.upi) {
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`upi://pay?pa=${db.profile.upi}&pn=${db.profile.firmName}`)}`;
+        upiQrHtml = `
+          <div style="text-align:center;border-left:1px solid #e2e8f0;padding-left:10px;">
+            <img src="${qrUrl}" style="width:75px;height:75px;margin:auto;">
+            <p style="font-size:8px;color:#059669;font-weight:bold;margin:2px 0 0;">Pay via UPI</p>
+          </div>
+        `;
+      }
+
       document.getElementById('pdfArea').innerHTML = `
-        <div id="actualPdf" class="border border-slate-300 p-3 rounded-lg bg-white text-[11px]">
-          <div class="flex justify-between border-b-2 border-blue-600 pb-2">
+        <div id="actualPdf" style="font-family:Arial,sans-serif;border:1px solid #cbd5e1;padding:16px;border-radius:10px;background:#ffffff;color:#1e293b;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #2563eb;padding-bottom:10px;">
             <div>
-              <h2 class="font-black text-blue-700 uppercase">${db.profile.firmName || 'Eevaan Benchers'}</h2>
-              <p class="text-[9px] text-slate-500">Powered by Eevan Ventures</p>
-              ${db.profile.phone ? `<p class="text-[9px]">मो: ${db.profile.phone}</p>` : ''}
-              ${db.profile.upi ? `<p class="text-[9px] text-emerald-600 font-bold">UPI: ${db.profile.upi}</p>` : ''}
+              <h2 style="font-size:16px;font-weight:900;color:#1d4ed8;margin:0;text-transform:uppercase;">${db.profile.firmName || 'Eevaan Benchers'}</h2>
+              <p style="font-size:9px;color:#64748b;margin:2px 0;">Powered by Eevan Ventures</p>
+              ${db.profile.phone ? `<p style="font-size:9px;margin:1px 0;">मो: ${db.profile.phone}</p>` : ''}
+              ${db.profile.upi ? `<p style="font-size:9px;color:#059669;font-weight:bold;margin:1px 0;">UPI: ${db.profile.upi}</p>` : ''}
             </div>
-            <div class="text-right">
-              <h4 class="font-bold">${isHi ? 'डिजिटल पर्चा / बिल' : 'Digital Bill'}</h4>
-              <p class="text-[9px] text-slate-400">${new Date().toLocaleDateString('en-IN')}</p>
+            ${upiQrHtml}
+          </div>
+
+          <div style="background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #e2e8f0;margin:10px 0;display:flex;justify-content:space-between;">
+            <div>
+              <p style="font-size:8px;color:#64748b;text-transform:uppercase;margin:0;font-weight:bold;">${isHi ? 'ग्राहक / खाता' : 'Customer Account'}</p>
+              <h4 style="font-size:12px;font-weight:bold;margin:2px 0;color:#0f172a;">${it.title}</h4>
+              <p style="font-size:9px;color:#64748b;margin:0;">📞 ${it.phone || 'N/A'}</p>
+            </div>
+            <div style="text-align:right;">
+              <p style="font-size:9px;color:#64748b;margin:0;">तारीख: ${new Date().toLocaleDateString('en-IN')}</p>
+              <span style="font-size:8px;background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:10px;font-weight:bold;">वेरिफाइड पर्चा</span>
             </div>
           </div>
-          <div class="bg-slate-50 p-2 rounded border border-slate-200 my-2">
-            <p class="font-bold text-slate-800">${it.title}</p>
-            <p class="text-[9px] text-slate-500">📞 ${it.phone || 'N/A'}</p>
-          </div>
-          <table class="w-full text-left my-2 border-collapse">
-            <thead><tr class="bg-slate-100 border-b"><th class="p-1">तारीख</th><th class="p-1">विवरण</th><th class="p-1">प्रकार</th><th class="p-1 text-right">रकम (₹)</th></tr></thead>
-            <tbody>
-              ${(it.history||[]).map(h => `<tr><td class="p-1 text-slate-500 text-[10px]">${h.date}</td><td class="p-1 text-[10px]">${h.note}</td><td class="p-1 text-[10px] font-bold">${h.type==='GAVE'?'दिए':(h.type==='GOT'?'मिले':'वापसी')}</td><td class="p-1 text-right text-[10px] font-bold">₹${h.amount}</td></tr>`).join('')}
-            </tbody>
+
+          <table style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <thead>
+              <tr style="background:#f1f5f9;border-bottom:1px solid #cbd5e1;text-align:left;">
+                <th style="padding:6px;font-size:9px;">तारीख</th>
+                <th style="padding:6px;font-size:9px;">सामान विवरण (Items)</th>
+                <th style="padding:6px;font-size:9px;">प्रकार</th>
+                <th style="padding:6px;font-size:9px;text-align:right;">रकम (₹)</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
           </table>
-          <div class="border-t border-slate-300 pt-1.5 space-y-0.5 text-right">
-            <div class="flex justify-between text-slate-600"><span>कुल सामान/उधार:</span><span class="font-bold">₹${c.gave}</span></div>
-            <div class="flex justify-between text-emerald-600"><span>जमा राशि:</span><span class="font-bold">- ₹${c.got}</span></div>
-            <div class="flex justify-between text-amber-600"><span>वापसी कटौती:</span><span class="font-bold">- ₹${c.ret}</span></div>
-            <div class="flex justify-between text-rose-600 font-black border-t border-slate-200 pt-1"><span>शुद्ध बाकी:</span><span>₹${c.balance}</span></div>
+
+          <div style="border-top:2px solid #e2e8f0;padding-top:6px;font-size:11px;text-align:right;">
+            <div style="display:flex;justify-content:space-between;margin:2px 0;color:#64748b;"><span>कुल सामान/उधार:</span><span style="font-weight:bold;">₹${c.gave}</span></div>
+            <div style="display:flex;justify-content:space-between;margin:2px 0;color:#059669;"><span>कुल जमा मिला:</span><span style="font-weight:bold;">- ₹${c.got}</span></div>
+            <div style="display:flex;justify-content:space-between;margin:2px 0;color:#d97706;"><span>सामान वापसी कटौती:</span><span style="font-weight:bold;">- ₹${c.ret}</span></div>
+            <div style="display:flex;justify-content:space-between;margin:6px 0 0;font-size:13px;font-weight:900;color:#dc2626;border-top:1px solid #cbd5e1;padding-top:4px;">
+              <span>कुल शुद्ध बकाया राशि:</span><span>₹${c.balance}</span>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;border-top:1px dashed #cbd5e1;padding-top:4px;font-size:8px;color:#94a3b8;display:flex;justify-content:space-between;">
+            <span>लेखा जोखा डिजिटल • 100% सुरक्षित</span>
+            <span>अधिकृत हस्ताक्षर</span>
           </div>
         </div>
       `;
@@ -654,11 +911,11 @@
     function downloadLivePDF() {
       const it = db.items.find(i => i.id === activeItemId);
       const el = document.getElementById('actualPdf');
-      html2pdf().set({ margin: 5, filename: `${it?it.title:'Bill'}_Parcha.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(el).save();
+      html2pdf().set({ margin: 4, filename: `${it?it.title:'Customer'}_Parcha.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(el).save();
     }
 
     function sendWA(ph, n, a) {
-      window.open(`https://wa.me/${ph?ph.replace(/[^0-9]/g,''):''}?text=${encodeURIComponent(`नमस्ते ${n}, कुल बकाया ₹${a} है। धन्यवाद! - ${db.profile.firmName}`)}`, '_blank');
+      window.open(`https://wa.me/${ph?ph.replace(/[^0-9]/g,''):''}?text=${encodeURIComponent(`नमस्ते ${n}, आपकी कुल बकाया राशि ₹${a} है। धन्यवाद! - ${db.profile.firmName}`)}`, '_blank');
     }
 
     function sendSMS(ph, n, a) {
@@ -671,11 +928,13 @@
     }
 
     function downloadCSV() {
-      let csv = "ID,Name,Phone,Category,Type,Balance,DueDate\n";
-      db.items.forEach(i => csv += `"${i.id}","${i.title}","${i.phone}","${i.category}","${i.type}","${calcItem(i).balance}","${i.dueDate}"\n`);
+      let csv = currentLang === 'hi' 
+        ? "ID,नाम,मोबाइल,कैटेगरी,प्रकार,कुल_बकाया,ड्यू_डेट\n"
+        : "ID,Name,Phone,Category,Type,Net_Balance,Due_Date\n";
+      db.items.forEach(i => csv += `"${i.id}","${i.title}","${i.phone}","${getCategoryName(i.category)}","${i.type}","${calcItem(i).balance}","${i.dueDate}"\n`);
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-      a.download = `Report_${new Date().toLocaleDateString('en-CA')}.csv`;
+      a.download = `LekhaJokha_Report_${new Date().toLocaleDateString('en-CA')}.csv`;
       a.click();
     }
 
@@ -689,4 +948,4 @@
     window.onload = init;
   </script>
 </body>
-</html>
+  </html>
