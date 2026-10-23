@@ -4,862 +4,688 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eevaan Benchers - Powered by Eevan Ventures</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- html2pdf for PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #0b1329; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    body { font-family: system-ui, sans-serif; background-color: #0b1329; }
+    .no-sb::-webkit-scrollbar { display: none; }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen pb-24">
 
-  <!-- TOP HEADER -->
-  <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40 px-4 py-3">
+  <!-- HEADER -->
+  <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40 px-4 py-2.5">
     <div class="max-w-xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <!-- Logo / Icon -->
-        <div id="headerLogoBox" class="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-500/40 flex items-center justify-center overflow-hidden">
-          <i id="defaultCalcIcon" class="fa-solid fa-calculator text-blue-400 text-lg"></i>
-          <img id="customLogoImg" class="w-full h-full object-cover hidden" alt="Logo">
+      <div class="flex items-center space-x-2.5">
+        <div onclick="openModal('profileModal')" class="w-10 h-10 rounded-full bg-blue-900 border-2 border-amber-400 overflow-hidden cursor-pointer flex items-center justify-center">
+          <img id="headerDP" class="w-full h-full object-cover hidden">
+          <i id="defaultUserIcon" class="fa-solid fa-user text-blue-400 text-sm"></i>
         </div>
         <div>
-          <h1 id="appFirmTitle" class="text-base font-bold text-white tracking-wide">Eevaan Benchers</h1>
-          <p class="text-[11px] text-amber-400 flex items-center gap-1 font-medium">
-            <i class="fa-solid fa-bolt text-[10px]"></i> Powered by Eevan Ventures
-          </p>
+          <h1 id="appFirmTitle" class="text-sm font-bold text-white leading-tight">Eevaan Benchers</h1>
+          <p class="text-[10px] text-amber-400 font-medium">⚡ Powered by Eevan Ventures</p>
         </div>
       </div>
-
-      <!-- Header Action Buttons -->
-      <div class="flex items-center space-x-2">
-        <button onclick="shareApp()" class="bg-[#1e293b] hover:bg-slate-700 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1 text-slate-200">
-          🎂 शेयर
-        </button>
-        <button onclick="toggleLang()" class="bg-[#1e293b] hover:bg-slate-700 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1 text-slate-200">
-          <i class="fa-solid fa-globe text-blue-400 text-[10px]"></i> English
-        </button>
-        <button onclick="openModal('profileModal')" class="w-8 h-8 rounded-full bg-blue-600/40 text-blue-300 border border-blue-500/50 flex items-center justify-center text-sm shadow">
-          <i class="fa-solid fa-user"></i>
-        </button>
+      <div class="flex items-center space-x-1.5 text-xs">
+        <button onclick="shareApp()" class="bg-[#1e293b] px-2.5 py-1.5 rounded-lg border border-slate-700">🎂 <span id="t-share">शेयर</span></button>
+        <button onclick="toggleLang()" id="langBtn" class="bg-[#1e293b] px-2.5 py-1.5 rounded-lg border border-slate-700 font-semibold text-blue-300">🌐 English</button>
+        <button onclick="openModal('profileModal')" class="w-8 h-8 rounded-full bg-blue-900/60 text-blue-300 border border-blue-500/50 flex items-center justify-center"><i class="fa-solid fa-gear"></i></button>
       </div>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-xl mx-auto px-4 pt-4 space-y-4">
-
+  <!-- MAIN VIEW -->
+  <main class="max-w-xl mx-auto px-4 pt-3 space-y-3">
     <!-- GREETING BANNER -->
-    <div class="bg-[#162238] border border-slate-800 rounded-2xl p-4 flex justify-between items-center shadow-md">
-      <div>
-        <h2 class="text-base font-bold text-white flex items-center gap-1.5">
-          नमस्ते, <span id="bannerUserName">Eevaan Benchers</span> 👋
-        </h2>
-        <p class="text-xs text-slate-400 mt-0.5">मासिक आय: <span class="text-slate-200 font-semibold" id="monthlyIncomeText">₹0</span></p>
+    <div class="bg-[#162238] border border-slate-800 rounded-2xl p-3.5 flex justify-between items-center shadow">
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 rounded-full border-2 border-blue-400 bg-slate-900 overflow-hidden flex items-center justify-center">
+          <img id="bannerDP" class="w-full h-full object-cover hidden">
+          <i id="defaultBannerIcon" class="fa-solid fa-store text-blue-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-white"><span id="t-namaste">नमस्ते</span>, <span id="bannerUserName">Eevaan Benchers</span> 👋</h2>
+          <p class="text-[11px] text-slate-400"><span id="t-income">मासिक आय</span>: <span class="text-white font-semibold" id="mIncomeText">₹0</span></p>
+          <p id="bannerUPI" class="text-[10px] text-amber-300 font-medium"></p>
+        </div>
       </div>
       <div class="text-right">
-        <span class="text-[11px] text-slate-400">बचत / शेष राशि</span>
-        <p class="text-lg font-black text-emerald-400" id="netSavingsTotal">₹0</p>
+        <span class="text-[10px] text-slate-400" id="t-savings">बचत / शेष राशि</span>
+        <p class="text-base font-black text-emerald-400" id="netSavings">₹0</p>
       </div>
     </div>
 
-    <!-- METRICS GRID 1 (4 BOXES) -->
-    <div class="grid grid-cols-4 gap-2">
-      <div class="bg-[#162238] border border-slate-800 p-2.5 rounded-xl text-center">
-        <span class="text-[10px] text-slate-400 block">कुल बिल</span>
-        <span class="text-xs font-bold text-rose-400" id="mTotalBills">₹0</span>
+    <!-- 4 METRICS -->
+    <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-bills">कुल बिल</span><span class="font-bold text-rose-400" id="mBills">₹0</span></div>
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-emi">कुल EMI</span><span class="font-bold text-amber-400" id="mEMI">₹0</span></div>
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-sip">कुल SIP</span><span class="font-bold text-emerald-400" id="mSIP">₹0</span></div>
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-prem">प्रीमियम</span><span class="font-bold text-cyan-400" id="mPrem">₹0</span></div>
+    </div>
+
+    <!-- 2 METRICS (LENE / DENE) -->
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="bg-[#162238] border-l-4 border-l-emerald-500 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center">
+        <div><span class="text-[11px] text-slate-400" id="t-toReceive">बाज़ार से लेने हैं</span><h3 class="text-lg font-black text-emerald-400" id="totLene">₹0</h3></div>
+        <span class="text-xl">🤝</span>
       </div>
-      <div class="bg-[#162238] border border-slate-800 p-2.5 rounded-xl text-center">
-        <span class="text-[10px] text-slate-400 block">कुल EMI</span>
-        <span class="text-xs font-bold text-amber-400" id="mTotalEMI">₹0</span>
-      </div>
-      <div class="bg-[#162238] border border-slate-800 p-2.5 rounded-xl text-center">
-        <span class="text-[10px] text-slate-400 block">कुल SIP</span>
-        <span class="text-xs font-bold text-emerald-400" id="mTotalSIP">₹0</span>
-      </div>
-      <div class="bg-[#162238] border border-slate-800 p-2.5 rounded-xl text-center">
-        <span class="text-[10px] text-slate-400 block">प्रीमियम</span>
-        <span class="text-xs font-bold text-cyan-400" id="mTotalPremium">₹0</span>
+      <div class="bg-[#162238] border-l-4 border-l-rose-500 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center">
+        <div><span class="text-[11px] text-slate-400" id="t-toPay">देने हैं (डेबिट)</span><h3 class="text-lg font-black text-rose-400" id="totDene">₹0</h3></div>
+        <span class="text-xl">🤲</span>
       </div>
     </div>
 
-    <!-- METRICS GRID 2 (Lene Hain vs Dene Hain) -->
-    <div class="grid grid-cols-2 gap-3">
-      <!-- Lene Hain (Credit) -->
-      <div class="bg-[#162238] border-l-4 border-l-emerald-500 border border-slate-800 rounded-xl p-3 flex justify-between items-center shadow-sm">
-        <div>
-          <span class="text-xs text-slate-400 font-medium">बाज़ार से लेने हैं (क्रेडिट)</span>
-          <h3 class="text-xl font-black text-emerald-400 mt-0.5" id="totalLeneHain">₹0</h3>
-        </div>
-        <span class="text-2xl text-emerald-500/80">🤝</span>
+    <!-- SEARCH & FILTERS -->
+    <input type="text" id="searchInput" onkeyup="renderCards()" placeholder="खोजें..." class="w-full bg-[#162238] border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-200 outline-none focus:border-blue-500">
+    <div class="flex space-x-1.5 overflow-x-auto no-sb py-0.5 text-[11px]">
+      <button onclick="setFilter('ALL')" id="f-ALL" class="bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap">सभी (All)</button>
+      <button onclick="setFilter('UDHAR')" id="f-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🤝 लेन-देन</button>
+      <button onclick="setFilter('SHOP')" id="f-SHOP" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">📦 दुकान</button>
+      <button onclick="setFilter('CARD')" id="f-CARD" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">💳 कार्ड</button>
+      <button onclick="setFilter('BANK')" id="f-BANK" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🏦 बैंक</button>
+      <button onclick="setFilter('INSURANCE')" id="f-INSURANCE" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🛡️ इंश्योरेंस</button>
+    </div>
+
+    <!-- CARDS LIST -->
+    <div id="cardsList" class="space-y-2.5"></div>
+
+    <!-- EXPORT & SHARE -->
+    <div class="bg-[#162238] border border-slate-800 rounded-2xl p-3.5 space-y-2 text-xs">
+      <h3 class="font-bold text-slate-300" id="t-repHeader">📑 स्टेटमेंट, रिपोर्ट & शेयर</h3>
+      <div class="grid grid-cols-2 gap-2 font-semibold">
+        <button onclick="alert('कार्ड पर क्लिक कर Live PDF देखें!')" class="bg-rose-600 text-white py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-pdf"></i> PDF रसीद</button>
+        <button onclick="downloadCSV()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-excel text-emerald-400"></i> Excel शीट</button>
+        <button onclick="backupData()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">💾 बैकअप लें</button>
+        <button onclick="shareApp()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">🎂 ऐप शेयर करें</button>
       </div>
-
-      <!-- Dene Hain (Debit) -->
-      <div class="bg-[#162238] border-l-4 border-l-rose-500 border border-slate-800 rounded-xl p-3 flex justify-between items-center shadow-sm">
-        <div>
-          <span class="text-xs text-slate-400 font-medium">देने हैं (डेबिट)</span>
-          <h3 class="text-xl font-black text-rose-400 mt-0.5" id="totalDeneHain">₹0</h3>
-        </div>
-        <span class="text-2xl text-rose-500/80">🤲</span>
-      </div>
+      <button onclick="shareApp()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-2.5 rounded-xl shadow">व्यापारियों और दोस्तों को शेयर करें</button>
     </div>
-
-    <!-- SEARCH BAR -->
-    <div class="relative">
-      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
-      <input type="text" id="searchInput" onkeyup="renderCards()" placeholder="नाम, बैंक, सामान या मोबाइल खोजें..." class="w-full bg-[#162238] border border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-blue-500">
-    </div>
-
-    <!-- HORIZONTAL FILTER CHIPS -->
-    <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1 text-xs">
-      <button onclick="setFilter('ALL')" id="filter-ALL" class="bg-blue-600 text-white px-3.5 py-1.5 rounded-full whitespace-nowrap font-medium shadow">सभी (All)</button>
-      <button onclick="setFilter('SHOP')" id="filter-SHOP" class="bg-[#162238] text-slate-300 border border-slate-700/60 px-3 py-1.5 rounded-full whitespace-nowrap">📦 दुकान / ऑर्डर</button>
-      <button onclick="setFilter('INSURANCE')" id="filter-INSURANCE" class="bg-[#162238] text-slate-300 border border-slate-700/60 px-3 py-1.5 rounded-full whitespace-nowrap">🛡️ इंश्योरेंस</button>
-      <button onclick="setFilter('UDHAR')" id="filter-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-700/60 px-3 py-1.5 rounded-full whitespace-nowrap">🤝 लेन-देन (उधार)</button>
-      <button onclick="setFilter('CARD')" id="filter-CARD" class="bg-[#162238] text-slate-300 border border-slate-700/60 px-3 py-1.5 rounded-full whitespace-nowrap">💳 क्रेडिट कार्ड</button>
-      <button onclick="setFilter('BANK')" id="filter-BANK" class="bg-[#162238] text-slate-300 border border-slate-700/60 px-3 py-1.5 rounded-full whitespace-nowrap">🏦 बैंक / NBFC</button>
-    </div>
-
-    <!-- TRANSACTIONS LIST CONTAINER -->
-    <div id="cardsContainer" class="space-y-3">
-      <!-- Dynamic Item Cards -->
-    </div>
-
-    <!-- STATEMENT, REPORT & SHARE SECTION -->
-    <div class="bg-[#162238] border border-slate-800 rounded-2xl p-4 space-y-3">
-      <h3 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-        📑 स्टेटमेंट, रिपोर्ट & शेयर
-      </h3>
-      
-      <!-- 2x2 Grid Buttons -->
-      <div class="grid grid-cols-2 gap-2">
-        <button onclick="openMasterPDFReport()" class="bg-[#dc2626] hover:bg-rose-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow">
-          <i class="fa-solid fa-file-pdf"></i> Khatabook PDF रसीद
-        </button>
-        <button onclick="downloadCSVReport()" class="bg-[#1e293b] hover:bg-slate-700 border border-slate-700 text-slate-200 py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow">
-          <i class="fa-solid fa-file-excel text-emerald-400"></i> Excel (.CSV) शीट
-        </button>
-        <button onclick="exportBackupData()" class="bg-[#1e293b] hover:bg-slate-700 border border-slate-700 text-slate-200 py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5">
-          💾 पूरा बैकअप लें
-        </button>
-        <button onclick="shareApp()" class="bg-[#1e293b] hover:bg-slate-700 border border-slate-700 text-slate-200 py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5">
-          🎂 ऐप शेयर करें
-        </button>
-      </div>
-
-      <!-- Big Blue Share Button -->
-      <button onclick="shareApp()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg flex items-center justify-center gap-2">
-        🎂 व्यापारियों और दोस्तों को शेयर करें
-      </button>
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="text-center py-4 text-slate-500 text-[11px] space-y-1">
-      <p>Powered by <span class="text-blue-400 font-semibold">Eevaan Ventures</span></p>
-      <p>100% सुरक्षित और स्वदेशी | Made in India 🇮🇳</p>
-    </footer>
-
   </main>
 
-  <!-- FLOATING ACTION BUTTON (+) -->
-  <button onclick="openAddEntryModal()" class="fixed right-6 bottom-6 w-14 h-14 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40 transition-transform active:scale-95">
-    +
-  </button>
+  <!-- FAB (+) -->
+  <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-13 h-13 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-xl z-40 p-3">+</button>
 
-  <!-- ==================== MODALS ==================== -->
-
-  <!-- 1. ENTRY DETAIL & LEDGER (दिया / लिया / सामान वापसी) -->
-  <div id="entryDetailModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3">
-    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[92vh] flex flex-col p-4 overflow-hidden">
-      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-        <div>
-          <h3 id="detailTitle" class="font-bold text-base text-white">ग्राहक / खाता विवरण</h3>
-          <p id="detailSubtitle" class="text-xs text-slate-400"></p>
+  <!-- MODAL: DETAIL & LEDGER -->
+  <div id="detailModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[92vh] flex flex-col p-4 overflow-hidden text-xs">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
+        <div class="flex items-center space-x-2">
+          <div class="w-9 h-9 rounded-full bg-slate-900 border border-slate-700 overflow-hidden flex items-center justify-center" id="dCustDP"></div>
+          <div><h3 id="dTitle" class="font-bold text-sm text-white"></h3><p id="dSub" class="text-[10px] text-slate-400"></p></div>
         </div>
-        <button onclick="closeModal('entryDetailModal')" class="text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+        <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
 
-      <!-- Balance Card -->
-      <div class="grid grid-cols-3 gap-2 my-3 bg-[#0f172a] p-3 rounded-xl border border-slate-800 text-center text-xs">
-        <div>
-          <span class="text-slate-400 text-[10px] block">कुल दिया</span>
-          <span id="detailGaveTotal" class="font-bold text-rose-400">₹0</span>
-        </div>
-        <div>
-          <span class="text-slate-400 text-[10px] block">जमा + वापसी</span>
-          <span id="detailReceivedTotal" class="font-bold text-emerald-400">₹0</span>
-        </div>
-        <div>
-          <span class="text-slate-400 text-[10px] block font-bold">शुद्ध बाकी (Net)</span>
-          <span id="detailNetBalance" class="font-black text-amber-400 text-sm">₹0</span>
-        </div>
+      <div class="grid grid-cols-3 gap-1.5 my-2.5 bg-[#0f172a] p-2.5 rounded-xl text-center">
+        <div><span class="text-slate-400 text-[10px] block" id="t-dtGave">कुल दिया</span><span id="dGave" class="font-bold text-rose-400">₹0</span></div>
+        <div><span class="text-slate-400 text-[10px] block" id="t-dtRec">जमा + वापसी</span><span id="dRec" class="font-bold text-emerald-400">₹0</span></div>
+        <div><span class="text-slate-400 text-[10px] block font-bold" id="t-dtNet">शुद्ध बाकी</span><span id="dNet" class="font-black text-amber-400">₹0</span></div>
       </div>
 
-      <!-- Action: Quick Add Transaction -->
-      <div class="grid grid-cols-3 gap-2 mb-3 text-xs font-semibold">
-        <button onclick="openSubTxForm('GAVE')" class="bg-rose-600/30 text-rose-300 border border-rose-500/40 py-2 rounded-xl flex items-center justify-center gap-1">
-          + और दिया (उधार)
-        </button>
-        <button onclick="openSubTxForm('GOT')" class="bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 py-2 rounded-xl flex items-center justify-center gap-1">
-          - पैसा मिला (जमा)
-        </button>
-        <button onclick="openSubTxForm('RETURN')" class="bg-amber-600/30 text-amber-300 border border-amber-500/40 py-2 rounded-xl flex items-center justify-center gap-1">
-          🔄 सामान वापसी
-        </button>
+      <div class="grid grid-cols-3 gap-2 mb-2 font-semibold">
+        <button onclick="showSubForm('GAVE')" class="bg-rose-950/70 border border-rose-600/50 text-rose-300 py-2 rounded-xl">🔴 <span id="t-btnGave">दिए (उधार)</span></button>
+        <button onclick="showSubForm('GOT')" class="bg-emerald-950/70 border border-emerald-600/50 text-emerald-300 py-2 rounded-xl">🟢 <span id="t-btnGot">मिले (जमा)</span></button>
+        <button onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-2 rounded-xl">🔄 <span id="t-btnRet">सामान वापसी</span></button>
       </div>
 
-      <!-- Sub Transaction Input Form -->
-      <div id="subTxForm" class="hidden bg-[#0f172a] p-3 rounded-xl border border-blue-500/40 mb-3 space-y-2 text-xs">
-        <div class="flex justify-between items-center">
-          <span id="subTxFormTitle" class="font-bold text-blue-400">एंट्री जोड़ें</span>
-          <button onclick="document.getElementById('subTxForm').classList.add('hidden')" class="text-slate-400">&times;</button>
-        </div>
+      <!-- Quick Sub Form -->
+      <div id="subFormBox" class="hidden bg-[#0f172a] p-2.5 rounded-xl border border-blue-500/40 mb-2 space-y-1.5">
+        <div class="flex justify-between font-bold text-blue-400"><span id="subFormTitle">एंट्री जोड़ें</span><button onclick="document.getElementById('subFormBox').classList.add('hidden')">&times;</button></div>
         <div class="grid grid-cols-2 gap-2">
-          <input type="number" id="subTxAmount" placeholder="रकम (₹)" class="p-2 bg-[#162238] border border-slate-700 rounded-lg text-slate-100 outline-none">
-          <input type="text" id="subTxNote" placeholder="विवरण (उदा: 2L तेल / नकद)" class="p-2 bg-[#162238] border border-slate-700 rounded-lg text-slate-100 outline-none">
+          <input type="number" id="subAmt" placeholder="रकम (₹)" class="p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
+          <input type="text" id="subNote" placeholder="विवरण" class="p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
         </div>
-        <div>
-          <label class="block text-[10px] text-slate-400 mb-1">पर्चे/बिल की फोटो (वैकल्पिक)</label>
-          <input type="file" id="subTxPhoto" accept="image/*" class="text-[10px] text-slate-400 w-full">
-        </div>
-        <button onclick="saveSubTransaction()" class="w-full bg-blue-600 text-white font-bold py-1.5 rounded-lg">सुरक्षित करें</button>
+        <input type="file" id="subPhoto" accept="image/*" class="text-[10px] text-slate-400 w-full">
+        <button onclick="saveSubTx()" class="w-full bg-blue-600 text-white font-bold py-1.5 rounded">सेव करें</button>
       </div>
 
-      <!-- Sub History List -->
-      <div class="flex-1 overflow-y-auto space-y-2 pr-1" id="subTxList">
-        <!-- Rendered items -->
-      </div>
+      <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="subList"></div>
 
-      <!-- Bottom Print PDF Button -->
-      <div class="pt-3 border-t border-slate-800 flex justify-between">
-        <button onclick="downloadSingleCustomerPDF()" class="bg-rose-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow">
-          <i class="fa-solid fa-file-pdf"></i> इस खाते का PDF पर्चा डाउनलोड करें
-        </button>
-        <button onclick="closeModal('entryDetailModal')" class="bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-xs font-semibold">बंद करें</button>
+      <div class="pt-2.5 border-t border-slate-800 flex justify-between gap-2">
+        <button onclick="viewLivePDF()" class="flex-1 bg-rose-600 text-white py-2 rounded-xl font-bold flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-eye"></i> <span id="t-viewPdf">PDF पर्चा देखें / डाउनलोड</span></button>
+        <button onclick="closeModal('detailModal')" class="bg-slate-700 text-slate-200 px-4 py-2 rounded-xl font-semibold">बंद करें</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. ADD NEW MAIN ENTRY MODAL (+) -->
-  <div id="addEntryModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3">
-    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md p-5 space-y-3 max-h-[90vh] overflow-y-auto text-xs">
-      <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-        <h3 class="font-bold text-sm text-white">नया खाता / बिल / लोन जोड़ें</h3>
-        <button onclick="closeModal('addEntryModal')" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+  <!-- MODAL: LIVE PDF PREVIEW -->
+  <div id="pdfModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
+    <div class="bg-white text-slate-800 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col overflow-hidden shadow-2xl text-xs">
+      <div class="flex justify-between items-center bg-slate-900 text-white px-4 py-2.5">
+        <h4 class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-file-invoice text-rose-400"></i> डिजिटल पर्चा (Live Preview)</h4>
+        <button onclick="closeModal('pdfModal')" class="text-white font-bold text-lg">&times;</button>
       </div>
+      <div class="flex-1 overflow-y-auto p-4" id="pdfArea"></div>
+      <div class="bg-slate-100 border-t border-slate-300 p-2.5 flex justify-between">
+        <button onclick="closeModal('pdfModal')" class="px-3 py-1.5 border rounded-lg bg-white font-semibold">बंद करें</button>
+        <button onclick="downloadLivePDF()" class="bg-rose-600 text-white px-4 py-1.5 font-bold rounded-lg flex items-center gap-1 shadow"><i class="fa-solid fa-download"></i> PDF डाउनलोड करें</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- MODAL: ADD ENTRY WITH PHONEBOOK & CUSTOMER DP -->
+  <div id="addModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 text-xs">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md p-4 space-y-2.5 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+        <h3 class="font-bold text-sm text-white" id="t-addTitle">नया खाता / लोन जोड़ें</h3>
+        <button onclick="closeModal('addModal')" class="text-slate-400 text-lg font-bold">&times;</button>
+      </div>
+      <button type="button" onclick="pickContact()" class="w-full bg-indigo-900/50 border border-indigo-500/50 text-indigo-300 py-2 rounded-xl flex items-center justify-center gap-2 font-semibold">
+        <i class="fa-solid fa-address-book text-amber-400"></i> 📱 फोन बुक से चुनें (Auto-fill)
+      </button>
       <div>
-        <label class="block text-slate-400 mb-1 font-semibold">कैटेगरी चुनें</label>
-        <select id="newCategory" onchange="handleCatChange()" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
-          <option value="UDHAR">🤝 लेन-देन (उधार/ग्राहक)</option>
-          <option value="SHOP">📦 दुकान / किराना ऑर्डर</option>
+        <label class="block text-slate-400 mb-0.5">कैटेगरी</label>
+        <select id="newCat" onchange="toggleCustomParty()" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+          <option value="UDHAR">🤝 लेन-देन (उधार)</option>
+          <option value="SHOP">📦 दुकान / ऑर्डर</option>
           <option value="CARD">💳 क्रेडिट कार्ड</option>
           <option value="BANK">🏦 बैंक लोन / NBFC</option>
-          <option value="INSURANCE">🛡️ इंश्योरेंस / प्रीमियम</option>
-          <option value="OTHER">✨ अन्य / कस्टम नाम जोड़ें</option>
+          <option value="INSURANCE">🛡️ इंश्योरेंस</option>
+          <option value="OTHER">✨ अन्य / कस्टम नाम</option>
         </select>
       </div>
-
-      <!-- Custom Name Option -->
-      <div id="customPartyBox" class="hidden">
-        <label class="block text-slate-400 mb-1 font-semibold">कस्टम नाम लिखें (Lender / Party Name)</label>
-        <input type="text" id="newCustomPartyName" placeholder="उदा: कालू सेठ, शर्मा जी, निजी फायनेंस" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
+      <div id="custPartyBox" class="hidden">
+        <label class="block text-slate-400 mb-0.5">कस्टम नाम (Lender/Bank)</label>
+        <input type="text" id="newCustParty" placeholder="उदा: कालू सेठ" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
       </div>
-
-      <div>
-        <label class="block text-slate-400 mb-1 font-semibold">नाम / विवरण</label>
-        <input type="text" id="newTitle" placeholder="उदा: रमेश किराना, Airtel, HDFC Card" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
+      <div class="grid grid-cols-4 gap-2 items-center">
+        <div class="col-span-3">
+          <label class="block text-slate-400 mb-0.5">नाम / विवरण</label>
+          <input type="text" id="newTitle" placeholder="नाम" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+        </div>
+        <div class="col-span-1 text-center">
+          <label class="block text-slate-400 text-[10px] mb-0.5">ग्राहक DP</label>
+          <label class="w-9 h-9 rounded-full border border-slate-600 bg-[#0f172a] flex items-center justify-center cursor-pointer overflow-hidden mx-auto">
+            <img id="newCustDPPreview" class="w-full h-full object-cover hidden">
+            <i id="newCustDPIcon" class="fa-solid fa-camera text-slate-400 text-xs"></i>
+            <input type="file" id="newCustDPFile" accept="image/*" class="hidden" onchange="previewCustDP(event)">
+          </label>
+        </div>
       </div>
-
       <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="block text-slate-400 mb-1 font-semibold">मोबाइल नंबर (वैकल्पिक)</label>
-          <input type="tel" id="newPhone" placeholder="उदा: 98XXXXXXXX" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1 font-semibold">शुरुआती रकम (₹)</label>
-          <input type="number" id="newAmount" placeholder="₹ रकम" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
-        </div>
+        <div><label class="block text-slate-400 mb-0.5">मोबाइल</label><input type="tel" id="newPhone" placeholder="मो." class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5">रकम (₹)</label><input type="number" id="newAmt" placeholder="₹" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
       </div>
-
       <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="block text-slate-400 mb-1 font-semibold">हिसाब प्रकार</label>
-          <select id="newTxType" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
-            <option value="LENE">लेने हैं (क्रेडिट)</option>
-            <option value="DENE">देने हैं (डेबिट)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1 font-semibold">ड्यू डेट / बिल तारीख</label>
-          <input type="date" id="newDueDate" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
-        </div>
+        <div><label class="block text-slate-400 mb-0.5">प्रकार</label><select id="newType" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"><option value="LENE">लेने हैं (क्रेडिट)</option><option value="DENE">देने हैं (डेबिट)</option></select></div>
+        <div><label class="block text-slate-400 mb-0.5">ड्यू डेट</label><input type="date" id="newDue" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
       </div>
-
-      <div>
-        <label class="block text-slate-400 mb-1 font-semibold">बिल / पर्चे की फोटो खींचें</label>
-        <input type="file" id="newBillPhoto" accept="image/*" class="w-full text-slate-400 text-xs">
-      </div>
-
-      <div class="pt-2">
-        <button onclick="saveNewMainEntry()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold py-2.5 rounded-xl shadow">
-          सुरक्षित करें (Save Entry)
-        </button>
-      </div>
+      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 text-slate-900 font-bold py-2 rounded-xl mt-1">सुरक्षित करें</button>
     </div>
   </div>
 
-  <!-- 3. PROFILE & LOGO UPLOAD MODAL -->
-  <div id="profileModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-sm p-5 space-y-4 text-xs">
+  <!-- MODAL: PROFILE & FIRM SETTINGS (PHONE, EMAIL, UPI, DP) -->
+  <div id="profileModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 text-xs">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-sm p-4 space-y-2.5 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-        <h3 class="font-bold text-sm text-white">प्रोफाइल एवं वॉलपेपर / लोगो सेटिंग्स</h3>
-        <button onclick="closeModal('profileModal')" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+        <h3 class="font-bold text-sm text-white">प्रोफाइल एवं बिजनेस सेटिंग्स</h3>
+        <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
-
-      <div>
-        <label class="block text-slate-400 mb-1 font-semibold">फर्म का नाम</label>
-        <input type="text" id="setFirmName" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
-      </div>
-
-      <div>
-        <label class="block text-slate-400 mb-1 font-semibold">मासिक आय (बजट हेतु)</label>
-        <input type="number" id="setMonthlyIncome" class="w-full p-2.5 bg-[#0f172a] border border-slate-700 rounded-xl text-slate-200 outline-none">
-      </div>
-
-      <!-- Photo upload fix -->
-      <div>
-        <label class="block text-slate-400 mb-1 font-semibold">दुकान / फर्म का लोगो या वॉलपेपर (Fix)</label>
-        <div class="flex items-center gap-3">
-          <div id="profileLogoPreview" class="w-14 h-14 rounded-xl border border-slate-600 bg-[#0f172a] overflow-hidden flex items-center justify-center">
-            <i class="fa-solid fa-image text-slate-500 text-xl"></i>
-          </div>
-          <input type="file" id="logoFileInput" accept="image/*" class="text-slate-400 text-xs w-full">
+      <div class="text-center">
+        <div class="w-14 h-14 rounded-full border-2 border-blue-400 bg-slate-900 mx-auto overflow-hidden flex items-center justify-center mb-1">
+          <img id="modalDP" class="w-full h-full object-cover hidden">
+          <i id="defaultModalIcon" class="fa-solid fa-user text-xl text-slate-500"></i>
         </div>
+        <label class="text-[11px] text-blue-400 font-semibold cursor-pointer underline">
+          DP / लोगो बदलें (Fix)
+          <input type="file" id="logoInput" accept="image/*" class="hidden">
+        </label>
       </div>
-
-      <button onclick="saveProfileSettings()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow">
-        सेटिंग्स सेव करें
-      </button>
+      <div><label class="block text-slate-400 mb-0.5">फर्म / मालिक का नाम</label><input type="text" id="setFirm" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="block text-slate-400 mb-0.5">मोबाइल</label><input type="tel" id="setUserPhone" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5">मासिक आय (₹)</label><input type="number" id="setIncome" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      </div>
+      <div><label class="block text-slate-400 mb-0.5">ईमेल</label><input type="email" id="setUserEmail" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      <div><label class="block text-slate-400 mb-0.5">UPI आईडी</label><input type="text" id="setUserUPI" placeholder="उदा: mobile@upi" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      <button onclick="saveProfile()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl mt-1">सेटिंग्स सेव करें</button>
     </div>
   </div>
 
-  <!-- HIDDEN PRINTABLE INVOICE TEMPLATE FOR PDF -->
-  <div id="pdfPrintContainer" class="hidden bg-white text-slate-900 p-6 text-xs max-w-lg mx-auto">
-    <!-- Rendered dynamically during PDF export -->
-  </div>
-
-  <!-- JAVASCRIPT LOGIC -->
+  <!-- JAVASCRIPT APPLICATION SCRIPT -->
   <script>
-    // CORE STATE
-    let db = {
-      profile: {
-        firmName: "Eevaan Benchers",
-        subTitle: "Powered by Eevan Ventures",
-        monthlyIncome: 0,
-        logo: ""
+    const dict = {
+      hi: {
+        share:"शेयर", namaste:"नमस्ते", income:"मासिक आय", savings:"बचत / शेष राशि", bills:"कुल बिल", emi:"कुल EMI",
+        sip:"कुल SIP", prem:"प्रीमियम", toReceive:"बाज़ार से लेने हैं", toPay:"देने हैं (डेबिट)", dtGave:"कुल दिया",
+        dtRec:"जमा + वापसी", dtNet:"शुद्ध बाकी", btnGave:"दिए (उधार)", btnGot:"मिले (जमा)", btnRet:"सामान वापसी",
+        viewPdf:"PDF पर्चा देखें / डाउनलोड", addTitle:"नया खाता / लोन जोड़ें", search:"नाम, बैंक या मोबाइल खोजें...",
+        due:"⏳ Due:", lene:"लेने हैं", dene:"देने हैं"
       },
+      en: {
+        share:"Share", namaste:"Hello", income:"Monthly Income", savings:"Savings / Net", bills:"Total Bills", emi:"Total EMI",
+        sip:"Total SIP", prem:"Premium", toReceive:"To Receive (Credit)", toPay:"To Pay (Debit)", dtGave:"Total Given",
+        dtRec:"Received + Return", dtNet:"Net Balance", btnGave:"Gave (Udhar)", btnGot:"Got (Jama)", btnRet:"Sales Return",
+        viewPdf:"View & Download PDF Bill", addTitle:"Add New Account / Loan", search:"Search name, bank or mobile...",
+        due:"⏳ Due:", lene:"To Receive", dene:"To Pay"
+      }
+    };
+
+    let currentLang = 'hi';
+    let db = {
+      lang: 'hi',
+      profile: { firmName: "Eevaan Benchers", phone: "", email: "", upi: "", income: 0, logo: "" },
       items: [
         {
-          id: "item_airtel_sample",
-          title: "my airtel",
-          category: "CARD",
-          phone: "*121#",
-          amount: 25860,
-          type: "LENE", // LENE = बाज़ार से लेने हैं, DENE = देने हैं
-          date: "2026-10-23",
-          dueDate: "2026-10-25",
-          history: [
-            { id: "sub_1", type: "GAVE", amount: 25860, note: "बिल/उधारी", date: "2026-10-23" }
-          ]
+          id: "item_sample", title: "my airtel", category: "CARD", phone: "*121#", dp: "",
+          amount: 25860, type: "LENE", date: "2026-10-23", dueDate: "2026-10-25",
+          history: [{ id: "sub_1", type: "GAVE", amount: 25860, note: "बिल/उधारी", date: "2026-10-23" }]
         }
       ]
     };
 
-    let activeFilter = 'ALL';
-    let currentDetailItemId = null;
-    let currentSubTxType = 'GAVE';
+    let activeFilter = 'ALL', activeItemId = null, activeSubType = 'GAVE', tempCustDP = "";
 
-    // INITIALIZATION
     function init() {
-      const saved = localStorage.getItem("eevaan_benchers_master_db");
-      if(saved) {
-        try { db = JSON.parse(saved); } catch(e) { console.error(e); }
-      }
-      applyProfileUI();
+      const saved = localStorage.getItem("eevaan_benchers_db");
+      if (saved) { try { db = JSON.parse(saved); } catch(e){} }
+      currentLang = db.lang || 'hi';
+      applyLang(currentLang);
+      applyProfile();
       renderCards();
       updateMetrics();
     }
 
     function saveDB() {
-      localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db));
+      db.lang = currentLang;
+      localStorage.setItem("eevaan_benchers_db", JSON.stringify(db));
       renderCards();
       updateMetrics();
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'hi' ? 'en' : 'hi';
+      applyLang(currentLang);
+      saveDB();
+    }
+
+    function applyLang(l) {
+      const d = dict[l];
+      ['share','namaste','income','savings','bills','emi','sip','prem','toReceive','toPay','dtGave','dtRec','dtNet','btnGave','btnGot','btnRet','viewPdf','addTitle'].forEach(k => {
+        const el = document.getElementById('t-' + k);
+        if (el) el.innerText = d[k];
+      });
+      document.getElementById('searchInput').placeholder = d.search;
+      document.getElementById('langBtn').innerHTML = `🌐 ${l === 'hi' ? 'English' : 'हिंदी'}`;
+      renderCards();
     }
 
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // PROFILE & LOGO FIX
-    document.getElementById('logoFileInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
+    // LOGO DP FIX
+    document.getElementById('logoInput').addEventListener('change', function(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = function(evt) {
         db.profile.logo = evt.target.result;
-        updateLogoOnUI(db.profile.logo);
+        updateDPUI(db.profile.logo);
       };
-      reader.readAsDataURL(file);
+      r.readAsDataURL(f);
     });
 
-    function updateLogoOnUI(b64) {
-      if(b64) {
-        const logoImg = document.getElementById('customLogoImg');
-        logoImg.src = b64;
-        logoImg.classList.remove('hidden');
-        document.getElementById('defaultCalcIcon').classList.add('hidden');
-        document.getElementById('profileLogoPreview').innerHTML = `<img src="${b64}" class="w-full h-full object-cover">`;
+    function updateDPUI(b64) {
+      if (!b64) return;
+      ['headerDP','bannerDP','modalDP'].forEach(id => {
+        const img = document.getElementById(id);
+        if (img) { img.src = b64; img.classList.remove('hidden'); }
+      });
+      ['defaultUserIcon','defaultBannerIcon','defaultModalIcon'].forEach(id => {
+        const ic = document.getElementById(id);
+        if (ic) ic.classList.add('hidden');
+      });
+    }
+
+    function saveProfile() {
+      const n = document.getElementById('setFirm').value.trim();
+      if (n) db.profile.firmName = n;
+      db.profile.phone = document.getElementById('setUserPhone').value.trim();
+      db.profile.email = document.getElementById('setUserEmail').value.trim();
+      db.profile.upi = document.getElementById('setUserUPI').value.trim();
+      db.profile.income = parseFloat(document.getElementById('setIncome').value) || 0;
+      saveDB();
+      applyProfile();
+      closeModal('profileModal');
+      alert(currentLang === 'hi' ? "सेटिंग्स सुरक्षित हो गईं!" : "Settings Saved!");
+    }
+
+    function applyProfile() {
+      document.getElementById('appFirmTitle').innerText = db.profile.firmName || "Eevaan Benchers";
+      document.getElementById('bannerUserName').innerText = db.profile.firmName || "Eevaan Benchers";
+      document.getElementById('setFirm').value = db.profile.firmName || "Eevaan Benchers";
+      document.getElementById('setUserPhone').value = db.profile.phone || "";
+      document.getElementById('setUserEmail').value = db.profile.email || "";
+      document.getElementById('setUserUPI').value = db.profile.upi || "";
+      document.getElementById('mIncomeText').innerText = `₹${db.profile.income || 0}`;
+      document.getElementById('setIncome').value = db.profile.income || 0;
+      document.getElementById('bannerUPI').innerText = db.profile.upi ? `UPI: ${db.profile.upi}` : "";
+      if (db.profile.logo) updateDPUI(db.profile.logo);
+    }
+
+    // CONTACT PICKER
+    async function pickContact() {
+      if ('contacts' in navigator && 'ContactsManager' in window) {
+        try {
+          const res = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+          if (res && res[0]) {
+            if (res[0].name && res[0].name[0]) document.getElementById('newTitle').value = res[0].name[0];
+            if (res[0].tel && res[0].tel[0]) document.getElementById('newPhone').value = res[0].tel[0].replace(/[^0-9]/g, '');
+          }
+        } catch(e){}
+      } else {
+        alert(currentLang === 'hi' ? "फोन बुक डायरेक्ट सपोर्ट नहीं है। कृपया नाम व नंबर टाइप करें।" : "Contact picker not supported. Enter manually.");
       }
     }
 
-    function saveProfileSettings() {
-      const name = document.getElementById('setFirmName').value.trim();
-      const inc = parseFloat(document.getElementById('setMonthlyIncome').value) || 0;
-      if(name) db.profile.firmName = name;
-      db.profile.monthlyIncome = inc;
-      saveDB();
-      applyProfileUI();
-      closeModal('profileModal');
-      alert("प्रोफाइल और लोगो सफलतापूर्वक सुरक्षित कर दिया गया!");
+    function previewCustDP(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = function(evt) {
+        tempCustDP = evt.target.result;
+        const im = document.getElementById('newCustDPPreview');
+        im.src = tempCustDP;
+        im.classList.remove('hidden');
+        document.getElementById('newCustDPIcon').classList.add('hidden');
+      };
+      r.readAsDataURL(f);
     }
 
-    function applyProfileUI() {
-      document.getElementById('appFirmTitle').innerText = db.profile.firmName || "Eevaan Benchers";
-      document.getElementById('bannerUserName').innerText = db.profile.firmName || "Eevaan Benchers";
-      document.getElementById('setFirmName').value = db.profile.firmName || "Eevaan Benchers";
-      document.getElementById('monthlyIncomeText').innerText = `₹${db.profile.monthlyIncome || 0}`;
-      document.getElementById('setMonthlyIncome').value = db.profile.monthlyIncome || 0;
-      if(db.profile.logo) updateLogoOnUI(db.profile.logo);
+    function toggleCustomParty() {
+      const v = document.getElementById('newCat').value;
+      document.getElementById('custPartyBox').classList.toggle('hidden', v !== 'OTHER');
     }
 
-    // FILTERING
     function setFilter(cat) {
       activeFilter = cat;
-      ['ALL', 'SHOP', 'INSURANCE', 'UDHAR', 'CARD', 'BANK'].forEach(c => {
-        const btn = document.getElementById(`filter-${c}`);
-        if(btn) {
-          if(c === cat) {
-            btn.className = "bg-blue-600 text-white px-3.5 py-1.5 rounded-full whitespace-nowrap font-medium shadow";
-          } else {
-            btn.className = "bg-[#162238] text-slate-300 border border-slate-700/60 px-3 py-1.5 rounded-full whitespace-nowrap";
-          }
-        }
+      ['ALL','UDHAR','SHOP','CARD','BANK','INSURANCE'].forEach(c => {
+        const b = document.getElementById('f-' + c);
+        if (b) b.className = c === cat ? "bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap shadow" : "bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap";
       });
       renderCards();
     }
 
-    function handleCatChange() {
-      const cat = document.getElementById('newCategory').value;
-      if(cat === 'OTHER') {
-        document.getElementById('customPartyBox').classList.remove('hidden');
-      } else {
-        document.getElementById('customPartyBox').classList.add('hidden');
-      }
-    }
-
-    // CALCULATE NET PER ITEM
-    function getItemBalance(item) {
-      if(!item.history || item.history.length === 0) return item.amount || 0;
+    function calcItem(it) {
+      if (!it.history || !it.history.length) return { gave: it.amount||0, got: 0, ret: 0, balance: it.amount||0 };
       let gave = 0, got = 0, ret = 0;
-      item.history.forEach(h => {
-        const val = parseFloat(h.amount) || 0;
-        if(h.type === 'GAVE') gave += val;
-        if(h.type === 'GOT') got += val;
-        if(h.type === 'RETURN') ret += val;
+      it.history.forEach(h => {
+        const a = parseFloat(h.amount) || 0;
+        if (h.type === 'GAVE') gave += a;
+        if (h.type === 'GOT') got += a;
+        if (h.type === 'RETURN') ret += a;
       });
       return { gave, got, ret, balance: gave - (got + ret) };
     }
 
-    // RENDER ITEM CARDS
     function renderCards() {
-      const container = document.getElementById('cardsContainer');
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      container.innerHTML = "";
+      const cont = document.getElementById('cardsList');
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const d = dict[currentLang];
+      cont.innerHTML = "";
 
-      const filtered = db.items.filter(item => {
-        const matchesFilter = (activeFilter === 'ALL') || (item.category === activeFilter);
-        const matchesSearch = item.title.toLowerCase().includes(search) || 
-                              (item.phone && item.phone.toLowerCase().includes(search));
-        return matchesFilter && matchesSearch;
-      });
-
-      if(filtered.length === 0) {
-        container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">कोई रिकॉर्ड नहीं मिला। नीचे (+) बटन दबाकर नया जोड़ें।</div>`;
+      const list = db.items.filter(i => (activeFilter === 'ALL' || i.category === activeFilter) && (i.title.toLowerCase().includes(q) || (i.phone && i.phone.includes(q))));
+      if (!list.length) {
+        cont.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs">${currentLang === 'hi' ? 'कोई रिकॉर्ड नहीं मिला' : 'No records found'}</div>`;
         return;
       }
 
-      filtered.forEach((item) => {
-        const calc = getItemBalance(item);
-        const netAmt = typeof calc === 'object' ? calc.balance : calc;
-
-        const isLene = item.type === 'LENE';
-        const colorClass = isLene ? 'text-emerald-400' : 'text-rose-400';
-        const labelText = isLene ? 'लेने हैं' : 'देने हैं';
-
+      list.forEach(i => {
+        const c = calcItem(i);
+        const isL = i.type === 'LENE';
         const card = document.createElement('div');
-        card.className = "bg-[#162238] border border-slate-800 rounded-2xl p-3.5 shadow-md space-y-3 cursor-pointer hover:border-blue-500/50 transition";
-        card.onclick = (e) => {
-          if(!e.target.closest('button')) openItemDetail(item.id);
-        };
+        card.className = "bg-[#162238] border border-slate-800 rounded-2xl p-3 shadow space-y-2 cursor-pointer hover:border-blue-500/50";
+        card.onclick = (e) => { if (!e.target.closest('button')) openDetail(i.id); };
 
         card.innerHTML = `
           <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">
-                🤝
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-full border border-slate-700 bg-slate-900 overflow-hidden flex items-center justify-center text-sm">
+                ${i.dp ? `<img src="${i.dp}" class="w-full h-full object-cover">` : `<span>🤝</span>`}
               </div>
               <div>
-                <h4 class="font-bold text-white text-sm">${item.title}</h4>
-                <p class="text-[11px] text-slate-400">
-                  📅 ${item.date} • 📞 ${item.phone || 'N/A'} • <span class="${colorClass} font-semibold">${labelText}</span>
-                </p>
+                <h4 class="font-bold text-white text-xs">${i.title}</h4>
+                <p class="text-[10px] text-slate-400">📅 ${i.date} • 📞 ${i.phone||'N/A'} • <span class="${isL?'text-emerald-400':'text-rose-400'} font-semibold">${isL ? d.lene : d.dene}</span></p>
               </div>
             </div>
-            <div class="text-right">
-              <span class="text-base font-black ${colorClass}">₹${netAmt}</span>
-            </div>
+            <span class="text-sm font-black ${isL?'text-emerald-400':'text-rose-400'}">₹${c.balance}</span>
           </div>
-
-          <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-xs">
-            <!-- Due Soon Badge -->
-            <div>
-              ${item.dueDate ? `
-                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md">
-                  ⏳ Due: ${item.dueDate}
-                </span>` : `
-                <span class="text-slate-500 text-[10px]">टैप करके लेजर देखें</span>`}
-            </div>
-
-            <!-- Action buttons: WA, SMS, Delete -->
+          <div class="flex justify-between items-center pt-1 border-t border-slate-800/80 text-[10px]">
+            <div>${i.dueDate ? `<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">${d.due} ${i.dueDate}</span>` : `<span class="text-slate-500">टैप कर देखें</span>`}</div>
             <div class="flex items-center space-x-1.5">
-              <button onclick="sendWA('${item.phone}', '${item.title}', ${netAmt})" class="bg-[#22c55e] hover:bg-green-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-md flex items-center gap-1 shadow">
-                💬 WA
-              </button>
-              <button onclick="sendSMS('${item.phone}', '${item.title}', ${netAmt})" class="bg-[#0ea5e9] hover:bg-sky-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-md flex items-center gap-1 shadow">
-                ✉️ SMS
-              </button>
-              <button onclick="deleteMainItem('${item.id}')" class="text-slate-400 hover:text-rose-400 text-sm px-1.5 py-1">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
+              <button onclick="sendWA('${i.phone}','${i.title}',${c.balance})" class="bg-[#22c55e] text-white px-2 py-0.5 rounded font-bold">💬 WA</button>
+              <button onclick="sendSMS('${i.phone}','${i.title}',${c.balance})" class="bg-[#0ea5e9] text-white px-2 py-0.5 rounded font-bold">✉️ SMS</button>
+              <button onclick="deleteItem('${i.id}')" class="text-slate-400 hover:text-rose-400 px-1"><i class="fa-solid fa-trash-can"></i></button>
             </div>
           </div>
         `;
-        container.appendChild(card);
+        cont.appendChild(card);
       });
     }
 
-    // UPDATE TOP METRIC CARDS
     function updateMetrics() {
-      let lene = 0, dene = 0;
-      let bills = 0, emi = 0, sip = 0, premium = 0;
-
+      let lene = 0, dene = 0, bills = 0, emi = 0, sip = 0, prem = 0;
       db.items.forEach(i => {
-        const bal = typeof getItemBalance(i) === 'object' ? getItemBalance(i).balance : (i.amount || 0);
-        if(i.type === 'LENE') lene += bal;
-        else dene += bal;
-
-        if(i.category === 'CARD' || i.category === 'SHOP') bills += bal;
-        if(i.category === 'BANK') emi += bal;
-        if(i.category === 'INSURANCE') premium += bal;
+        const c = calcItem(i);
+        if (i.type === 'LENE') lene += c.balance; else dene += c.balance;
+        if (i.category === 'CARD' || i.category === 'SHOP') bills += c.balance;
+        if (i.category === 'BANK') emi += c.balance;
+        if (i.category === 'INSURANCE') prem += c.balance;
       });
-
-      document.getElementById('totalLeneHain').innerText = `₹${lene}`;
-      document.getElementById('totalDeneHain').innerText = `₹${dene}`;
-      document.getElementById('mTotalBills').innerText = `₹${bills}`;
-      document.getElementById('mTotalEMI').innerText = `₹${emi}`;
-      document.getElementById('mTotalSIP').innerText = `₹${sip}`;
-      document.getElementById('mTotalPremium').innerText = `₹${premium}`;
-
-      const netSavings = (db.profile.monthlyIncome || 0) + lene - dene;
-      document.getElementById('netSavingsTotal').innerText = `₹${netSavings}`;
+      document.getElementById('totLene').innerText = `₹${lene}`;
+      document.getElementById('totDene').innerText = `₹${dene}`;
+      document.getElementById('mBills').innerText = `₹${bills}`;
+      document.getElementById('mEMI').innerText = `₹${emi}`;
+      document.getElementById('mSIP').innerText = `₹${sip}`;
+      document.getElementById('mPrem').innerText = `₹${prem}`;
+      document.getElementById('netSavings').innerText = `₹${(db.profile.income||0) + lene - dene}`;
     }
 
-    // ADD MAIN ENTRY
     function openAddEntryModal() {
-      document.getElementById('newTitle').value = "";
-      document.getElementById('newPhone').value = "";
-      document.getElementById('newAmount').value = "";
-      document.getElementById('newCustomPartyName').value = "";
-      openModal('addEntryModal');
+      ['newTitle','newPhone','newAmt','newCustParty'].forEach(id => document.getElementById(id).value = "");
+      tempCustDP = "";
+      document.getElementById('newCustDPPreview').classList.add('hidden');
+      document.getElementById('newCustDPIcon').classList.remove('hidden');
+      openModal('addModal');
     }
 
-    function saveNewMainEntry() {
-      const cat = document.getElementById('newCategory').value;
-      let title = document.getElementById('newTitle').value.trim();
-      const customParty = document.getElementById('newCustomPartyName').value.trim();
-      if(cat === 'OTHER' && customParty) title = `${customParty} (${title})`;
-      if(!title) return alert("कृपया नाम दर्ज करें!");
+    function saveNewEntry() {
+      const cat = document.getElementById('newCat').value;
+      let t = document.getElementById('newTitle').value.trim();
+      const cp = document.getElementById('newCustParty').value.trim();
+      if (cat === 'OTHER' && cp) t = `${cp} (${t})`;
+      if (!t) return alert(currentLang === 'hi' ? "कृपया नाम लिखें!" : "Enter name!");
 
-      const phone = document.getElementById('newPhone').value.trim();
-      const amount = parseFloat(document.getElementById('newAmount').value) || 0;
-      const type = document.getElementById('newTxType').value;
-      const dueDate = document.getElementById('newDueDate').value;
-
+      const amt = parseFloat(document.getElementById('newAmt').value) || 0;
       const newItem = {
-        id: "item_" + Date.now(),
-        title: title,
-        category: cat,
-        phone: phone,
-        amount: amount,
-        type: type,
+        id: "item_" + Date.now(), title: t, category: cat,
+        phone: document.getElementById('newPhone').value.trim(), dp: tempCustDP,
+        amount: amt, type: document.getElementById('newType').value,
         date: new Date().toLocaleDateString('en-CA'),
-        dueDate: dueDate,
-        history: [
-          { id: "sub_" + Date.now(), type: "GAVE", amount: amount, note: "आरंभिक एंट्री", date: new Date().toLocaleDateString('en-CA') }
-        ]
+        dueDate: document.getElementById('newDue').value,
+        history: [{ id: "sub_" + Date.now(), type: "GAVE", amount: amt, note: "आरंभिक एंट्री", date: new Date().toLocaleDateString('en-CA') }]
       };
-
       db.items.unshift(newItem);
       saveDB();
-      closeModal('addEntryModal');
+      closeModal('addModal');
     }
 
-    function deleteMainItem(id) {
-      if(confirm("क्या आप इसे हटाना चाहते हैं?")) {
+    function deleteItem(id) {
+      if (confirm(currentLang === 'hi' ? "हटाना चाहते हैं?" : "Delete item?")) {
         db.items = db.items.filter(i => i.id !== id);
         saveDB();
       }
     }
 
-    // DETAIL LEDGER MODAL (दिया / जमा / वापसी)
-    function openItemDetail(id) {
-      currentDetailItemId = id;
-      const item = db.items.find(i => i.id === id);
-      if(!item) return;
-
-      document.getElementById('detailTitle').innerText = item.title;
-      document.getElementById('detailSubtitle').innerText = `मो: ${item.phone || 'N/A'} • ${item.date}`;
-      document.getElementById('subTxForm').classList.add('hidden');
-
-      renderSubHistory(item);
-      openModal('entryDetailModal');
+    function openDetail(id) {
+      activeItemId = id;
+      const it = db.items.find(i => i.id === id);
+      if (!it) return;
+      document.getElementById('dTitle').innerText = it.title;
+      document.getElementById('dSub').innerText = `📞 ${it.phone||'N/A'} • ${it.date}`;
+      document.getElementById('dCustDP').innerHTML = it.dp ? `<img src="${it.dp}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-slate-500"></i>`;
+      document.getElementById('subFormBox').classList.add('hidden');
+      renderSubHistory(it);
+      openModal('detailModal');
     }
 
-    function openSubTxForm(type) {
-      currentSubTxType = type;
-      const form = document.getElementById('subTxForm');
-      form.classList.remove('hidden');
-      document.getElementById('subTxAmount').value = "";
-      document.getElementById('subTxNote').value = "";
-
-      let tText = "+ और उधार दिया";
-      if(type === 'GOT') tText = "- पैसा जमा मिला";
-      if(type === 'RETURN') tText = "🔄 सामान वापसी (Return - घटेगा)";
-      document.getElementById('subTxFormTitle').innerText = tText;
+    function showSubForm(tp) {
+      activeSubType = tp;
+      document.getElementById('subFormBox').classList.remove('hidden');
+      document.getElementById('subAmt').value = "";
+      document.getElementById('subNote').value = "";
+      document.getElementById('subFormTitle').innerText = tp === 'GAVE' ? "🔴 पैसे दिए (उधार)" : (tp === 'GOT' ? "🟢 पैसे मिले (जमा)" : "🔄 सामान वापसी (माइनस)");
     }
 
-    function saveSubTransaction() {
-      const item = db.items.find(i => i.id === currentDetailItemId);
-      if(!item) return;
+    function saveSubTx() {
+      const it = db.items.find(i => i.id === activeItemId);
+      if (!it) return;
+      const amt = parseFloat(document.getElementById('subAmt').value);
+      if (!amt || amt <= 0) return alert("रकम दर्ज करें!");
 
-      const amt = parseFloat(document.getElementById('subTxAmount').value);
-      const note = document.getElementById('subTxNote').value.trim();
-      if(!amt || amt <= 0) return alert("कृपया सही रकम लिखें!");
-
-      if(!item.history) item.history = [];
-
-      const subRecord = {
-        id: "sub_" + Date.now(),
-        type: currentSubTxType,
-        amount: amt,
-        note: note || (currentSubTxType === 'GAVE' ? 'उधार' : (currentSubTxType === 'GOT' ? 'जमा' : 'वापसी')),
-        date: new Date().toLocaleDateString('en-CA')
+      const fi = document.getElementById('subPhoto');
+      const rec = {
+        id: "sub_" + Date.now(), type: activeSubType, amount: amt,
+        note: document.getElementById('subNote').value.trim() || (activeSubType === 'GAVE' ? 'उधार' : (activeSubType === 'GOT' ? 'जमा' : 'वापसी')),
+        date: new Date().toLocaleDateString('en-CA'), photo: ""
       };
 
-      item.history.unshift(subRecord);
-      saveDB();
-      renderSubHistory(item);
-      document.getElementById('subTxForm').classList.add('hidden');
+      const pushAndSave = () => {
+        if (!it.history) it.history = [];
+        it.history.unshift(rec);
+        saveDB();
+        renderSubHistory(it);
+        document.getElementById('subFormBox').classList.add('hidden');
+      };
+
+      if (fi.files && fi.files[0]) {
+        const r = new FileReader();
+        r.onload = (e) => { rec.photo = e.target.result; pushAndSave(); };
+        r.readAsDataURL(fi.files[0]);
+      } else pushAndSave();
     }
 
-    function renderSubHistory(item) {
-      const calc = getItemBalance(item);
-      document.getElementById('detailGaveTotal').innerText = `₹${calc.gave}`;
-      document.getElementById('detailReceivedTotal').innerText = `₹${calc.got + calc.ret}`;
-      document.getElementById('detailNetBalance').innerText = `₹${calc.balance}`;
+    function renderSubHistory(it) {
+      const c = calcItem(it);
+      document.getElementById('dGave').innerText = `₹${c.gave}`;
+      document.getElementById('dRec').innerText = `₹${c.got + c.ret}`;
+      document.getElementById('dNet').innerText = `₹${c.balance}`;
+      const l = document.getElementById('subList');
+      l.innerHTML = "";
 
-      const list = document.getElementById('subTxList');
-      list.innerHTML = "";
-
-      if(!item.history || item.history.length === 0) {
-        list.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs">कोई लेन-देन नहीं है।</div>`;
-        return;
-      }
-
-      item.history.forEach((h, index) => {
-        let tag = "उधार दिया";
-        let color = "text-rose-400 bg-rose-500/10 border-rose-500/30";
-        if(h.type === 'GOT') { tag = "जमा मिला"; color = "text-emerald-400 bg-emerald-500/10 border-emerald-500/30"; }
-        if(h.type === 'RETURN') { tag = "सामान वापसी"; color = "text-amber-400 bg-amber-500/10 border-amber-500/30"; }
-
-        const row = document.createElement('div');
-        row.className = `p-2.5 rounded-xl border flex justify-between items-center ${color}`;
-        row.innerHTML = `
+      (it.history || []).forEach((h, idx) => {
+        const isG = h.type === 'GAVE', isR = h.type === 'RETURN';
+        const color = isG ? "text-rose-400 border-rose-500/30 bg-rose-500/10" : (isR ? "text-amber-400 border-amber-500/30 bg-amber-500/10" : "text-emerald-400 border-emerald-500/30 bg-emerald-500/10");
+        const div = document.createElement('div');
+        div.className = `p-2 rounded-xl border flex justify-between items-center ${color}`;
+        div.innerHTML = `
           <div>
-            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase">${tag}</span>
-            <p class="text-xs font-semibold text-white mt-1">${h.note}</p>
-            <span class="text-[10px] text-slate-400">${h.date}</span>
+            <span class="text-[9px] font-bold px-1 rounded border uppercase">${isG ? 'दिए' : (isR ? 'वापसी' : 'मिले')}</span>
+            <p class="font-semibold text-white mt-0.5">${h.note}</p>
+            <span class="text-[9px] text-slate-400">${h.date}</span>
+            ${h.photo ? `<button onclick="viewImg('${h.photo}')" class="text-[9px] text-blue-400 underline block mt-0.5">📎 फोटो देखें</button>` : ''}
           </div>
           <div class="text-right">
-            <span class="text-sm font-black">₹${h.amount}</span>
-            <button onclick="deleteSubTx(${index})" class="block text-slate-500 hover:text-rose-400 text-xs mt-1"><i class="fa-solid fa-trash"></i></button>
+            <span class="font-black">₹${h.amount}</span>
+            <button onclick="delSubTx(${idx})" class="block text-slate-500 hover:text-rose-400 text-xs mt-0.5"><i class="fa-solid fa-trash"></i></button>
           </div>
         `;
-        list.appendChild(row);
+        l.appendChild(div);
       });
     }
 
-    function deleteSubTx(index) {
-      const item = db.items.find(i => i.id === currentDetailItemId);
-      if(!item) return;
-      if(confirm("यह एंट्री हटाना चाहते हैं?")) {
-        item.history.splice(index, 1);
+    function delSubTx(idx) {
+      const it = db.items.find(i => i.id === activeItemId);
+      if (it && confirm("डिलीट करें?")) {
+        it.history.splice(idx, 1);
         saveDB();
-        renderSubHistory(item);
+        renderSubHistory(it);
       }
     }
 
-    // WHATSAPP & SMS
-    function sendWA(phone, name, amt) {
-      const cleanPhone = phone ? phone.replace(/[^0-9]/g, '') : '';
-      const text = encodeURIComponent(`नमस्ते ${name}, आपकी कुल बकाया राशि ₹${amt} है। कृपया समय पर भुगतान करें। धन्यवाद! - ${db.profile.firmName}`);
-      window.open(`https://wa.me/${cleanPhone}?text=${text}`, '_blank');
+    function viewImg(src) {
+      const w = window.open("");
+      w.document.write(`<img src="${src}" style="max-width:100%;margin:20px auto;display:block;">`);
     }
 
-    function sendSMS(phone, name, amt) {
-      const text = encodeURIComponent(`नमस्ते ${name}, आपकी कुल बकाया राशि ₹${amt} है। - ${db.profile.firmName}`);
-      window.open(`sms:${phone}?body=${text}`, '_blank');
-    }
+    // LIVE PDF PREVIEW & DOWNLOAD
+    function viewLivePDF() {
+      const it = db.items.find(i => i.id === activeItemId);
+      if (!it) return;
+      const c = calcItem(it);
+      const isHi = currentLang === 'hi';
 
-    function shareApp() {
-      if (navigator.share) {
-        navigator.share({
-          title: db.profile.firmName,
-          text: `मेरा डिजिटल खाता बही: ${db.profile.firmName}`,
-          url: window.location.href
-        });
-      } else {
-        navigator.clipboard.writeText(window.location.href);
-        alert("ऐप का लिंक कॉपी हो गया है! दोस्तों को शेयर करें।");
-      }
-    }
-
-    // EXCEL CSV DOWNLOAD
-    function downloadCSVReport() {
-      let csv = "ID,Name,Phone,Category,Type,Net_Amount,Due_Date\n";
-      db.items.forEach(i => {
-        const bal = typeof getItemBalance(i) === 'object' ? getItemBalance(i).balance : i.amount;
-        csv += `"${i.id}","${i.title}","${i.phone}","${i.category}","${i.type}","${bal}","${i.dueDate}"\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Eevaan_Benchers_Report_${new Date().toLocaleDateString('en-CA')}.csv`;
-      a.click();
-    }
-
-    // PDF GENERATION (KHATABOOK STYLE)
-    function downloadSingleCustomerPDF() {
-      const item = db.items.find(i => i.id === currentDetailItemId);
-      if(!item) return;
-      const calc = getItemBalance(item);
-
-      const printArea = document.getElementById('pdfPrintContainer');
-      printArea.innerHTML = `
-        <div style="font-family: Arial; padding: 20px; border: 2px solid #2563eb; border-radius: 10px;">
-          <div style="display:flex; justify-content:space-between; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+      document.getElementById('pdfArea').innerHTML = `
+        <div id="actualPdf" class="border border-slate-300 p-3 rounded-lg bg-white text-[11px]">
+          <div class="flex justify-between border-b-2 border-blue-600 pb-2">
             <div>
-              <h2 style="margin:0; color:#2563eb;">${db.profile.firmName}</h2>
-              <p style="margin:2px 0; color:#64748b;">Powered by Eevan Ventures</p>
+              <h2 class="font-black text-blue-700 uppercase">${db.profile.firmName || 'Eevaan Benchers'}</h2>
+              <p class="text-[9px] text-slate-500">Powered by Eevan Ventures</p>
+              ${db.profile.phone ? `<p class="text-[9px]">मो: ${db.profile.phone}</p>` : ''}
+              ${db.profile.upi ? `<p class="text-[9px] text-emerald-600 font-bold">UPI: ${db.profile.upi}</p>` : ''}
             </div>
-            <div style="text-align:right;">
-              <h4 style="margin:0;">ग्राहक पर्चा / रसीद</h4>
-              <p style="margin:2px 0;">तारीख: ${new Date().toLocaleDateString('en-IN')}</p>
+            <div class="text-right">
+              <h4 class="font-bold">${isHi ? 'डिजिटल पर्चा / बिल' : 'Digital Bill'}</h4>
+              <p class="text-[9px] text-slate-400">${new Date().toLocaleDateString('en-IN')}</p>
             </div>
           </div>
-
-          <div style="margin: 15px 0; padding: 10px; background:#f1f5f9; border-radius: 6px;">
-            <p style="margin:0;"><strong>ग्राहक का नाम:</strong> ${item.title}</p>
-            <p style="margin:2px 0;"><strong>मोबाइल:</strong> ${item.phone || 'N/A'}</p>
+          <div class="bg-slate-50 p-2 rounded border border-slate-200 my-2">
+            <p class="font-bold text-slate-800">${it.title}</p>
+            <p class="text-[9px] text-slate-500">📞 ${it.phone || 'N/A'}</p>
           </div>
-
-          <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-            <thead>
-              <tr style="background:#e2e8f0; text-align:left;">
-                <th style="padding:8px; border:1px solid #cbd5e1;">तारीख</th>
-                <th style="padding:8px; border:1px solid #cbd5e1;">विवरण</th>
-                <th style="padding:8px; border:1px solid #cbd5e1;">प्रकार</th>
-                <th style="padding:8px; border:1px solid #cbd5e1; text-align:right;">रकम (₹)</th>
-              </tr>
-            </thead>
+          <table class="w-full text-left my-2 border-collapse">
+            <thead><tr class="bg-slate-100 border-b"><th class="p-1">तारीख</th><th class="p-1">विवरण</th><th class="p-1">प्रकार</th><th class="p-1 text-right">रकम (₹)</th></tr></thead>
             <tbody>
-              ${item.history.map(h => `
-                <tr>
-                  <td style="padding:8px; border:1px solid #cbd5e1;">${h.date}</td>
-                  <td style="padding:8px; border:1px solid #cbd5e1;">${h.note}</td>
-                  <td style="padding:8px; border:1px solid #cbd5e1;">${h.type === 'GAVE' ? 'उधार दिया' : (h.type === 'GOT' ? 'जमा किया' : 'सामान वापसी')}</td>
-                  <td style="padding:8px; border:1px solid #cbd5e1; text-align:right;">₹${h.amount}</td>
-                </tr>
-              `).join('')}
+              ${(it.history||[]).map(h => `<tr><td class="p-1 text-slate-500 text-[10px]">${h.date}</td><td class="p-1 text-[10px]">${h.note}</td><td class="p-1 text-[10px] font-bold">${h.type==='GAVE'?'दिए':(h.type==='GOT'?'मिले':'वापसी')}</td><td class="p-1 text-right text-[10px] font-bold">₹${h.amount}</td></tr>`).join('')}
             </tbody>
           </table>
-
-          <div style="margin-top:15px; text-align:right; font-size:14px;">
-            <p style="margin:3px 0;">कुल सामान/उधार: <strong>₹${calc.gave}</strong></p>
-            <p style="margin:3px 0; color:green;">कुल जमा मिला: <strong>- ₹${calc.got}</strong></p>
-            <p style="margin:3px 0; color:orange;">सामान वापसी: <strong>- ₹${calc.ret}</strong></p>
-            <h3 style="margin:6px 0; color:#dc2626; border-top:1px solid #cbd5e1; padding-top:6px;">कुल शुद्ध बकाया राशि: ₹${calc.balance}</h3>
+          <div class="border-t border-slate-300 pt-1.5 space-y-0.5 text-right">
+            <div class="flex justify-between text-slate-600"><span>कुल सामान/उधार:</span><span class="font-bold">₹${c.gave}</span></div>
+            <div class="flex justify-between text-emerald-600"><span>जमा राशि:</span><span class="font-bold">- ₹${c.got}</span></div>
+            <div class="flex justify-between text-amber-600"><span>वापसी कटौती:</span><span class="font-bold">- ₹${c.ret}</span></div>
+            <div class="flex justify-between text-rose-600 font-black border-t border-slate-200 pt-1"><span>शुद्ध बाकी:</span><span>₹${c.balance}</span></div>
           </div>
         </div>
       `;
-
-      printArea.classList.remove('hidden');
-      const opt = {
-        margin: 5,
-        filename: `${item.title}_Parcha.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(printArea).save().then(() => {
-        printArea.classList.add('hidden');
-      });
+      openModal('pdfModal');
     }
 
-    function openMasterPDFReport() {
-      alert("खाता पर्चा डाउनलोड करने के लिए सूची में किसी भी ग्राहक के कार्ड पर टैप करें और 'PDF पर्चा डाउनलोड करें' बटन दबाएं!");
+    function downloadLivePDF() {
+      const it = db.items.find(i => i.id === activeItemId);
+      const el = document.getElementById('actualPdf');
+      html2pdf().set({ margin: 5, filename: `${it?it.title:'Bill'}_Parcha.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(el).save();
     }
 
-    function exportBackupData() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `Eevaan_Backup_${new Date().toLocaleDateString('en-CA')}.json`);
-      downloadAnchor.click();
+    function sendWA(ph, n, a) {
+      window.open(`https://wa.me/${ph?ph.replace(/[^0-9]/g,''):''}?text=${encodeURIComponent(`नमस्ते ${n}, कुल बकाया ₹${a} है। धन्यवाद! - ${db.profile.firmName}`)}`, '_blank');
     }
 
-    function toggleLang() {
-      alert("English version coming soon! वर्तमान में हिंदी सक्रिय है।");
+    function sendSMS(ph, n, a) {
+      window.open(`sms:${ph}?body=${encodeURIComponent(`नमस्ते ${n}, कुल बकाया ₹${a} है। - ${db.profile.firmName}`)}`, '_blank');
     }
 
-    // Start
+    function shareApp() {
+      if (navigator.share) navigator.share({ title: db.profile.firmName, url: window.location.href });
+      else { navigator.clipboard.writeText(window.location.href); alert("लिंक कॉपी हो गया!"); }
+    }
+
+    function downloadCSV() {
+      let csv = "ID,Name,Phone,Category,Type,Balance,DueDate\n";
+      db.items.forEach(i => csv += `"${i.id}","${i.title}","${i.phone}","${i.category}","${i.type}","${calcItem(i).balance}","${i.dueDate}"\n`);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      a.download = `Report_${new Date().toLocaleDateString('en-CA')}.csv`;
+      a.click();
+    }
+
+    function backupData() {
+      const a = document.createElement('a');
+      a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+      a.download = `Backup_${new Date().toLocaleDateString('en-CA')}.json`;
+      a.click();
+    }
+
     window.onload = init;
   </script>
 </body>
