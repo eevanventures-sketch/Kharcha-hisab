@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eevaan Benchers - Powered by Eevan Ventures</title>
+  <title>लेखा जोखा - Digital Ledger</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -23,8 +23,8 @@
           <i id="defaultUserIcon" class="fa-solid fa-user text-blue-400 text-xs"></i>
         </div>
         <div>
-          <h1 id="appFirmTitle" class="text-xs font-bold text-white leading-tight">Eevaan Benchers</h1>
-          <p class="text-[9px] text-amber-400 font-medium">⚡ Powered by Eevan Ventures</p>
+          <h1 id="appFirmTitle" class="text-xs font-bold text-white leading-tight">मेरी दुकान / फर्म</h1>
+          <p class="text-[9px] text-amber-400 font-medium">⚡ Powered by Eevaan Ventures</p>
         </div>
       </div>
       <div class="flex items-center space-x-1.5">
@@ -44,8 +44,8 @@
           <i id="defaultBannerIcon" class="fa-solid fa-store text-blue-400 text-base"></i>
         </div>
         <div>
-          <h2 class="font-bold text-white"><span id="t-namaste">नमस्ते</span>, <span id="bannerUserName">Eevaan Benchers</span> 👋</h2>
-          <p id="bannerAddressText" class="text-[9px] text-slate-400"></p>
+          <h2 class="font-bold text-white"><span id="t-namaste">नमस्ते</span>, <span id="bannerUserName">दुकानदार</span> 👋</h2>
+          <p id="bannerAddressText" class="text-[9px] text-slate-400">प्रोफाइल सेट करने के लिए ⚙️ दबाएं</p>
           <div id="bannerUPIBox" class="hidden flex items-center gap-1 mt-0.5">
             <span id="bannerUPIText" class="text-[9px] text-amber-300 font-semibold"></span>
             <button onclick="openModal('upiQRModal')" class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 rounded font-bold">QR</button>
@@ -107,7 +107,7 @@
   <!-- (+) BUTTON -->
   <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-12 h-12 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
 
-  <!-- 1. DETAIL MODAL: LEDGER + MATERIAL + PHOTO + SHARE BUTTON -->
+  <!-- 1. DETAIL MODAL -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -122,7 +122,6 @@
         <button onclick="closeModal('detailModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
-      <!-- Balance row -->
       <div class="grid grid-cols-3 gap-1 my-2 bg-[#0f172a] p-1.5 rounded-xl text-center">
         <div><span class="text-slate-400 text-[9px] block">कुल दिया</span><span id="dGave" class="font-bold text-rose-400">₹0</span></div>
         <div><span class="text-slate-400 text-[9px] block">जमा + वापसी</span><span id="dRec" class="font-bold text-emerald-400">₹0</span></div>
@@ -139,7 +138,6 @@
       <div id="subFormBox" class="hidden bg-[#0f172a] p-2 rounded-xl border border-blue-500/50 mb-2 space-y-1.5 max-h-72 overflow-y-auto">
         <div class="flex justify-between font-bold text-blue-400"><span>एंट्री जोड़ें</span><button onclick="document.getElementById('subFormBox').classList.add('hidden')">&times;</button></div>
 
-        <!-- MATERIAL AUTO-CALCULATE ROWS -->
         <div class="space-y-1">
           <div class="grid grid-cols-12 gap-1 text-[9px] text-slate-400 font-semibold">
             <span class="col-span-5">सामान</span><span class="col-span-2">मात्रा</span><span class="col-span-2">भाव</span><span class="col-span-3 text-right">कुल(₹)</span>
@@ -173,14 +171,8 @@
         <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1">
           <span class="block text-[10px] text-amber-300 font-bold">📷 बिल फोटो / पर्चा जोड़ें:</span>
           <div class="grid grid-cols-2 gap-2">
-            <div>
-              <span class="block text-[9px] text-slate-400">कैमरा:</span>
-              <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'txPhotoThumb', 'txPhotoBox', 'TX'))">
-            </div>
-            <div>
-              <span class="block text-[9px] text-slate-400">गैलरी:</span>
-              <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'txPhotoThumb', 'txPhotoBox', 'TX'))">
-            </div>
+            <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'txPhotoThumb', 'txPhotoBox', 'TX'))">
+            <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'txPhotoThumb', 'txPhotoBox', 'TX'))">
           </div>
           <div id="txPhotoBox" class="hidden flex items-center gap-2 pt-1">
             <img id="txPhotoThumb" class="w-10 h-10 rounded border border-emerald-400 object-cover">
@@ -193,17 +185,10 @@
 
       <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="subList"></div>
 
-      <!-- ACTION BUTTONS: PDF, EXCEL, SHARE, CLOSE -->
       <div class="pt-2 border-t border-slate-800 grid grid-cols-4 gap-1.5">
-        <button onclick="viewLivePDF()" class="bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
-          <i class="fa-solid fa-eye"></i> PDF पर्चा
-        </button>
-        <button onclick="downloadCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
-          <i class="fa-solid fa-file-excel"></i> Excel शीट
-        </button>
-        <button onclick="shareCustomerBill()" class="bg-[#22c55e] hover:bg-green-600 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
-          <i class="fa-solid fa-share-nodes"></i> 📲 शेयर
-        </button>
+        <button onclick="viewLivePDF()" class="bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-eye"></i> PDF</button>
+        <button onclick="downloadCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-file-excel"></i> Excel</button>
+        <button onclick="shareCustomerBill()" class="bg-[#22c55e] hover:bg-green-600 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-share-nodes"></i> शेयर</button>
         <button onclick="closeModal('detailModal')" class="bg-slate-700 text-slate-200 py-1.5 rounded-xl font-semibold">बंद करें</button>
       </div>
     </div>
@@ -241,14 +226,8 @@
       <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1">
         <span class="block text-[10px] text-amber-300 font-bold">📷 ग्राहक DP फोटो:</span>
         <div class="grid grid-cols-2 gap-2">
-          <div>
-            <span class="block text-[9px] text-slate-400">कैमरा:</span>
-            <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'custDPThumb', 'custDPBox', 'CUST'))">
-          </div>
-          <div>
-            <span class="block text-[9px] text-slate-400">गैलरी:</span>
-            <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'custDPThumb', 'custDPBox', 'CUST'))">
-          </div>
+          <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'custDPThumb', 'custDPBox', 'CUST'))">
+          <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => showImgThumb(b, 'custDPThumb', 'custDPBox', 'CUST'))">
         </div>
         <div id="custDPBox" class="hidden flex items-center gap-2 pt-1">
           <img id="custDPThumb" class="w-8 h-8 rounded-full border border-amber-400 object-cover">
@@ -276,31 +255,24 @@
   <div id="profileModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-sm p-3.5 space-y-2 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
-        <h3 class="font-bold text-white">प्रोफाइल एवं बिजनेस सेटिंग्स</h3>
+        <h3 class="font-bold text-white">प्रोफाइल सेटिंग्स (आपका विवरण)</h3>
         <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
-      <!-- OWNER DP -->
       <div class="bg-slate-900 p-2 rounded-xl border border-blue-500/30 text-center space-y-1.5">
         <div class="w-12 h-12 rounded-full border-2 border-blue-400 bg-slate-800 mx-auto overflow-hidden flex items-center justify-center shadow">
           <img id="modalDP" class="w-full h-full object-cover hidden">
           <i id="defaultModalIcon" class="fa-solid fa-user text-lg text-slate-500"></i>
         </div>
-        <span class="block text-[10px] text-amber-300 font-bold">मालिक की DP फोटो:</span>
+        <span class="block text-[10px] text-amber-300 font-bold">अपनी दुकान / खुद की DP फोटो:</span>
         <div class="grid grid-cols-2 gap-2">
-          <div>
-            <span class="block text-[9px] text-slate-400">कैमरा:</span>
-            <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => setOwnerDP(b))">
-          </div>
-          <div>
-            <span class="block text-[9px] text-slate-400">गैलरी:</span>
-            <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => setOwnerDP(b))">
-          </div>
+          <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => setOwnerDP(b))">
+          <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="pickImg(this, b => setOwnerDP(b))">
         </div>
       </div>
 
-      <input type="text" id="setFirm" placeholder="फर्म / मालिक का नाम" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
-      <input type="text" id="setAddress" placeholder="दुकान का पूरा पता" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
+      <input type="text" id="setFirm" placeholder="दुकान / फर्म का नाम लिखें" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
+      <input type="text" id="setAddress" placeholder="दुकान का पूरा पता लिखें" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
 
       <div class="grid grid-cols-2 gap-2">
         <input type="tel" id="setUserPhone" placeholder="मोबाइल नं." class="p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
@@ -311,11 +283,11 @@
       <input type="text" id="setUserUPI" placeholder="UPI आईडी (उदा: 98XXXXXXXX@paytm)" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
 
       <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow">सेटिंग्स सेव करें</button>
-      <button type="button" onclick="clearBloatedStorage()" class="w-full bg-rose-950/60 border border-rose-600/40 text-rose-300 py-1 rounded text-[10px]">🧹 मेमोरी साफ़ करें (Clear Cache)</button>
+      <button type="button" onclick="clearBloatedStorage()" class="w-full bg-rose-950/60 border border-rose-600/40 text-rose-300 py-1 rounded text-[10px]">🧹 पूरा खाता रीसेट करें (Clear All)</button>
     </div>
   </div>
 
-  <!-- 4. LIVE PDF MODAL WITH DIGITAL SIGNATURE -->
+  <!-- 4. LIVE PDF MODAL -->
   <div id="pdfModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-white text-slate-800 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col overflow-hidden shadow-2xl">
       <div class="flex justify-between items-center bg-slate-900 text-white px-3 py-2">
@@ -330,7 +302,7 @@
     </div>
   </div>
 
-  <!-- 5. BULK BROADCAST MODAL (WHATSAPP + TEXT SMS) -->
+  <!-- 5. BULK BROADCAST MODAL -->
   <div id="bulkModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md max-h-[92vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -339,11 +311,10 @@
       </div>
       <div class="my-1.5 p-2 bg-[#0f172a] rounded-lg border border-slate-800 flex justify-between items-center">
         <span class="text-[10px] text-slate-300 font-semibold">न्यूनतम बकाया (₹):</span>
-        <input type="number" id="bulkMin" value="100" oninput="renderBulkList()" class="w-20 p-1 bg-[#162238] border border-slate-700 rounded text-right font-bold text-amber-400">
+        <input type="number" id="bulkMin" value="1" oninput="renderBulkList()" class="w-20 p-1 bg-[#162238] border border-slate-700 rounded text-right font-bold text-amber-400">
       </div>
       <div class="flex-1 overflow-y-auto space-y-1 pr-1" id="bulkList"></div>
 
-      <!-- 2 BUTTONS: WHATSAPP + TEXT SMS -->
       <div class="mt-2 grid grid-cols-2 gap-2">
         <button onclick="sendBulkWA()" class="bg-[#22c55e] hover:bg-green-600 text-white font-bold py-1.5 rounded-xl flex items-center justify-center gap-1 shadow">
           <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp तगादा
@@ -369,7 +340,7 @@
     </div>
   </div>
 
-  <!-- APPLICATION JAVASCRIPT -->
+  <!-- JAVASCRIPT LOGIC (100% BLANK FRESH START) -->
   <script>
     const dict = {
       hi: { share:"शेयर", namaste:"नमस्ते", savings:"बचत / शेष राशि", bills:"कुल बिल", emi:"कुल EMI", sip:"कुल SIP", prem:"प्रीमियम", toReceive:"बाज़ार से लेने हैं", toPay:"देने हैं (डेबिट)", udhar:"लेन-देन", shop:"दुकान", card:"कार्ड", bank:"बैंक/NBFC", ins:"इंश्योरेंस", bulkRem:"बल्क तगादा / रिमाइंडर (Broadcast)", search:"खोजें..." },
@@ -377,16 +348,12 @@
     };
 
     let currentLang = 'hi';
+    
+    // 100% BLANK DATABASE (NO HARDCODED / SAMPLE DATA)
     let db = {
       lang: 'hi',
-      profile: { firmName: "Eevaan Benchers", address: "", phone: "", email: "", upi: "", income: 0, logo: "" },
-      items: [
-        {
-          id: "item_1", title: "my airtel", category: "CARD", phone: "*121#", address: "Main Market", dp: "",
-          amount: 25860, type: "LENE", date: "2026-10-23", dueDate: "2026-10-25",
-          history: [{ id: "s1", type: "GAVE", amount: 25860, payMode: "UPI", note: "Bill / Udhar", items: [], photo: "", date: "2026-10-23" }]
-        }
-      ]
+      profile: { firmName: "", address: "", phone: "", email: "", upi: "", income: 0, logo: "" },
+      items: [] // बिल्कुल खाली खाता
     };
 
     let activeFilter = 'ALL', activeId = null, subType = 'GAVE';
@@ -470,7 +437,7 @@
       db.profile.logo = b64;
       updateDPUI(b64);
       saveDB();
-      alert("✅ दुकान / मालिक की DP सेट हो गई!");
+      alert("✅ DP सेट हो गई!");
     }
 
     function updateDPUI(b) {
@@ -509,7 +476,7 @@
 
     function saveProfile() {
       const f = document.getElementById('setFirm').value.trim();
-      if (f) db.profile.firmName = f;
+      db.profile.firmName = f;
       db.profile.address = document.getElementById('setAddress').value.trim();
       db.profile.phone = document.getElementById('setUserPhone').value.trim();
       db.profile.email = document.getElementById('setUserEmail').value.trim();
@@ -522,9 +489,10 @@
     }
 
     function applyProfile() {
-      document.getElementById('appFirmTitle').innerText = db.profile.firmName || "Eevaan Benchers";
-      document.getElementById('bannerUserName').innerText = db.profile.firmName || "Eevaan Benchers";
-      document.getElementById('setFirm').value = db.profile.firmName || "Eevaan Benchers";
+      const defaultName = db.profile.firmName || (currentLang === 'hi' ? "मेरी दुकान / फर्म" : "My Business");
+      document.getElementById('appFirmTitle').innerText = defaultName;
+      document.getElementById('bannerUserName').innerText = db.profile.firmName || (currentLang === 'hi' ? "दुकानदार" : "Merchant");
+      document.getElementById('setFirm').value = db.profile.firmName || "";
       document.getElementById('setAddress').value = db.profile.address || "";
       document.getElementById('setUserPhone').value = db.profile.phone || "";
       document.getElementById('setUserEmail').value = db.profile.email || "";
@@ -532,13 +500,13 @@
       document.getElementById('setIncome').value = db.profile.income || 0;
 
       const ad = document.getElementById('bannerAddressText');
-      ad.innerText = db.profile.address ? `📍 ${db.profile.address}` : "";
+      ad.innerText = db.profile.address ? `📍 ${db.profile.address}` : (currentLang === 'hi' ? "प्रोफाइल सेट करने के लिए ⚙️ दबाएं" : "Tap ⚙️ to set profile");
 
       const ub = document.getElementById('bannerUPIBox');
       if (db.profile.upi) {
         ub.classList.remove('hidden');
         document.getElementById('bannerUPIText').innerText = `UPI: ${db.profile.upi}`;
-        document.getElementById('upiQRImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`upi://pay?pa=${db.profile.upi}&pn=${db.profile.firmName}`)}`;
+        document.getElementById('upiQRImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`upi://pay?pa=${db.profile.upi}&pn=${db.profile.firmName||'Merchant'}`)}`;
         document.getElementById('upiQRText').innerText = db.profile.upi;
       } else ub.classList.add('hidden');
 
@@ -546,10 +514,8 @@
     }
 
     function clearBloatedStorage() {
-      if (confirm("अटकी हुई फोटो मेमोरी साफ़ करें?")) {
-        db.profile.logo = "";
-        db.items.forEach(it => { it.dp = ""; if(it.history) it.history.forEach(h => h.photo = ""); });
-        saveDB();
+      if (confirm("क्या आप अपना सारा खाता और मेमोरी साफ़ करके नया शुरू करना चाहते हैं?")) {
+        localStorage.removeItem("eevaan_benchers_master_db");
         location.reload();
       }
     }
@@ -593,7 +559,10 @@
       cont.innerHTML = "";
 
       const list = db.items.filter(i => (activeFilter === 'ALL' || i.category === activeFilter) && (i.title.toLowerCase().includes(q) || (i.phone && i.phone.includes(q))));
-      if (!list.length) { cont.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs">कोई रिकॉर्ड नहीं मिला</div>`; return; }
+      if (!list.length) { 
+        cont.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">खाता खाली है। नीचे (+) बटन दबाकर पहला ग्राहक या बिल जोड़ें।</div>`; 
+        return; 
+      }
 
       list.forEach(i => {
         const c = calcItem(i);
@@ -634,7 +603,8 @@
     function sendSMS(ph, n, a) {
       if (!ph || ph === 'N/A') return alert("मोबाइल नंबर नहीं मिला!");
       const c = ph.replace(/[^0-9]/g, '');
-      const msg = encodeURIComponent(`नमस्ते ${n}, आपकी कुल बकाया राशि ₹${a} है। कृपया भुगतान करें। धन्यवाद! - ${db.profile.firmName}`);
+      const firm = db.profile.firmName || "व्यापारी";
+      const msg = encodeURIComponent(`नमस्ते ${n}, आपकी कुल बकाया राशि ₹${a} है। कृपया भुगतान करें। धन्यवाद! - ${firm}`);
       window.open(`sms:${c}?body=${msg}`, '_blank');
     }
 
@@ -810,12 +780,12 @@
       w.document.write(`<body style="background:#000;margin:0;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${src}" style="max-width:95%;max-height:95%;border-radius:8px;"></body>`);
     }
 
-    // SHARE SINGLE CUSTOMER BILL DIRECTLY VIA WHATSAPP
     function shareCustomerBill() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
       const c = calcItem(it);
-      const txt = `नमस्ते ${it.title}, आपका ${db.profile.firmName} पर कुल बकाया ₹${c.balance} है। (कुल सामान: ₹${c.gave}, जमा मिला: ₹${c.got + c.ret})। कृपया समय पर भुगतान करें। धन्यवाद!`;
+      const firm = db.profile.firmName || "व्यापारी";
+      const txt = `नमस्ते ${it.title}, आपका ${firm} पर कुल बकाया ₹${c.balance} है। (कुल बिल: ₹${c.gave}, जमा: ₹${c.got + c.ret})। कृपया समय पर भुगतान करें। धन्यवाद!`;
       if (it.phone && it.phone !== 'N/A') {
         const clean = it.phone.replace(/[^0-9]/g, '');
         window.open(`https://wa.me/${clean}?text=${encodeURIComponent(txt)}`, '_blank');
@@ -823,16 +793,15 @@
         navigator.share({ title: 'खाता पर्चा', text: txt });
       } else {
         navigator.clipboard.writeText(txt);
-        alert("बिल विवरण कॉपी हो गया है!");
+        alert("बिल विवरण कॉपी हो गया!");
       }
     }
 
-    // LIVE PDF WITH AUTOMATIC DIGITAL SIGNATURE
     function viewLivePDF() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
       const c = calcItem(it);
-      const firm = db.profile.firmName || "Eevaan Benchers";
+      const firm = db.profile.firmName || "डिजिटल खाता";
       const dt = new Date().toLocaleDateString('en-IN') + ' ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
       let rows = (it.history || []).map(h => `
@@ -906,11 +875,13 @@
     }
 
     function sendWA(ph, n, a) {
-      window.open(`https://wa.me/${ph?ph.replace(/[^0-9]/g,''):''}?text=${encodeURIComponent(`नमस्ते ${n}, बकाया राशि ₹${a} है। धन्यवाद! - ${db.profile.firmName}`)}`, '_blank');
+      const firm = db.profile.firmName || "व्यापारी";
+      window.open(`https://wa.me/${ph?ph.replace(/[^0-9]/g,''):''}?text=${encodeURIComponent(`नमस्ते ${n}, बकाया राशि ₹${a} है। धन्यवाद! - ${firm}`)}`, '_blank');
     }
 
     function shareApp() {
-      if (navigator.share) navigator.share({ title: db.profile.firmName, url: window.location.href });
+      const firm = db.profile.firmName || "डिजिटल खाता";
+      if (navigator.share) navigator.share({ title: firm, url: window.location.href });
       else { navigator.clipboard.writeText(window.location.href); alert("लिंक कॉपी हो गया!"); }
     }
 
@@ -944,6 +915,7 @@
       const min = parseFloat(document.getElementById('bulkMin').value) || 0;
       const eligible = db.items.filter(i => i.type === 'LENE' && calcItem(i).balance >= min && i.phone && i.phone !== 'N/A');
       if(!eligible.length) return alert("मैसेज के लिए कोई वैध नंबर नहीं मिला!");
+      const firm = db.profile.firmName || "व्यापारी";
       eligible.forEach((c, idx) => {
         setTimeout(() => sendWA(c.phone, c.title, calcItem(c).balance), idx * 1200);
       });
@@ -961,4 +933,4 @@
     window.onload = init;
   </script>
 </body>
-  </html>
+          </html>
