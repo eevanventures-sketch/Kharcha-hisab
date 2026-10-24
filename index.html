@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="text-right">
-        <span class="text-[9px] text-slate-400">बचत / शेष राशि</span>
+        <span class="text-[9px] text-slate-400" id="t-savings">बचत / शेष राशि</span>
         <p class="text-sm font-black text-emerald-400" id="netSavings">₹0</p>
       </div>
     </div>
@@ -66,7 +66,7 @@
       <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block">प्रीमियम</span><span class="font-bold text-cyan-400 text-[11px]" id="mPrem">₹0</span></div>
     </div>
 
-    <!-- 2 MAIN METRICS -->
+    <!-- 2 MAIN METRICS (LENE / DENE) -->
     <div class="grid grid-cols-2 gap-2 text-xs">
       <div class="bg-[#162238] border-l-4 border-l-emerald-500 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center shadow-sm">
         <div><span class="text-[10px] text-slate-400">बाज़ार से लेने हैं</span><h3 class="text-base font-black text-emerald-400" id="totLene">₹0</h3></div>
@@ -84,7 +84,7 @@
     </button>
 
     <!-- SEARCH & CHIPS -->
-    <input type="text" id="searchInput" onkeyup="renderCards()" placeholder="नाम, बैंक या मोबाइल खोजें..." class="w-full bg-[#162238] border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 outline-none">
+    <input type="text" id="searchInput" onkeyup="renderCards()" placeholder="खोजें..." class="w-full bg-[#162238] border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 outline-none">
     <div class="flex space-x-1.5 overflow-x-auto no-sb py-0.5 text-[10px]">
       <button onclick="setFilter('ALL')" id="f-ALL" class="bg-blue-600 text-white px-2.5 py-1 rounded-full whitespace-nowrap font-medium shadow">सभी (All)</button>
       <button onclick="setFilter('UDHAR')" id="f-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-800 px-2.5 py-1 rounded-full whitespace-nowrap">🤝 लेन-देन</button>
@@ -107,6 +107,12 @@
         <button onclick="shareApp()" class="bg-slate-800 border border-slate-700 text-slate-200 py-1.5 rounded-xl shadow">🎂 शेयर करें</button>
       </div>
     </div>
+
+    <!-- ORIGINAL FOOTER (POWERED BY & MADE IN INDIA) -->
+    <footer class="text-center py-5 text-slate-400 text-xs space-y-1 border-t border-slate-800/80 mt-6">
+      <p>Powered by <span class="text-blue-400 font-bold">Eevaan Ventures</span></p>
+      <p class="text-[11px] text-slate-500 font-medium">100% सुरक्षित और स्वदेशी | Made in India 🇮🇳</p>
+    </footer>
   </main>
 
   <!-- (+) FLOATING BUTTON -->
@@ -163,19 +169,21 @@
         </div>
         <input type="text" id="subNote" placeholder="विवरण / नोट" class="w-full p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none text-xs">
 
-        <!-- BILL PHOTO: DIRECT CAMERA + GALLERY OPTIONS -->
+        <!-- BILL PHOTO: SEPARATE CAMERA & GALLERY INPUTS -->
         <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1.5">
           <span class="block text-[10px] text-amber-300 font-bold">📷 बिल फोटो / रसीद जोड़ें:</span>
           <div class="flex gap-2">
-            <label class="flex-1 bg-blue-700 hover:bg-blue-600 text-white text-[10px] py-1.5 px-2 rounded-lg text-center font-bold cursor-pointer shadow">
-              <i class="fa-solid fa-camera"></i> कैमरा से खींचें
-              <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleDirectUpload(this, 'txPhotoThumb', 'txPhotoBox')">
-            </label>
-            <label class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] py-1.5 px-2 rounded-lg text-center font-bold cursor-pointer shadow">
-              <i class="fa-solid fa-image"></i> गैलरी से चुनें
-              <input type="file" accept="image/*" class="hidden" onchange="handleDirectUpload(this, 'txPhotoThumb', 'txPhotoBox')">
-            </label>
+            <button type="button" onclick="triggerFileInput('billCamInput')" class="flex-1 bg-blue-700 hover:bg-blue-600 text-white text-[10px] py-1.5 px-2 rounded-lg font-bold shadow flex items-center justify-center gap-1">
+              <i class="fa-solid fa-camera"></i> कैमरा
+            </button>
+            <button type="button" onclick="triggerFileInput('billGalInput')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] py-1.5 px-2 rounded-lg font-bold shadow flex items-center justify-center gap-1">
+              <i class="fa-solid fa-image"></i> गैलरी
+            </button>
           </div>
+          <!-- Hidden Inputs -->
+          <input type="file" id="billCamInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageInput(this, 'txPhotoThumb', 'txPhotoBox', 'TX')">
+          <input type="file" id="billGalInput" accept="image/*" class="hidden" onchange="handleImageInput(this, 'txPhotoThumb', 'txPhotoBox', 'TX')">
+          
           <div id="txPhotoBox" class="hidden flex items-center gap-2 pt-1">
             <img id="txPhotoThumb" class="w-12 h-12 rounded border-2 border-emerald-400 object-cover">
             <span class="text-[10px] text-emerald-400 font-bold">✔ फोटो लोड हो गई!</span>
@@ -258,15 +266,17 @@
       <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1.5">
         <span class="block text-[10px] text-amber-300 font-bold">📷 ग्राहक DP फोटो:</span>
         <div class="flex gap-2">
-          <label class="flex-1 bg-blue-700 hover:bg-blue-600 text-white text-[10px] py-1 px-2 rounded text-center font-bold cursor-pointer">
+          <button type="button" onclick="triggerFileInput('custCamInput')" class="flex-1 bg-blue-700 hover:bg-blue-600 text-white text-[10px] py-1 px-2 rounded font-bold flex items-center justify-center gap-1">
             <i class="fa-solid fa-camera"></i> कैमरा
-            <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleDirectUpload(this, 'custDPThumb', 'custDPBox')">
-          </label>
-          <label class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] py-1 px-2 rounded text-center font-bold cursor-pointer">
+          </button>
+          <button type="button" onclick="triggerFileInput('custGalInput')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] py-1 px-2 rounded font-bold flex items-center justify-center gap-1">
             <i class="fa-solid fa-image"></i> गैलरी
-            <input type="file" accept="image/*" class="hidden" onchange="handleDirectUpload(this, 'custDPThumb', 'custDPBox')">
-          </label>
+          </button>
         </div>
+        <!-- Hidden Inputs -->
+        <input type="file" id="custCamInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageInput(this, 'custDPThumb', 'custDPBox', 'CUST')">
+        <input type="file" id="custGalInput" accept="image/*" class="hidden" onchange="handleImageInput(this, 'custDPThumb', 'custDPBox', 'CUST')">
+
         <div id="custDPBox" class="hidden flex items-center gap-2 pt-1">
           <img id="custDPThumb" class="w-10 h-10 rounded-full border-2 border-amber-400 object-cover">
           <span class="text-[10px] text-emerald-400 font-bold">✔ DP लोड हो गई!</span>
@@ -297,7 +307,7 @@
         <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
-      <!-- OWNER DP: DIRECT BUTTONS -->
+      <!-- OWNER DP -->
       <div class="bg-slate-900 p-2.5 rounded-xl border border-blue-500/30 text-center space-y-1.5">
         <div class="w-14 h-14 rounded-full border-2 border-blue-400 bg-slate-800 mx-auto overflow-hidden flex items-center justify-center shadow">
           <img id="modalDP" class="w-full h-full object-cover hidden">
@@ -305,15 +315,16 @@
         </div>
         <span class="block text-[10px] text-amber-300 font-bold">दुकान / मालिक की DP फोटो:</span>
         <div class="flex gap-2">
-          <label class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] py-1 px-2 rounded-lg font-bold cursor-pointer shadow">
+          <button type="button" onclick="triggerFileInput('ownerCamInput')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] py-1 px-2 rounded-lg font-bold shadow flex items-center justify-center gap-1">
             <i class="fa-solid fa-camera"></i> कैमरा
-            <input type="file" accept="image/*" capture="environment" class="hidden" onchange="onOwnerDPChange(this)">
-          </label>
-          <label class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] py-1 px-2 rounded-lg font-bold cursor-pointer shadow">
+          </button>
+          <button type="button" onclick="triggerFileInput('ownerGalInput')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] py-1 px-2 rounded-lg font-bold shadow flex items-center justify-center gap-1">
             <i class="fa-solid fa-image"></i> गैलरी
-            <input type="file" accept="image/*" class="hidden" onchange="onOwnerDPChange(this)">
-          </label>
+          </button>
         </div>
+        <!-- Hidden Inputs -->
+        <input type="file" id="ownerCamInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageInput(this, 'modalDP', null, 'OWNER')">
+        <input type="file" id="ownerGalInput" accept="image/*" class="hidden" onchange="handleImageInput(this, 'modalDP', null, 'OWNER')">
       </div>
 
       <input type="text" id="setFirm" placeholder="फर्म / मालिक का नाम" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none text-xs">
@@ -329,9 +340,8 @@
 
       <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow">सेटिंग्स सेव करें</button>
       
-      <!-- RESET STORAGE BUTTON TO FIX STUCK MEMORY -->
       <button type="button" onclick="clearBloatedStorage()" class="w-full bg-rose-950/60 border border-rose-600/40 text-rose-300 py-1 rounded text-[10px]">
-        🧹 अटकी हुई मेमोरी साफ़ करें (Clear Memory)
+        🧹 अटकी हुई मेमोरी साफ़ करें (Clear Cache)
       </button>
     </div>
   </div>
@@ -416,7 +426,6 @@
         localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db));
       } catch (err) {
         console.warn("Storage warning, optimizing...", err);
-        // Clear heavy history photos to prevent lock
         db.items.forEach(it => { if(it.history) it.history.forEach(h => { if(h.photo && h.photo.length > 25000) h.photo=""; }); });
         try { localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db)); } catch(e){}
       }
@@ -424,7 +433,16 @@
       updateMetrics();
     }
 
-    // DIRECT ULTRA-LIGHT COMPRESSOR (MAX 15-20 KB FOR PHONES)
+    // DIRECT TRIGGER FOR MOBILE ANDROID CHROME
+    function triggerFileInput(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.value = ''; // Reset to ensure onchange fires even for same file
+        el.click();
+      }
+    }
+
+    // ROCK-SOLID IMAGE COMPRESSOR (MAX 250PX, WORKS FOR BOTH CAMERA & GALLERY)
     function compressImgDirect(file, maxD, cb) {
       if (!file) return;
       const r = new FileReader();
@@ -437,36 +455,43 @@
           else if (h > maxD) { w = Math.round(w * maxD / h); h = maxD; }
           cv.width = w; cv.height = h;
           cv.getContext('2d').drawImage(im, 0, 0, w, h);
-          const b64 = cv.toDataURL('image/jpeg', 0.5);
+          const b64 = cv.toDataURL('image/jpeg', 0.55);
           cb(b64);
         };
+        im.onerror = () => alert("फोटो लोड नहीं हो सकी, कृपया दूसरी फोटो चुनें!");
         im.src = e.target.result;
       };
       r.readAsDataURL(file);
     }
 
-    // 1. DIRECT HANDLER FOR CAM / GALLERY (CUSTOMER & BILL PHOTO)
-    function handleDirectUpload(input, imgId, boxId) {
+    // UNIVERSAL IMAGE HANDLER (FOR OWNER, CUSTOMER, BILL PHOTO)
+    function handleImageInput(input, imgId, boxId, type) {
       if (!input.files || !input.files[0]) return;
-      compressImgDirect(input.files[0], 250, b64 => {
-        const el = document.getElementById(imgId);
-        if (el) el.src = b64;
-        const box = document.getElementById(boxId);
-        if (box) box.classList.remove('hidden');
+      const file = input.files[0];
 
-        if (imgId === 'custDPThumb') tempCustDP = b64;
-        if (imgId === 'txPhotoThumb') tempTxPhoto = b64;
-      });
-    }
+      compressImgDirect(file, 250, b64 => {
+        if (imgId) {
+          const el = document.getElementById(imgId);
+          if (el) {
+            el.src = b64;
+            el.classList.remove('hidden');
+          }
+        }
+        if (boxId) {
+          const box = document.getElementById(boxId);
+          if (box) box.classList.remove('hidden');
+        }
 
-    // 2. OWNER DP CHANGE
-    function onOwnerDPChange(input) {
-      if (!input.files || !input.files[0]) return;
-      compressImgDirect(input.files[0], 200, b64 => {
-        db.profile.logo = b64;
-        updateDPUI(b64);
-        saveDB();
-        alert("✅ DP सफलतापूर्वक लग गई है!");
+        if (type === 'OWNER') {
+          db.profile.logo = b64;
+          updateDPUI(b64);
+          saveDB();
+          alert("✅ दुकान / मालिक की DP सेट हो गई!");
+        } else if (type === 'CUST') {
+          tempCustDP = b64;
+        } else if (type === 'TX') {
+          tempTxPhoto = b64;
+        }
       });
     }
 
@@ -810,8 +835,8 @@
 
       let photos = (it.history || []).filter(h => h.photo).map(h => `
         <div style="margin-top:6px; text-align:center;">
-          <p style="font-size:8px; margin:0; color:#64748b;">संलग्न पर्चा/रसीद (${h.date}):</p>
-          <img src="${h.photo}" style="max-height:140px; margin:2px auto; border-radius:4px; border:1px solid #cbd5e1;">
+          <p style="font-size:8px; margin:0; color:#64748b;">संलग्न पर्चा (${h.date}):</p>
+          <img src="${h.photo}" style="max-height:130px; margin:2px auto; border-radius:4px; border:1px solid #cbd5e1;">
         </div>
       `).join('');
 
@@ -924,4 +949,4 @@
     window.onload = init;
   </script>
 </body>
-</html>
+  </html>
