@@ -87,11 +87,11 @@
     <input type="text" id="searchInput" onkeyup="renderCards()" placeholder="खोजें..." class="w-full bg-[#162238] border border-slate-800 rounded-xl px-3 py-1.5 text-slate-200 outline-none">
     <div class="flex space-x-1 overflow-x-auto no-sb py-0.5 text-[10px]">
       <button onclick="setFilter('ALL')" id="f-ALL" class="bg-blue-600 text-white px-2.5 py-1 rounded-full whitespace-nowrap font-medium shadow">सभी (All)</button>
-      <button onclick="setFilter('UDHAR')" id="f-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-800 px-2 py-1 rounded-full whitespace-nowrap">🤝 <span id="tc-udhar">लेन-देन</span></button>
-      <button onclick="setFilter('SHOP')" id="f-SHOP" class="bg-[#162238] text-slate-300 border border-slate-800 px-2 py-1 rounded-full whitespace-nowrap">📦 <span id="tc-shop">दुकान</span></button>
-      <button onclick="setFilter('CARD')" id="f-CARD" class="bg-[#162238] text-slate-300 border border-slate-800 px-2 py-1 rounded-full whitespace-nowrap">💳 <span id="tc-card">कार्ड</span></button>
-      <button onclick="setFilter('BANK')" id="f-BANK" class="bg-[#162238] text-slate-300 border border-slate-800 px-2 py-1 rounded-full whitespace-nowrap">🏦 <span id="tc-bank">बैंक/NBFC</span></button>
-      <button onclick="setFilter('INSURANCE')" id="f-INSURANCE" class="bg-[#162238] text-slate-300 border border-slate-800 px-2 py-1 rounded-full whitespace-nowrap">🛡️ <span id="tc-ins">इंश्योरेंस</span></button>
+      <button onclick="setFilter('UDHAR')" id="f-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-800 px-2.5 py-1 rounded-full whitespace-nowrap">🤝 <span id="tc-udhar">लेन-देन</span></button>
+      <button onclick="setFilter('SHOP')" id="f-SHOP" class="bg-[#162238] text-slate-300 border border-slate-800 px-2.5 py-1 rounded-full whitespace-nowrap">📦 <span id="tc-shop">दुकान</span></button>
+      <button onclick="setFilter('CARD')" id="f-CARD" class="bg-[#162238] text-slate-300 border border-slate-800 px-2.5 py-1 rounded-full whitespace-nowrap">💳 <span id="tc-card">कार्ड</span></button>
+      <button onclick="setFilter('BANK')" id="f-BANK" class="bg-[#162238] text-slate-300 border border-slate-800 px-2.5 py-1 rounded-full whitespace-nowrap">🏦 <span id="tc-bank">बैंक/NBFC</span></button>
+      <button onclick="setFilter('INSURANCE')" id="f-INSURANCE" class="bg-[#162238] text-slate-300 border border-slate-800 px-2.5 py-1 rounded-full whitespace-nowrap">🛡️ <span id="tc-ins">इंश्योरेंस</span></button>
     </div>
 
     <!-- CARDS LIST -->
@@ -107,7 +107,7 @@
   <!-- (+) BUTTON -->
   <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-12 h-12 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
 
-  <!-- 1. DETAIL MODAL: LEDGER + MATERIAL AUTO-CALC + PHOTO -->
+  <!-- 1. DETAIL MODAL: LEDGER + MATERIAL + PHOTO -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -122,6 +122,7 @@
         <button onclick="closeModal('detailModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
+      <!-- Balance row -->
       <div class="grid grid-cols-3 gap-1 my-2 bg-[#0f172a] p-1.5 rounded-xl text-center">
         <div><span class="text-slate-400 text-[9px] block">कुल दिया</span><span id="dGave" class="font-bold text-rose-400">₹0</span></div>
         <div><span class="text-slate-400 text-[9px] block">जमा + वापसी</span><span id="dRec" class="font-bold text-emerald-400">₹0</span></div>
@@ -134,11 +135,10 @@
         <button onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-1.5 rounded-xl shadow">🔄 सामान वापसी</button>
       </div>
 
-      <!-- SUB FORM WITH ATTACHMENT -->
+      <!-- SUB FORM -->
       <div id="subFormBox" class="hidden bg-[#0f172a] p-2 rounded-xl border border-blue-500/50 mb-2 space-y-1.5 max-h-72 overflow-y-auto">
         <div class="flex justify-between font-bold text-blue-400"><span>एंट्री जोड़ें</span><button onclick="document.getElementById('subFormBox').classList.add('hidden')">&times;</button></div>
 
-        <!-- MATERIAL AUTO-CALCULATE ROWS -->
         <div class="space-y-1">
           <div class="grid grid-cols-12 gap-1 text-[9px] text-slate-400 font-semibold">
             <span class="col-span-5">सामान</span><span class="col-span-2">मात्रा</span><span class="col-span-2">भाव</span><span class="col-span-3 text-right">कुल(₹)</span>
@@ -168,7 +168,7 @@
 
         <input type="text" id="subNote" placeholder="विवरण / नोट" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
 
-        <!-- BILL PHOTO: CAMERA & GALLERY DIRECT PICKERS -->
+        <!-- BILL PHOTO -->
         <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1">
           <span class="block text-[10px] text-amber-300 font-bold">📷 बिल फोटो / पर्चा जोड़ें:</span>
           <div class="grid grid-cols-2 gap-2">
@@ -228,12 +228,11 @@
         </select>
       </div>
 
-      <!-- DYNAMIC CHIPS -->
       <div id="chipBox" class="hidden flex flex-wrap gap-1 p-1.5 bg-[#0f172a] rounded-lg border border-slate-700"></div>
 
       <input type="text" id="newTitle" placeholder="नाम / विवरण" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-100 font-bold outline-none">
 
-      <!-- CUSTOMER DP PHOTO (CAMERA & GALLERY) -->
+      <!-- CUSTOMER DP -->
       <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1">
         <span class="block text-[10px] text-amber-300 font-bold">📷 ग्राहक DP फोटो:</span>
         <div class="grid grid-cols-2 gap-2">
@@ -276,7 +275,7 @@
         <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
-      <!-- OWNER DP (CAMERA & GALLERY) -->
+      <!-- OWNER DP -->
       <div class="bg-slate-900 p-2 rounded-xl border border-blue-500/30 text-center space-y-1.5">
         <div class="w-12 h-12 rounded-full border-2 border-blue-400 bg-slate-800 mx-auto overflow-hidden flex items-center justify-center shadow">
           <img id="modalDP" class="w-full h-full object-cover hidden">
@@ -426,7 +425,7 @@
       renderCards();
     }
 
-    // ULTRA RELIABLE 15KB COMPRESSION
+    // ULTRA RELIABLE COMPRESSION
     function pickImg(input, cb) {
       const f = input.files && input.files[0];
       if (!f) return;
@@ -560,7 +559,7 @@
       activeFilter = cat;
       ['ALL','UDHAR','SHOP','CARD','BANK','INSURANCE'].forEach(c => {
         const b = document.getElementById('f-' + c);
-        if (b) b.className = c === cat ? "bg-blue-600 text-white px-2.5 py-1 rounded-full whitespace-nowrap font-medium shadow" : "bg-[#162238] text-slate-300 border border-slate-800 px-2 py-1 rounded-full whitespace-nowrap";
+        if (b) b.className = c === cat ? "bg-blue-600 text-white px-2.5 py-1 rounded-full whitespace-nowrap font-medium shadow" : "bg-[#162238] text-slate-300 border border-slate-800 px-2.5 py-1 rounded-full whitespace-nowrap";
       });
       renderCards();
     }
@@ -577,6 +576,7 @@
       return { gave, got, ret, balance: gave - (got + ret) };
     }
 
+    // CARD RENDER WITH WA & DIRECT SMS
     function renderCards() {
       const cont = document.getElementById('cardsList');
       const q = document.getElementById('searchInput').value.toLowerCase();
@@ -611,13 +611,21 @@
           <div class="flex justify-between items-center pt-1 border-t border-slate-800 text-[9px]">
             <div>${i.dueDate ? `<span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold">Due: ${i.dueDate}</span>` : `<span class="text-slate-500">लेजर देखें</span>`}</div>
             <div class="flex items-center space-x-1">
-              <button onclick="sendWA('${i.phone}','${i.title}',${c.balance})" class="bg-[#22c55e] text-white px-2 py-0.5 rounded font-bold">💬 WA</button>
+              <button onclick="sendWA('${i.phone}','${i.title}',${c.balance})" class="bg-[#22c55e] text-white px-2 py-0.5 rounded font-bold shadow">💬 WA</button>
+              <button onclick="sendSMS('${i.phone}','${i.title}',${c.balance})" class="bg-[#0ea5e9] text-white px-2 py-0.5 rounded font-bold shadow">✉️ SMS</button>
               <button onclick="deleteItem('${i.id}')" class="text-slate-400 hover:text-rose-400 px-1"><i class="fa-solid fa-trash-can"></i></button>
             </div>
           </div>
         `;
         cont.appendChild(card);
       });
+    }
+
+    function sendSMS(ph, n, a) {
+      if (!ph || ph === 'N/A') return alert("मोबाइल नंबर नहीं मिला!");
+      const c = ph.replace(/[^0-9]/g, '');
+      const msg = encodeURIComponent(`नमस्ते ${n}, आपकी कुल बकाया राशि ₹${a} है। कृपया भुगतान करें। धन्यवाद! - ${db.profile.firmName}`);
+      window.open(`sms:${c}?body=${msg}`, '_blank');
     }
 
     function updateMetrics() {
@@ -852,7 +860,6 @@
 
           ${photos}
 
-          <!-- AUTOMATIC DIGITAL SIGNATURE SEAL -->
           <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:flex-end;">
             <span style="font-size:7px; color:#94a3b8;">100% सुरक्षित • स्वदेशी लेखा जोखा</span>
             <div style="border:1.5px dashed #16a34a; padding:4px 8px; border-radius:6px; background:#f0fdf4; text-align:center;">
