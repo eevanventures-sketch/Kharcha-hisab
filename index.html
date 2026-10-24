@@ -1,4 +1,1168 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eevaan Benchers - Powered by Eevan Ventures</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #0b1329; }
+    .no-sb::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen pb-24">
+
+  <!-- HEADER -->
+  <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40 px-4 py-2.5">
+    <div class="max-w-xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div onclick="openModal('profileModal')" class="w-10 h-10 rounded-full bg-blue-900 border-2 border-amber-400 overflow-hidden cursor-pointer flex items-center justify-center shadow">
+          <img id="headerDP" class="w-full h-full object-cover hidden">
+          <i id="defaultUserIcon" class="fa-solid fa-user text-blue-400 text-sm"></i>
+        </div>
+        <div>
+          <h1 id="appFirmTitle" class="text-sm font-bold text-white leading-tight">Eevaan Benchers</h1>
+          <p class="text-[10px] text-amber-400 font-medium">⚡ Powered by Eevan Ventures</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-1.5 text-xs">
+        <button onclick="shareApp()" class="bg-[#1e293b] px-2.5 py-1.5 rounded-lg border border-slate-700">🎂 <span id="t-share">शेयर</span></button>
+        <button onclick="toggleLang()" id="langBtn" class="bg-[#1e293b] px-2.5 py-1.5 rounded-lg border border-slate-700 font-semibold text-blue-300">🌐 English</button>
+        <button onclick="openModal('profileModal')" class="w-8 h-8 rounded-full bg-blue-900/60 text-blue-300 border border-blue-500/50 flex items-center justify-center"><i class="fa-solid fa-gear"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-xl mx-auto px-4 pt-3 space-y-3">
+    <!-- GREETING BANNER WITH ADDRESS & AUTO UPI QR -->
+    <div class="bg-[#162238] border border-slate-800 rounded-2xl p-3.5 flex justify-between items-center shadow">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 rounded-full border-2 border-blue-400 bg-slate-900 overflow-hidden flex items-center justify-center shadow">
+          <img id="bannerDP" class="w-full h-full object-cover hidden">
+          <i id="defaultBannerIcon" class="fa-solid fa-store text-blue-400 text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-white"><span id="t-namaste">नमस्ते</span>, <span id="bannerUserName">Eevaan Benchers</span> 👋</h2>
+          <p id="bannerAddressText" class="text-[10px] text-slate-400 flex items-center gap-1"></p>
+          <div id="bannerUPIContainer" class="hidden flex items-center gap-1.5 mt-0.5">
+            <span id="bannerUPIText" class="text-[10px] text-amber-300 font-semibold"></span>
+            <button onclick="showUPIQRModal()" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
+              <i class="fa-solid fa-qrcode"></i> QR
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="text-right">
+        <span class="text-[10px] text-slate-400" id="t-savings">बचत / शेष राशि</span>
+        <p class="text-base font-black text-emerald-400" id="netSavings">₹0</p>
+      </div>
+    </div>
+
+    <!-- 4 METRICS -->
+    <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-bills">कुल बिल</span><span class="font-bold text-rose-400" id="mBills">₹0</span></div>
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-emi">कुल EMI</span><span class="font-bold text-amber-400" id="mEMI">₹0</span></div>
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-sip">कुल SIP</span><span class="font-bold text-emerald-400" id="mSIP">₹0</span></div>
+      <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-prem">प्रीमियम</span><span class="font-bold text-cyan-400" id="mPrem">₹0</span></div>
+    </div>
+
+    <!-- 2 MAIN METRICS -->
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="bg-[#162238] border-l-4 border-l-emerald-500 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center">
+        <div><span class="text-[11px] text-slate-400" id="t-toReceive">बाज़ार से लेने हैं</span><h3 class="text-lg font-black text-emerald-400" id="totLene">₹0</h3></div>
+        <span class="text-xl">🤝</span>
+      </div>
+      <div class="bg-[#162238] border-l-4 border-l-rose-500 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center">
+        <div><span class="text-[11px] text-slate-400" id="t-toPay">देने हैं (डेबिट)</span><h3 class="text-lg font-black text-rose-400" id="totDene">₹0</h3></div>
+        <span class="text-xl">🤲</span>
+      </div>
+    </div>
+
+    <!-- BULK REMINDER & BROADCAST BUTTON -->
+    <button onclick="openBulkReminderModal()" class="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 shadow">
+      <i class="fa-solid fa-bullhorn"></i> <span id="t-bulkRem">📢 बल्क तगादा / रिमाइंडर (Broadcast Payment Reminders)</span>
+    </button>
+
+    <!-- SEARCH & CATEGORY CHIPS -->
+    <input type="text" id="searchInput" onkeyup="renderCards()" placeholder="खोजें..." class="w-full bg-[#162238] border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-200 outline-none focus:border-blue-500">
+    <div class="flex space-x-1.5 overflow-x-auto no-sb py-0.5 text-[11px]">
+      <button onclick="setFilter('ALL')" id="f-ALL" class="bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap shadow font-medium">सभी (All)</button>
+      <button onclick="setFilter('UDHAR')" id="f-UDHAR" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🤝 <span id="tc-udhar">लेन-देन</span></button>
+      <button onclick="setFilter('SHOP')" id="f-SHOP" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">📦 <span id="tc-shop">दुकान / किराना</span></button>
+      <button onclick="setFilter('CARD')" id="f-CARD" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">💳 <span id="tc-card">क्रेडिट कार्ड</span></button>
+      <button onclick="setFilter('BANK')" id="f-BANK" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🏦 <span id="tc-bank">बैंक / NBFC</span></button>
+      <button onclick="setFilter('INSURANCE')" id="f-INSURANCE" class="bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap">🛡️ <span id="tc-ins">इंश्योरेंस</span></button>
+    </div>
+
+    <!-- CARDS LIST -->
+    <div id="cardsList" class="space-y-2.5"></div>
+
+    <!-- REPORTS & SHARE -->
+    <div class="bg-[#162238] border border-slate-800 rounded-2xl p-3.5 space-y-2 text-xs">
+      <h3 class="font-bold text-slate-300" id="t-repHeader">📑 स्टेटमेंट, रिपोर्ट & शेयर</h3>
+      <div class="grid grid-cols-2 gap-2 font-semibold">
+        <button onclick="alert(currentLang==='hi'?'किसी भी खाते पर टैप करके लाइव PDF पर्चा देखें!':'Tap any customer card to view live PDF!')" class="bg-rose-600 text-white py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-pdf"></i> <span id="t-pdfRep">PDF रसीद</span></button>
+        <button onclick="downloadCSV()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl flex items-center justify-center gap-1"><i class="fa-solid fa-file-excel text-emerald-400"></i> <span id="t-xlRep">Excel (.CSV) शीट</span></button>
+        <button onclick="backupData()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">💾 <span id="t-bkp">बैकअप लें</span></button>
+        <button onclick="shareApp()" class="bg-slate-800 border border-slate-700 text-slate-200 py-2 rounded-xl">🎂 <span id="t-shApp">ऐप शेयर करें</span></button>
+      </div>
+      <button onclick="shareApp()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-2.5 rounded-xl shadow" id="t-shBig">व्यापारियों और दोस्तों को शेयर करें</button>
+    </div>
+  </main>
+
+  <!-- (+) FLOATING BUTTON -->
+  <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-14 h-14 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
+
+  <!-- MODAL: LEDGER DETAIL & MATERIAL BILL BUILDER WITH PAYMENT MODES -->
+  <div id="detailModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col p-4 overflow-hidden text-xs">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-600 overflow-hidden flex items-center justify-center shadow" id="dCustDP"></div>
+          <div>
+            <h3 id="dTitle" class="font-bold text-sm text-white"></h3>
+            <p id="dSub" class="text-[10px] text-slate-400"></p>
+            <p id="dCustAddress" class="text-[10px] text-amber-300"></p>
+          </div>
+        </div>
+        <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <!-- Balance Card -->
+      <div class="grid grid-cols-3 gap-1.5 my-2.5 bg-[#0f172a] p-2.5 rounded-xl text-center">
+        <div><span class="text-slate-400 text-[10px] block" id="t-dtGave">कुल दिया</span><span id="dGave" class="font-bold text-rose-400">₹0</span></div>
+        <div><span class="text-slate-400 text-[10px] block" id="t-dtRec">जमा + वापसी</span><span id="dRec" class="font-bold text-emerald-400">₹0</span></div>
+        <div><span class="text-slate-400 text-[10px] block font-bold" id="t-dtNet">शुद्ध बाकी</span><span id="dNet" class="font-black text-amber-400">₹0</span></div>
+      </div>
+
+      <!-- 3 Buttons -->
+      <div class="grid grid-cols-3 gap-2 mb-2 font-semibold">
+        <button onclick="showSubForm('GAVE')" class="bg-rose-950/70 border border-rose-600/50 text-rose-300 py-2 rounded-xl">🔴 <span id="t-btnGave">दिए (बिल)</span></button>
+        <button onclick="showSubForm('GOT')" class="bg-emerald-950/70 border border-emerald-600/50 text-emerald-300 py-2 rounded-xl">🟢 <span id="t-btnGot">मिले (जमा)</span></button>
+        <button onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-2 rounded-xl">🔄 <span id="t-btnRet">सामान वापसी</span></button>
+      </div>
+
+      <!-- ENTRY FORM WITH PAYMENT MODE & SCREENSHOT -->
+      <div id="subFormBox" class="hidden bg-[#0f172a] p-3 rounded-xl border border-blue-500/50 mb-2 space-y-2 max-h-64 overflow-y-auto">
+        <div class="flex justify-between font-bold text-blue-400">
+          <span id="subFormTitle">एंट्री जोड़ें</span>
+          <button onclick="document.getElementById('subFormBox').classList.add('hidden')">&times;</button>
+        </div>
+
+        <!-- Material Table for SHOP/GAVE -->
+        <div id="materialItemsWrapper" class="space-y-1.5">
+          <div class="grid grid-cols-12 gap-1 text-[10px] text-slate-400 font-semibold">
+            <span class="col-span-5">सामान का नाम</span><span class="col-span-2">मात्रा(Qty)</span><span class="col-span-2">भाव(Rate)</span><span class="col-span-3 text-right">कुल(₹)</span>
+          </div>
+          <div id="matRowContainer" class="space-y-1"></div>
+          <button type="button" onclick="addMaterialRow()" class="text-[10px] text-cyan-400 underline font-semibold flex items-center gap-1">
+            + सामान की लाइन जोड़ें (Add Item)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-0.5">रकम (₹)</label>
+            <input type="number" id="subAmt" placeholder="₹" class="w-full p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 font-bold outline-none">
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-0.5">पेमेंट माध्यम (Payment Mode)</label>
+            <select id="subPayMode" class="w-full p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none text-[10px]">
+              <option value="Cash">💵 नकद (Cash)</option>
+              <option value="PhonePe">📱 PhonePe</option>
+              <option value="GooglePay">📱 Google Pay</option>
+              <option value="Paytm">📱 Paytm</option>
+              <option value="UPI">⚡ UPI</option>
+              <option value="Cheque">🏦 चेक (Cheque)</option>
+              <option value="BankTransfer">🏛️ बैंक ट्रांसफर (IMPS/NEFT)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-0.5">विवरण / नोट</label>
+          <input type="text" id="subNote" placeholder="विवरण (उदा: राशन सामान / बिल नं)" class="w-full p-1.5 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
+        </div>
+
+        <!-- Bill / Payment Screenshot Attachment with Live Preview -->
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-0.5">📷 बिल फोटो / पेमेंट स्क्रीनशॉट अटैच करें</label>
+          <div class="flex items-center gap-2">
+            <input type="file" id="subPhoto" accept="image/*" class="w-full text-[10px] text-slate-400" onchange="previewTxPhoto(event)">
+            <div id="txPhotoThumbBox" class="hidden w-8 h-8 rounded border border-cyan-400 overflow-hidden flex-shrink-0">
+              <img id="txPhotoThumb" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+
+        <button onclick="saveSubTx()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded shadow">सुरक्षित करें (Save)</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="subList"></div>
+
+      <div class="pt-2.5 border-t border-slate-800 flex justify-between gap-2">
+        <button onclick="viewLivePDF()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-xl font-bold flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-solid fa-eye"></i> <span id="t-viewPdf">PDF पर्चा देखें / डाउनलोड</span>
+        </button>
+        <button onclick="closeModal('detailModal')" class="bg-slate-700 text-slate-200 px-4 py-2 rounded-xl font-semibold">बंद करें</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BULK PAYMENT REMINDER (तगादा मैसेजिंग) -->
+  <div id="bulkReminderModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3 text-xs">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md max-h-[92vh] flex flex-col p-4 overflow-hidden">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
+        <h3 class="font-bold text-sm text-amber-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-bullhorn"></i> बल्क तगादा (Broadcast Reminders)
+        </h3>
+        <button onclick="closeModal('bulkReminderModal')" class="text-slate-400 text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="my-2 p-2 bg-[#0f172a] rounded-xl border border-slate-800 space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-[11px] text-slate-300 font-semibold">न्यूनतम बकाया रकम (₹):</label>
+          <input type="number" id="bulkMinAmt" value="100" oninput="filterBulkCustomers()" class="w-24 p-1 bg-[#162238] border border-slate-700 rounded text-right font-bold text-amber-400">
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400">
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" id="bulkSelectAll" onchange="toggleSelectAllBulk(this.checked)" checked class="w-3.5 h-3.5">
+            <span class="font-bold text-white">सबको चुनें (Select All)</span>
+          </label>
+          <span id="bulkSelectedCount" class="text-cyan-400 font-bold">0 चुने गए</span>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="bulkCustList"></div>
+
+      <div class="pt-2.5 border-t border-slate-800 space-y-2">
+        <button onclick="sendBulkWhatsAppBroadcast()" class="w-full bg-[#22c55e] hover:bg-green-600 text-white font-bold py-2 rounded-xl flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-brands fa-whatsapp text-sm"></i> चुने गए ग्राहकों को WhatsApp रिमाइंडर भेजें
+        </button>
+        <button onclick="copyBulkReminderText()" class="w-full bg-[#1e293b] hover:bg-slate-700 border border-slate-700 text-slate-200 py-1.5 rounded-xl font-semibold flex items-center justify-center gap-1">
+          <i class="fa-regular fa-copy"></i> सभी मैसेज क्लिपबोर्ड पर कॉपी करें
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD ENTRY WITH CONTACT PICKER, CUSTOMER ADDRESS & AUTOCOMPLETE BANKS -->
+  <div id="addModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 text-xs">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md p-4 space-y-2.5 max-h-[92vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+        <h3 class="font-bold text-sm text-white" id="t-addTitle">नया खाता / लोन जोड़ें</h3>
+        <button onclick="closeModal('addModal')" class="text-slate-400 text-lg font-bold">&times;</button>
+      </div>
+
+      <button type="button" onclick="pickContact()" class="w-full bg-indigo-900/50 border border-indigo-500/50 text-indigo-300 py-2 rounded-xl flex items-center justify-center gap-2 font-semibold">
+        <i class="fa-solid fa-address-book text-amber-400"></i> 📱 फोन बुक से चुनें (Auto-fill Contact)
+      </button>
+
+      <div>
+        <label class="block text-slate-400 mb-0.5" id="lbl-cat">कैटेगरी</label>
+        <select id="newCat" onchange="handleCatChange()" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+          <option value="UDHAR">🤝 लेन-देन (उधार)</option>
+          <option value="SHOP">📦 दुकान / किराना</option>
+          <option value="CARD">💳 क्रेडिट कार्ड</option>
+          <option value="BANK">🏦 बैंक लोन / NBFC</option>
+          <option value="INSURANCE">🛡️ इंश्योरेंस</option>
+          <option value="OTHER">✨ अन्य / कस्टम कंपनी</option>
+        </select>
+      </div>
+
+      <!-- Autocomplete Bank / NBFC / Company List -->
+      <div id="bankAutocompleteBox" class="hidden">
+        <label class="block text-slate-400 mb-0.5">बैंक / NBFC चुनें या टाइप करें</label>
+        <input list="indianBanksList" id="newBankName" placeholder="उदा: SBI, HDFC, Bajaj Finserv..." class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+        <datalist id="indianBanksList">
+          <option value="State Bank of India (SBI)"></option>
+          <option value="HDFC Bank"></option>
+          <option value="ICICI Bank"></option>
+          <option value="Punjab National Bank (PNB)"></option>
+          <option value="Bank of Baroda (BoB)"></option>
+          <option value="Axis Bank"></option>
+          <option value="Kotak Mahindra Bank"></option>
+          <option value="Canara Bank"></option>
+          <option value="Union Bank of India"></option>
+          <option value="Bajaj Finserv"></option>
+          <option value="Muthoot Finance"></option>
+          <option value="Home Credit India"></option>
+          <option value="Tata Capital"></option>
+          <option value="L&T Finance"></option>
+          <option value="Manappuram Finance"></option>
+          <option value="Aditya Birla Finance"></option>
+        </datalist>
+      </div>
+
+      <!-- Custom Company/Lender box -->
+      <div id="custPartyBox" class="hidden">
+        <label class="block text-slate-400 mb-0.5">कंपनी या व्यक्ति का नाम (Custom Company / Lender)</label>
+        <input type="text" id="newCustParty" placeholder="उदा: कालू सेठ, शर्मा फायनेंस" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+      </div>
+
+      <div class="grid grid-cols-4 gap-2 items-center">
+        <div class="col-span-3">
+          <label class="block text-slate-400 mb-0.5" id="lbl-name">नाम / विवरण</label>
+          <input type="text" id="newTitle" placeholder="उदा: रमेश कुमार / राशन खाता" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+        </div>
+        <div class="col-span-1 text-center">
+          <label class="block text-slate-400 text-[10px] mb-0.5">ग्राहक DP</label>
+          <label class="w-10 h-10 rounded-full border border-slate-600 bg-[#0f172a] flex items-center justify-center cursor-pointer overflow-hidden mx-auto shadow">
+            <img id="newCustDPPreview" class="w-full h-full object-cover hidden">
+            <i id="newCustDPIcon" class="fa-solid fa-camera text-slate-400 text-xs"></i>
+            <input type="file" id="newCustDPFile" accept="image/*" class="hidden" onchange="compressAndPreviewCustDP(event)">
+          </label>
+        </div>
+      </div>
+
+      <!-- Customer Address -->
+      <div>
+        <label class="block text-slate-400 mb-0.5">ग्राहक का पता / मोहल्ला / गांव (Address)</label>
+        <input type="text" id="newAddress" placeholder="उदा: गांधी चौक, मकान नं 12" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-phone">मोबाइल</label><input type="tel" id="newPhone" placeholder="मो." class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-amt">शुरुआती रकम (₹)</label><input type="number" id="newAmt" placeholder="₹" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-type">प्रकार</label><select id="newType" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"><option value="LENE">लेने हैं (क्रेडिट)</option><option value="DENE">देने हैं (डेबिट)</option></select></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-due">ड्यू डेट</label><input type="date" id="newDue" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      </div>
+
+      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 text-slate-900 font-bold py-2.5 rounded-xl mt-1 shadow" id="btn-saveEntry">सुरक्षित करें</button>
+    </div>
+  </div>
+
+  <!-- MODAL: PROFILE & FIRM SETTINGS WITH ADDRESS & DP FIX -->
+  <div id="profileModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 text-xs">
+    <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-sm p-4 space-y-2.5 max-h-[92vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+        <h3 class="font-bold text-sm text-white" id="t-profTitle">प्रोफाइल एवं बिजनेस सेटिंग्स</h3>
+        <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
+      </div>
+
+      <!-- DP Upload Box with Immediate Preview -->
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full border-2 border-blue-400 bg-slate-900 mx-auto overflow-hidden flex items-center justify-center mb-1 shadow">
+          <img id="modalDP" class="w-full h-full object-cover hidden">
+          <i id="defaultModalIcon" class="fa-solid fa-user text-2xl text-slate-500"></i>
+        </div>
+        <label class="text-[11px] text-blue-400 font-semibold cursor-pointer underline">
+          DP / लोगो बदलें (100% Fixed)
+          <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="compressAndSetOwnerDP(event)">
+        </label>
+      </div>
+
+      <div><label class="block text-slate-400 mb-0.5" id="lbl-firm">फर्म / मालिक का नाम</label><input type="text" id="setFirm" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+
+      <!-- Firm Address -->
+      <div><label class="block text-slate-400 mb-0.5">दुकान / फर्म का पूरा पता (Address on Bill)</label><input type="text" id="setAddress" placeholder="उदा: मेन मार्केट, इंदौर (म.प्र.)" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-uphone">मोबाइल</label><input type="tel" id="setUserPhone" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+        <div><label class="block text-slate-400 mb-0.5" id="lbl-uinc">मासिक आय (₹)</label><input type="number" id="setIncome" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      </div>
+
+      <div><label class="block text-slate-400 mb-0.5">ईमेल</label><input type="email" id="setUserEmail" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none"></div>
+      <div>
+        <label class="block text-slate-400 mb-0.5">UPI आईडी (PhonePe, GPay, Paytm QR कोड हेतु)</label>
+        <input type="text" id="setUserUPI" placeholder="उदा: 98XXXXXXXX@paytm" class="w-full p-2 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
+      </div>
+      <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl mt-1 shadow" id="btn-saveProf">सेटिंग्स सेव करें</button>
+    </div>
+  </div>
+
+  <!-- MODAL: AUTO UPI QR CODE POPUP -->
+  <div id="upiQRModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+    <div class="bg-white text-slate-900 rounded-2xl w-full max-w-xs p-5 text-center space-y-3">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h4 class="font-bold text-sm text-blue-700">UPI पेमेंट QR कोड</h4>
+        <button onclick="closeModal('upiQRModal')" class="text-slate-400 text-xl font-bold">&times;</button>
+      </div>
+      <div class="w-48 h-48 mx-auto bg-slate-100 border rounded-xl overflow-hidden flex items-center justify-center p-2 shadow-inner">
+        <img id="upiQRImage" class="w-full h-full object-contain" alt="QR Code">
+      </div>
+      <p class="text-xs font-semibold text-slate-700" id="upiQRIdText"></p>
+      <p class="text-[10px] text-slate-400">PhonePe, GPay, Paytm से स्कैन कर सीधे भुगतान करें</p>
+    </div>
+  </div>
+
+  <!-- MODAL: LIVE PDF PREVIEW (SCREEN PAR DEKHNA) -->
+  <div id="pdfModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
+    <div class="bg-white text-slate-800 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col overflow-hidden shadow-2xl text-xs">
+      <div class="flex justify-between items-center bg-slate-900 text-white px-4 py-2.5">
+        <h4 class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-file-invoice text-rose-400"></i> डिजिटल पर्चा (Live Preview)</h4>
+        <button onclick="closeModal('pdfModal')" class="text-white font-bold text-lg">&times;</button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-4" id="pdfArea"></div>
+      <div class="bg-slate-100 border-t border-slate-300 p-2.5 flex justify-between">
+        <button onclick="closeModal('pdfModal')" class="px-3 py-1.5 border rounded-lg bg-white font-semibold">बंद करें</button>
+        <button onclick="downloadLivePDF()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-1.5 font-bold rounded-lg flex items-center gap-1 shadow">
+          <i class="fa-solid fa-download"></i> PDF डाउनलोड करें
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    const dict = {
+      hi: {
+        share:"शेयर", namaste:"नमस्ते", income:"मासिक आय", savings:"बचत / शेष राशि", bills:"कुल बिल", emi:"कुल EMI",
+        sip:"कुल SIP", prem:"प्रीमियम", toReceive:"बाज़ार से लेने हैं", toPay:"देने हैं (डेबिट)", dtGave:"कुल दिया",
+        dtRec:"जमा + वापसी", dtNet:"शुद्ध बाकी", btnGave:"दिए (बिल)", btnGot:"मिले (जमा)", btnRet:"सामान वापसी",
+        viewPdf:"PDF पर्चा देखें / डाउनलोड", addTitle:"नया खाता / लोन जोड़ें", search:"नाम, बैंक या मोबाइल खोजें...",
+        due:"⏳ Due:", lene:"लेने हैं", dene:"देने हैं", repHeader:"📑 स्टेटमेंट, रिपोर्ट & शेयर", pdfRep:"PDF रसीद",
+        xlRep:"Excel (.CSV) शीट", bkp:"बैकअप लें", shApp:"ऐप शेयर करें", shBig:"व्यापारियों और दोस्तों को शेयर करें",
+        udhar:"लेन-देन", shop:"दुकान / किराना", card:"क्रेडिट कार्ड", bank:"बैंक / NBFC", ins:"इंश्योरेंस",
+        profTitle:"प्रोफाइल एवं बिजनेस सेटिंग्स", saveEntry:"सुरक्षित करें", saveProf:"सेटिंग्स सेव करें",
+        bulkRem:"📢 बल्क तगादा / रिमाइंडर (Broadcast Payment Reminders)"
+      },
+      en: {
+        share:"Share", namaste:"Hello", income:"Monthly Income", savings:"Savings / Net Balance", bills:"Total Bills", emi:"Total EMI",
+        sip:"Total SIP", prem:"Premium", toReceive:"To Receive (Credit)", toPay:"To Pay (Debit)", dtGave:"Total Given",
+        dtRec:"Received + Return", dtNet:"Net Balance", btnGave:"Gave (Bill)", btnGot:"Got (Jama)", btnRet:"Sales Return",
+        viewPdf:"View & Download PDF Bill", addTitle:"Add New Account / Loan", search:"Search name, bank or mobile...",
+        due:"⏳ Due:", lene:"To Receive", dene:"To Pay", repHeader:"📑 Statements, Reports & Share", pdfRep:"PDF Receipt",
+        xlRep:"Excel (.CSV) Sheet", bkp:"Backup All", shApp:"Share App", shBig:"Share with Merchants & Friends",
+        udhar:"Udhar / Ledger", shop:"Shop / Grocery", card:"Credit Cards", bank:"Bank / NBFC", ins:"Insurance",
+        profTitle:"Profile & Business Settings", saveEntry:"Save Entry", saveProf:"Save Settings",
+        bulkRem:"📢 Broadcast Payment Reminders"
+      }
+    };
+
+    let currentLang = 'hi';
+    let db = {
+      lang: 'hi',
+      profile: { firmName: "Eevaan Benchers", address: "", phone: "", email: "", upi: "", income: 0, logo: "" },
+      items: [
+        {
+          id: "item_sample", title: "my airtel", category: "CARD", phone: "*121#", address: "Main Market", dp: "",
+          amount: 25860, type: "LENE", date: "2026-10-23", dueDate: "2026-10-25",
+          history: [{ id: "sub_1", type: "GAVE", amount: 25860, payMode: "UPI", note: "Bill / Udhar", items: [], photo: "", date: "2026-10-23" }]
+        }
+      ]
+    };
+
+    let activeFilter = 'ALL', activeItemId = null, activeSubType = 'GAVE', tempCustDP = "", tempTxPhoto = "";
+
+    function init() {
+      const saved = localStorage.getItem("eevaan_benchers_master_db");
+      if (saved) { try { db = JSON.parse(saved); } catch(e){} }
+      currentLang = db.lang || 'hi';
+      applyLang(currentLang);
+      applyProfile();
+      renderCards();
+      updateMetrics();
+    }
+
+    function saveDB() {
+      db.lang = currentLang;
+      localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db));
+      renderCards();
+      updateMetrics();
+    }
+
+    // ULTRA-RELIABLE CANVAS IMAGE COMPRESSOR
+    function compressImageFile(file, maxDimension, quality, callback) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if (w > h) {
+            if (w > maxDimension) { h = Math.round((h * maxDimension) / w); w = maxDimension; }
+          } else {
+            if (h > maxDimension) { w = Math.round((w * maxDimension) / h); h = maxDimension; }
+          }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          callback(dataUrl);
+        };
+        img.onerror = function() { alert("फोटो लोड नहीं हो सकी!"); };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 1. OWNER DP FIX
+    function compressAndSetOwnerDP(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      compressImageFile(f, 250, 0.7, function(b64) {
+        db.profile.logo = b64;
+        updateDPUI(b64);
+      });
+    }
+
+    function updateDPUI(b64) {
+      if (!b64) return;
+      ['headerDP','bannerDP','modalDP'].forEach(id => {
+        const img = document.getElementById(id);
+        if (img) { img.src = b64; img.classList.remove('hidden'); }
+      });
+      ['defaultUserIcon','defaultBannerIcon','defaultModalIcon'].forEach(id => {
+        const ic = document.getElementById(id);
+        if (ic) ic.classList.add('hidden');
+      });
+    }
+
+    // 2. CUSTOMER DP FIX
+    function compressAndPreviewCustDP(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      compressImageFile(f, 200, 0.7, function(b64) {
+        tempCustDP = b64;
+        const im = document.getElementById('newCustDPPreview');
+        im.src = b64;
+        im.classList.remove('hidden');
+        document.getElementById('newCustDPIcon').classList.add('hidden');
+      });
+    }
+
+    // 3. PAYMENT / BILL PHOTO PREVIEW FIX
+    function previewTxPhoto(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      compressImageFile(f, 400, 0.65, function(b64) {
+        tempTxPhoto = b64;
+        document.getElementById('txPhotoThumb').src = b64;
+        document.getElementById('txPhotoThumbBox').classList.remove('hidden');
+      });
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'hi' ? 'en' : 'hi';
+      applyLang(currentLang);
+      saveDB();
+    }
+
+    function applyLang(l) {
+      const d = dict[l];
+      ['share','namaste','income','savings','bills','emi','sip','prem','toReceive','toPay','dtGave','dtRec','dtNet',
+       'btnGave','btnGot','btnRet','viewPdf','addTitle','repHeader','pdfRep','xlRep','bkp','shApp','shBig','profTitle','bulkRem'].forEach(k => {
+        const el = document.getElementById('t-' + k);
+        if (el) el.innerText = d[k];
+      });
+
+      document.getElementById('tc-udhar').innerText = d.udhar;
+      document.getElementById('tc-shop').innerText = d.shop;
+      document.getElementById('tc-card').innerText = d.card;
+      document.getElementById('tc-bank').innerText = d.bank;
+      document.getElementById('tc-ins').innerText = d.ins;
+
+      const catSel = document.getElementById('newCat');
+      if (catSel) {
+        catSel.options[0].text = `🤝 ${d.udhar}`;
+        catSel.options[1].text = `📦 ${d.shop}`;
+        catSel.options[2].text = `💳 ${d.card}`;
+        catSel.options[3].text = `🏦 ${d.bank}`;
+        catSel.options[4].text = `🛡️ ${d.ins}`;
+        catSel.options[5].text = l === 'hi' ? "✨ अन्य / कस्टम कंपनी" : "✨ Other / Custom Company";
+      }
+
+      const typeSel = document.getElementById('newType');
+      if (typeSel) {
+        typeSel.options[0].text = l === 'hi' ? "लेने हैं (क्रेडिट)" : "To Receive (Credit)";
+        typeSel.options[1].text = l === 'hi' ? "देने हैं (डेबिट)" : "To Pay (Debit)";
+      }
+
+      document.getElementById('btn-saveEntry').innerText = d.saveEntry;
+      document.getElementById('btn-saveProf').innerText = d.saveProf;
+      document.getElementById('searchInput').placeholder = d.search;
+      document.getElementById('langBtn').innerHTML = `🌐 ${l === 'hi' ? 'English' : 'हिंदी'}`;
+      renderCards();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    // PROFILE SAVE & UPI QR
+    function saveProfile() {
+      const n = document.getElementById('setFirm').value.trim();
+      if (n) db.profile.firmName = n;
+      db.profile.address = document.getElementById('setAddress').value.trim();
+      db.profile.phone = document.getElementById('setUserPhone').value.trim();
+      db.profile.email = document.getElementById('setUserEmail').value.trim();
+      db.profile.upi = document.getElementById('setUserUPI').value.trim();
+      db.profile.income = parseFloat(document.getElementById('setIncome').value) || 0;
+      saveDB();
+      applyProfile();
+      closeModal('profileModal');
+      alert(currentLang === 'hi' ? "प्रोफाइल सुरक्षित हो गई!" : "Profile Saved!");
+    }
+
+    function applyProfile() {
+      document.getElementById('appFirmTitle').innerText = db.profile.firmName || "Eevaan Benchers";
+      document.getElementById('bannerUserName').innerText = db.profile.firmName || "Eevaan Benchers";
+      document.getElementById('setFirm').value = db.profile.firmName || "Eevaan Benchers";
+      document.getElementById('setAddress').value = db.profile.address || "";
+      document.getElementById('setUserPhone').value = db.profile.phone || "";
+      document.getElementById('setUserEmail').value = db.profile.email || "";
+      document.getElementById('setUserUPI').value = db.profile.upi || "";
+      document.getElementById('mIncomeText').innerText = `₹${db.profile.income || 0}`;
+      document.getElementById('setIncome').value = db.profile.income || 0;
+
+      const addrEl = document.getElementById('bannerAddressText');
+      if (db.profile.address) {
+        addrEl.innerHTML = `<i class="fa-solid fa-location-dot text-rose-400"></i> ${db.profile.address}`;
+      } else {
+        addrEl.innerHTML = "";
+      }
+
+      const upiBox = document.getElementById('bannerUPIContainer');
+      if (db.profile.upi) {
+        upiBox.classList.remove('hidden');
+        document.getElementById('bannerUPIText').innerText = `UPI: ${db.profile.upi}`;
+      } else {
+        upiBox.classList.add('hidden');
+      }
+
+      if (db.profile.logo) updateDPUI(db.profile.logo);
+    }
+
+    function showUPIQRModal() {
+      if (!db.profile.upi) return;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${db.profile.upi}&pn=${db.profile.firmName}`)}`;
+      document.getElementById('upiQRImage').src = qrUrl;
+      document.getElementById('upiQRIdText').innerText = `UPI ID: ${db.profile.upi}`;
+      openModal('upiQRModal');
+    }
+
+    // CONTACT PICKER
+    async function pickContact() {
+      if ('contacts' in navigator && 'ContactsManager' in window) {
+        try {
+          const res = await navigator.contacts.select(['name', 'tel', 'address'], { multiple: false });
+          if (res && res[0]) {
+            if (res[0].name && res[0].name[0]) document.getElementById('newTitle').value = res[0].name[0];
+            if (res[0].tel && res[0].tel[0]) document.getElementById('newPhone').value = res[0].tel[0].replace(/[^0-9]/g, '');
+            if (res[0].address && res[0].address[0]) document.getElementById('newAddress').value = res[0].address[0];
+          }
+        } catch(e){}
+      } else {
+        alert(currentLang === 'hi' ? "फोन बुक डायरेक्ट सपोर्ट नहीं है। नाम व नंबर टाइप करें।" : "Contact picker not supported. Type manually.");
+      }
+    }
+
+    function handleCatChange() {
+      const v = document.getElementById('newCat').value;
+      document.getElementById('bankAutocompleteBox').classList.toggle('hidden', v !== 'BANK');
+      document.getElementById('custPartyBox').classList.toggle('hidden', v !== 'OTHER');
+    }
+
+    function setFilter(cat) {
+      activeFilter = cat;
+      ['ALL','UDHAR','SHOP','CARD','BANK','INSURANCE'].forEach(c => {
+        const b = document.getElementById('f-' + c);
+        if (b) b.className = c === cat ? "bg-blue-600 text-white px-3 py-1 rounded-full whitespace-nowrap shadow font-medium" : "bg-[#162238] text-slate-300 border border-slate-800 px-3 py-1 rounded-full whitespace-nowrap";
+      });
+      renderCards();
+    }
+
+    function calcItem(it) {
+      if (!it.history || !it.history.length) return { gave: it.amount||0, got: 0, ret: 0, balance: it.amount||0 };
+      let gave = 0, got = 0, ret = 0;
+      it.history.forEach(h => {
+        const a = parseFloat(h.amount) || 0;
+        if (h.type === 'GAVE') gave += a;
+        if (h.type === 'GOT') got += a;
+        if (h.type === 'RETURN') ret += a;
+      });
+      return { gave, got, ret, balance: gave - (got + ret) };
+    }
+
+    function getCategoryName(cat) {
+      const d = dict[currentLang];
+      if (cat === 'UDHAR') return d.udhar;
+      if (cat === 'SHOP') return d.shop;
+      if (cat === 'CARD') return d.card;
+      if (cat === 'BANK') return d.bank;
+      if (cat === 'INSURANCE') return d.ins;
+      return currentLang === 'hi' ? "अन्य" : "Other";
+    }
+
+    // RENDER CARDS
+    function renderCards() {
+      const cont = document.getElementById('cardsList');
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const d = dict[currentLang];
+      cont.innerHTML = "";
+
+      const list = db.items.filter(i => (activeFilter === 'ALL' || i.category === activeFilter) && (i.title.toLowerCase().includes(q) || (i.phone && i.phone.includes(q)) || (i.address && i.address.toLowerCase().includes(q))));
+      if (!list.length) {
+        cont.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs">${currentLang === 'hi' ? 'कोई रिकॉर्ड नहीं मिला' : 'No records found'}</div>`;
+        return;
+      }
+
+      list.forEach(i => {
+        const c = calcItem(i);
+        const isL = i.type === 'LENE';
+        const card = document.createElement('div');
+        card.className = "bg-[#162238] border border-slate-800 rounded-2xl p-3 shadow space-y-2 cursor-pointer hover:border-blue-500/50 transition";
+        card.onclick = (e) => { if (!e.target.closest('button')) openDetail(i.id); };
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-10 h-10 rounded-full border border-slate-700 bg-slate-900 overflow-hidden flex items-center justify-center text-sm shadow">
+                ${i.dp ? `<img src="${i.dp}" class="w-full h-full object-cover">` : `<span>🤝</span>`}
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-xs">${i.title}</h4>
+                <p class="text-[10px] text-slate-400">
+                  <span class="text-blue-400 font-semibold">[${getCategoryName(i.category)}]</span> • 📅 ${i.date} • 📞 ${i.phone||'N/A'}
+                </p>
+                ${i.address ? `<p class="text-[9px] text-slate-400 flex items-center gap-1"><i class="fa-solid fa-location-dot text-rose-400 text-[8px]"></i> ${i.address}</p>` : ''}
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] block font-semibold ${isL?'text-emerald-400':'text-rose-400'}">${isL ? d.lene : d.dene}</span>
+              <span class="text-sm font-black ${isL?'text-emerald-400':'text-rose-400'}">₹${c.balance}</span>
+            </div>
+          </div>
+          <div class="flex justify-between items-center pt-1 border-t border-slate-800/80 text-[10px]">
+            <div>${i.dueDate ? `<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">${d.due} ${i.dueDate}</span>` : `<span class="text-slate-500">टैप कर देखें</span>`}</div>
+            <div class="flex items-center space-x-1.5">
+              <button onclick="sendWA('${i.phone}','${i.title}',${c.balance})" class="bg-[#22c55e] text-white px-2 py-0.5 rounded font-bold shadow">💬 WA</button>
+              <button onclick="sendSMS('${i.phone}','${i.title}',${c.balance})" class="bg-[#0ea5e9] text-white px-2 py-0.5 rounded font-bold shadow">✉️ SMS</button>
+              <button onclick="deleteItem('${i.id}')" class="text-slate-400 hover:text-rose-400 px-1"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+          </div>
+        `;
+        cont.appendChild(card);
+      });
+    }
+
+    function updateMetrics() {
+      let lene = 0, dene = 0, bills = 0, emi = 0, sip = 0, prem = 0;
+      db.items.forEach(i => {
+        const c = calcItem(i);
+        if (i.type === 'LENE') lene += c.balance; else dene += c.balance;
+        if (i.category === 'CARD' || i.category === 'SHOP') bills += c.balance;
+        if (i.category === 'BANK') emi += c.balance;
+        if (i.category === 'INSURANCE') prem += c.balance;
+      });
+      document.getElementById('totLene').innerText = `₹${lene}`;
+      document.getElementById('totDene').innerText = `₹${dene}`;
+      document.getElementById('mBills').innerText = `₹${bills}`;
+      document.getElementById('mEMI').innerText = `₹${emi}`;
+      document.getElementById('mSIP').innerText = `₹${sip}`;
+      document.getElementById('mPrem').innerText = `₹${prem}`;
+      document.getElementById('netSavings').innerText = `₹${(db.profile.income||0) + lene - dene}`;
+    }
+
+    function openAddEntryModal() {
+      ['newTitle','newAddress','newPhone','newAmt','newCustParty','newBankName'].forEach(id => document.getElementById(id).value = "");
+      tempCustDP = "";
+      document.getElementById('newCustDPPreview').classList.add('hidden');
+      document.getElementById('newCustDPIcon').classList.remove('hidden');
+      handleCatChange();
+      openModal('addModal');
+    }
+
+    function saveNewEntry() {
+      const cat = document.getElementById('newCat').value;
+      let t = document.getElementById('newTitle').value.trim();
+      const cp = document.getElementById('newCustParty').value.trim();
+      const bn = document.getElementById('newBankName').value.trim();
+
+      if (cat === 'BANK' && bn) t = `${bn} (${t || 'Loan'})`;
+      if (cat === 'OTHER' && cp) t = `${cp} (${t || 'Khata'})`;
+      if (!t) return alert(currentLang === 'hi' ? "कृपया नाम लिखें!" : "Enter name!");
+
+      const amt = parseFloat(document.getElementById('newAmt').value) || 0;
+      const newItem = {
+        id: "item_" + Date.now(), title: t, category: cat,
+        address: document.getElementById('newAddress').value.trim(),
+        phone: document.getElementById('newPhone').value.trim(), dp: tempCustDP,
+        amount: amt, type: document.getElementById('newType').value,
+        date: new Date().toLocaleDateString('en-CA'),
+        dueDate: document.getElementById('newDue').value,
+        history: [{ id: "sub_" + Date.now(), type: "GAVE", amount: amt, payMode: "Cash", note: "Initial Entry", items: [], photo: "", date: new Date().toLocaleDateString('en-CA') }]
+      };
+      db.items.unshift(newItem);
+      saveDB();
+      closeModal('addModal');
+    }
+
+    function deleteItem(id) {
+      if (confirm(currentLang === 'hi' ? "हटाना चाहते हैं?" : "Delete item?")) {
+        db.items = db.items.filter(i => i.id !== id);
+        saveDB();
+      }
+    }
+
+    // MATERIAL ITEM BUILDER
+    function addMaterialRow() {
+      const container = document.getElementById('matRowContainer');
+      const div = document.createElement('div');
+      div.className = "grid grid-cols-12 gap-1 items-center mat-row";
+      div.innerHTML = `
+        <input type="text" placeholder="सामान" class="col-span-5 p-1 bg-[#162238] border border-slate-700 rounded text-[10px] text-slate-100 mat-name">
+        <input type="number" placeholder="मात्रा" oninput="calculateMaterialTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-[10px] text-slate-100 mat-qty">
+        <input type="number" placeholder="भाव" oninput="calculateMaterialTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-[10px] text-slate-100 mat-rate">
+        <span class="col-span-2 text-right font-bold text-amber-400 text-[10px] mat-subtot">₹0</span>
+        <button type="button" onclick="this.parentElement.remove(); calculateMaterialTotal();" class="col-span-1 text-slate-500 hover:text-rose-400 text-center">&times;</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function calculateMaterialTotal() {
+      let sum = 0;
+      document.querySelectorAll('.mat-row').forEach(row => {
+        const qty = parseFloat(row.querySelector('.mat-qty').value) || 0;
+        const rate = parseFloat(row.querySelector('.mat-rate').value) || 0;
+        const total = qty * rate;
+        row.querySelector('.mat-subtot').innerText = `₹${total}`;
+        sum += total;
+      });
+      if (sum > 0) document.getElementById('subAmt').value = sum;
+    }
+
+    function openDetail(id) {
+      activeItemId = id;
+      const it = db.items.find(i => i.id === id);
+      if (!it) return;
+      document.getElementById('dTitle').innerText = it.title;
+      document.getElementById('dSub').innerText = `[${getCategoryName(it.category)}] • 📞 ${it.phone||'N/A'} • ${it.date}`;
+      document.getElementById('dCustAddress').innerText = it.address ? `📍 ${it.address}` : "";
+      document.getElementById('dCustDP').innerHTML = it.dp ? `<img src="${it.dp}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-slate-500"></i>`;
+      document.getElementById('subFormBox').classList.add('hidden');
+      renderSubHistory(it);
+      openModal('detailModal');
+    }
+
+    function showSubForm(tp) {
+      activeSubType = tp;
+      document.getElementById('subFormBox').classList.remove('hidden');
+      document.getElementById('subAmt').value = "";
+      document.getElementById('subNote').value = "";
+      document.getElementById('subPhoto').value = "";
+      tempTxPhoto = "";
+      document.getElementById('txPhotoThumbBox').classList.add('hidden');
+      document.getElementById('matRowContainer').innerHTML = "";
+      addMaterialRow();
+
+      const isHi = currentLang === 'hi';
+      document.getElementById('subFormTitle').innerText = tp === 'GAVE' 
+        ? (isHi ? "🔴 सामान बिल जोड़ें (दिए / बिल)" : "🔴 Add Goods Bill (Gave)")
+        : (tp === 'GOT' ? (isHi ? "🟢 पैसा जमा मिला (Payment Got)" : "🟢 Payment Received (Got)")
+                        : (isHi ? "🔄 सामान वापसी (Sales Return)" : "🔄 Sales Return (Deducted)"));
+    }
+
+    function saveSubTx() {
+      const it = db.items.find(i => i.id === activeItemId);
+      if (!it) return;
+      const amt = parseFloat(document.getElementById('subAmt').value);
+      if (!amt || amt <= 0) return alert("कृपया सही रकम दर्ज करें!");
+
+      const items = [];
+      document.querySelectorAll('.mat-row').forEach(row => {
+        const name = row.querySelector('.mat-name').value.trim();
+        const qty = parseFloat(row.querySelector('.mat-qty').value) || 1;
+        const rate = parseFloat(row.querySelector('.mat-rate').value) || 0;
+        if (name) items.push({ name, qty, rate, total: qty * rate });
+      });
+
+      const rec = {
+        id: "sub_" + Date.now(),
+        type: activeSubType,
+        amount: amt,
+        payMode: document.getElementById('subPayMode').value,
+        note: document.getElementById('subNote').value.trim() || (activeSubType === 'GAVE' ? 'सामान बिल' : (activeSubType === 'GOT' ? 'जमा रकम' : 'सामान वापसी')),
+        items: items,
+        photo: tempTxPhoto || "",
+        date: new Date().toLocaleDateString('en-CA')
+      };
+
+      if (!it.history) it.history = [];
+      it.history.unshift(rec);
+      saveDB();
+      renderSubHistory(it);
+      document.getElementById('subFormBox').classList.add('hidden');
+    }
+
+    function renderSubHistory(it) {
+      const c = calcItem(it);
+      document.getElementById('dGave').innerText = `₹${c.gave}`;
+      document.getElementById('dRec').innerText = `₹${c.got + c.ret}`;
+      document.getElementById('dNet').innerText = `₹${c.balance}`;
+      const l = document.getElementById('subList');
+      l.innerHTML = "";
+
+      (it.history || []).forEach((h, idx) => {
+        const isG = h.type === 'GAVE', isR = h.type === 'RETURN';
+        const color = isG ? "text-rose-400 border-rose-500/30 bg-rose-500/10" : (isR ? "text-amber-400 border-amber-500/30 bg-amber-500/10" : "text-emerald-400 border-emerald-500/30 bg-emerald-500/10");
+        const div = document.createElement('div');
+        div.className = `p-2.5 rounded-xl border flex justify-between items-start ${color}`;
+        
+        let itemsHtml = "";
+        if (h.items && h.items.length) {
+          itemsHtml = `<div class="mt-1 bg-black/30 p-1.5 rounded text-[10px] space-y-0.5">` +
+            h.items.map(m => `<div class="flex justify-between text-slate-300"><span>• ${m.name} (${m.qty} x ₹${m.rate})</span><span class="font-bold">₹${m.total}</span></div>`).join('') +
+            `</div>`;
+        }
+
+        div.innerHTML = `
+          <div class="flex-1 pr-2">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[9px] font-bold px-1 rounded border uppercase">${isG ? 'दिए/बिल' : (isR ? 'वापसी' : 'मिले/जमा')}</span>
+              <span class="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.2 rounded border border-slate-700">${h.payMode || 'Cash'}</span>
+            </div>
+            <p class="font-semibold text-white mt-0.5 text-xs">${h.note}</p>
+            ${itemsHtml}
+            <span class="text-[9px] text-slate-400 block mt-0.5">${h.date}</span>
+            ${h.photo ? `<button onclick="viewImg('${h.photo}')" class="text-[10px] text-cyan-400 font-bold underline flex items-center gap-1 mt-1"><i class="fa-solid fa-paperclip"></i> स्क्रीनशॉट / बिल फोटो देखें</button>` : ''}
+          </div>
+          <div class="text-right">
+            <span class="font-black text-sm">₹${h.amount}</span>
+            <button onclick="delSubTx(${idx})" class="block text-slate-500 hover:text-rose-400 text-xs mt-1"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `;
+        l.appendChild(div);
+      });
+    }
+
+    function delSubTx(idx) {
+      const it = db.items.find(i => i.id === activeItemId);
+      if (it && confirm("हटाना चाहते हैं?")) {
+        it.history.splice(idx, 1);
+        saveDB();
+        renderSubHistory(it);
+      }
+    }
+
+    function viewImg(src) {
+      const w = window.open("");
+      w.document.write(`<div style="background:#000;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;"><img src="${src}" style="max-width:100%;max-height:90vh;border-radius:10px;box-shadow:0 0 20px rgba(255,255,255,0.2);"></div>`);
+    }
+
+    // BULK REMINDERS LOGIC
+    function openBulkReminderModal() {
+      filterBulkCustomers();
+      openModal('bulkReminderModal');
+    }
+
+    function filterBulkCustomers() {
+      const minAmt = parseFloat(document.getElementById('bulkMinAmt').value) || 0;
+      const list = document.getElementById('bulkCustList');
+      list.innerHTML = "";
+
+      const eligible = db.items.filter(i => i.type === 'LENE' && calcItem(i).balance >= minAmt);
+      if (!eligible.length) {
+        list.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs">कोई ग्राहक इस रकम से ऊपर नहीं मिला</div>`;
+        document.getElementById('bulkSelectedCount').innerText = "0 चुने गए";
+        return;
+      }
+
+      eligible.forEach(c => {
+        const bal = calcItem(c).balance;
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between p-2 bg-[#0f172a] rounded-xl border border-slate-800 text-xs";
+        row.innerHTML = `
+          <label class="flex items-center gap-2 cursor-pointer flex-1">
+            <input type="checkbox" class="bulk-cb" data-id="${c.id}" data-phone="${c.phone}" data-name="${c.title}" data-amt="${bal}" checked onchange="updateBulkCount()">
+            <div>
+              <p class="font-bold text-white">${c.title}</p>
+              <p class="text-[10px] text-slate-400">📞 ${c.phone||'N/A'} ${c.address ? `• 📍 ${c.address}` : ''}</p>
+            </div>
+          </label>
+          <span class="font-black text-rose-400">₹${bal}</span>
+        `;
+        list.appendChild(row);
+      });
+      updateBulkCount();
+    }
+
+    function toggleSelectAllBulk(checked) {
+      document.querySelectorAll('.bulk-cb').forEach(cb => cb.checked = checked);
+      updateBulkCount();
+    }
+
+    function updateBulkCount() {
+      const cnt = document.querySelectorAll('.bulk-cb:checked').length;
+      document.getElementById('bulkSelectedCount').innerText = `${cnt} चुने गए`;
+    }
+
+    function sendBulkWhatsAppBroadcast() {
+      const selected = Array.from(document.querySelectorAll('.bulk-cb:checked'));
+      if (!selected.length) return alert("कृपया कम से कम एक ग्राहक चुनें!");
+
+      alert(`कुल ${selected.length} ग्राहकों के लिए WhatsApp मैसेजिंग शुरू की जा रही है।`);
+      selected.forEach((cb, idx) => {
+        const ph = cb.getAttribute('data-phone');
+        const name = cb.getAttribute('data-name');
+        const amt = cb.getAttribute('data-amt');
+        if (ph && ph.length >= 10) {
+          setTimeout(() => {
+            const clean = ph.replace(/[^0-9]/g, '');
+            const msg = encodeURIComponent(`नमस्ते ${name}, आपकी कुल बकाया राशि ₹${amt} है। कृपया समय पर भुगतान करें। धन्यवाद! - ${db.profile.firmName}`);
+            window.open(`https://wa.me/${clean}?text=${msg}`, '_blank');
+          }, idx * 1200);
+        }
+      });
+    }
+
+    function copyBulkReminderText() {
+      const selected = Array.from(document.querySelectorAll('.bulk-cb:checked'));
+      if (!selected.length) return alert("कोई ग्राहक नहीं चुना गया!");
+      let txt = `तगादा लिस्ट - ${db.profile.firmName}\n---------------------\n`;
+      selected.forEach(cb => {
+        txt += `• ${cb.getAttribute('data-name')} (मो: ${cb.getAttribute('data-phone')}) : ₹${cb.getAttribute('data-amt')}\n`;
+      });
+      navigator.clipboard.writeText(txt);
+      alert("पूरी लिस्ट कॉपी हो गई है!");
+    }
+
+    // LIVE PDF BILL PREVIEW WITH ADDRESS, PAYMENT MODE & QR
+    function viewLivePDF() {
+      const it = db.items.find(i => i.id === activeItemId);
+      if (!it) return;
+      const c = calcItem(it);
+      const isHi = currentLang === 'hi';
+
+      let rowsHtml = "";
+      (it.history || []).forEach(h => {
+        let typeText = h.type === 'GAVE' ? (isHi ? 'दिए' : 'Gave') : (h.type === 'GOT' ? (isHi ? 'मिले' : 'Received') : (isHi ? 'वापसी' : 'Return'));
+        let typeColor = h.type === 'GAVE' ? 'text-rose-600' : (h.type === 'GOT' ? 'text-emerald-600' : 'text-amber-600');
+        
+        let subItems = "";
+        if (h.items && h.items.length) {
+          subItems = `<div style="font-size:9px;color:#64748b;margin-top:2px;">` +
+            h.items.map(m => `${m.name} (${m.qty} x ₹${m.rate} = ₹${m.total})`).join(', ') +
+            `</div>`;
+        }
+
+        rowsHtml += `
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:6px;font-size:10px;color:#64748b;">${h.date}</td>
+            <td style="padding:6px;font-size:10px;">
+              <strong>${h.note}</strong> <span style="font-size:8px;background:#f1f5f9;padding:1px 4px;border-radius:4px;">[${h.payMode||'Cash'}]</span>
+              ${subItems}
+            </td>
+            <td style="padding:6px;font-size:10px;font-weight:bold;" class="${typeColor}">${typeText}</td>
+            <td style="padding:6px;font-size:10px;text-align:right;font-weight:bold;">₹${h.amount}</td>
+          </tr>
+        `;
+      });
+
+      let upiQrHtml = "";
+      if (db.profile.upi) {
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`upi://pay?pa=${db.profile.upi}&pn=${db.profile.firmName}`)}`;
+        upiQrHtml = `
+          <div style="text-align:center;border-left:1px solid #e2e8f0;padding-left:10px;">
+            <img src="${qrUrl}" style="width:75px;height:75px;margin:auto;">
+            <p style="font-size:8px;color:#059669;font-weight:bold;margin:2px 0 0;">Pay via UPI</p>
+          </div>
+        `;
+      }
+
+      document.getElementById('pdfArea').innerHTML = `
+        <div id="actualPdf" style="font-family:Arial,sans-serif;border:1px solid #cbd5e1;padding:16px;border-radius:10px;background:#ffffff;color:#1e293b;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #2563eb;padding-bottom:10px;">
+            <div>
+              <h2 style="font-size:16px;font-weight:900;color:#1d4ed8;margin:0;text-transform:uppercase;">${db.profile.firmName || 'Eevaan Benchers'}</h2>
+              <p style="font-size:9px;color:#64748b;margin:2px 0;">Powered by Eevan Ventures</p>
+              ${db.profile.address ? `<p style="font-size:9px;color:#475569;margin:1px 0;">📍 ${db.profile.address}</p>` : ''}
+              ${db.profile.phone ? `<p style="font-size:9px;margin:1px 0;">मो: ${db.profile.phone}</p>` : ''}
+              ${db.profile.upi ? `<p style="font-size:9px;color:#059669;font-weight:bold;margin:1px 0;">UPI: ${db.profile.upi}</p>` : ''}
+            </div>
+            ${upiQrHtml}
+          </div>
+
+          <div style="background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #e2e8f0;margin:10px 0;display:flex;justify-content:space-between;">
+            <div>
+              <p style="font-size:8px;color:#64748b;text-transform:uppercase;margin:0;font-weight:bold;">${isHi ? 'ग्राहक विवरण' : 'Customer Details'}</p>
+              <h4 style="font-size:12px;font-weight:bold;margin:2px 0;color:#0f172a;">${it.title}</h4>
+              <p style="font-size:9px;color:#64748b;margin:0;">📞 ${it.phone || 'N/A'}</p>
+              ${it.address ? `<p style="font-size:9px;color:#64748b;margin:0;">📍 ${it.address}</p>` : ''}
+            </div>
+            <div style="text-align:right;">
+              <p style="font-size:9px;color:#64748b;margin:0;">तारीख: ${new Date().toLocaleDateString('en-IN')}</p>
+              <span style="font-size:8px;background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:10px;font-weight:bold;">वेरिफाइड पर्चा</span>
+            </div>
+          </div>
+
+          <table style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <thead>
+              <tr style="background:#f1f5f9;border-bottom:1px solid #cbd5e1;text-align:left;">
+                <th style="padding:6px;font-size:9px;">तारीख</th>
+                <th style="padding:6px;font-size:9px;">विवरण व माध्यम</th>
+                <th style="padding:6px;font-size:9px;">प्रकार</th>
+                <th style="padding:6px;font-size:9px;text-align:right;">रकम (₹)</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+
+          <div style="border-top:2px solid #e2e8f0;padding-top:6px;font-size:11px;text-align:right;">
+            <div style="display:flex;justify-content:space-between;margin:2px 0;color:#64748b;"><span>कुल सामान/उधार:</span><span style="font-weight:bold;">₹${c.gave}</span></div>
+            <div style="display:flex;justify-content:space-between;margin:2px 0;color:#059669;"><span>कुल जमा मिला:</span><span style="font-weight:bold;">- ₹${c.got}</span></div>
+            <div style="display:flex;justify-content:space-between;margin:2px 0;color:#d97706;"><span>सामान वापसी कटौती:</span><span style="font-weight:bold;">- ₹${c.ret}</span></div>
+            <div style="display:flex;justify-content:space-between;margin:6px 0 0;font-size:13px;font-weight:900;color:#dc2626;border-top:1px solid #cbd5e1;padding-top:4px;">
+              <span>कुल शुद्ध बकाया राशि:</span><span>₹${c.balance}</span>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;border-top:1px dashed #cbd5e1;padding-top:4px;font-size:8px;color:#94a3b8;display:flex;justify-content:space-between;">
+            <span>लेखा जोखा डिजिटल • 100% सुरक्षित</span>
+            <span>अधिकृत हस्ताक्षर / मुहर</span>
+          </div>
+        </div>
+      `;
+      openModal('pdfModal');
+    }
+
+    function downloadLivePDF() {
+      const it = db.items.find(i => i.id === activeItemId);
+      const el = document.getElementById('actualPdf');
+      html2pdf().set({ margin: 4, filename: `${it?it.title:'Customer'}_Parcha.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(el).save();
+    }
+
+    function sendWA(ph, n, a) {
+      window.open(`https://wa.me/${ph?ph.replace(/[^0-9]/g,''):''}?text=${encodeURIComponent(`नमस्ते ${n}, आपकी कुल बकाया राशि ₹${a} है। धन्यवाद! - ${db.profile.firmName}`)}`, '_blank');
+    }
+
+    function sendSMS(ph, n, a) {
+      window.open(`sms:${ph}?body=${encodeURIComponent(`नमस्ते ${n}, कुल बकाया ₹${a} है। - ${db.profile.firmName}`)}`, '_blank');
+    }
+
+    function shareApp() {
+      if (navigator.share) navigator.share({ title: db.profile.firmName, url: window.location.href });
+      else { navigator.clipboard.writeText(window.location.href); alert("लिंक कॉपी हो गया!"); }
+    }
+
+    function downloadCSV() {
+      let csv = currentLang === 'hi' 
+        ? "ID,नाम,पता,मोबाइल,कैटेगरी,प्रकार,कुल_बकाया,ड्यू_डेट\n"
+        : "ID,Name,Address,Phone,Category,Type,Net_Balance,Due_Date\n";
+      db.items.forEach(i => csv += `"${i.id}","${i.title}","${i.address||''}","${i.phone}","${getCategoryName(i.category)}","${i.type}","${calcItem(i).balance}","${i.dueDate}"\n`);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      a.download = `LekhaJokha_Report_${new Date().toLocaleDateString('en-CA')}.csv`;
+      a.click();
+    }
+
+    function backupData() {
+      const a = document.createElement('a');
+      a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+      a.download = `Backup_${new Date().toLocaleDateString('en-CA')}.json`;
+      a.click();
+    }
+
+    window.onload = init;
+  </script>
+</body>
+  </html>
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
