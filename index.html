@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- SheetJS for Reading and Exporting Excel Automatically -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body { font-family: system-ui, sans-serif; background-color: #0b1329; }
@@ -16,7 +15,7 @@
 </head>
 <body class="text-slate-100 min-h-screen pb-24 text-xs">
 
-  <!-- TOP HEADER -->
+  <!-- HEADER -->
   <header class="bg-[#0f172a] border-b border-slate-800 sticky top-0 z-40 px-4 py-2">
     <div class="max-w-xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2">
@@ -47,7 +46,7 @@
         </div>
         <div>
           <h2 class="font-bold text-white"><span id="t-namaste">नमस्ते</span>, <span id="bannerUserName">दुकानदार</span> 👋</h2>
-          <p id="bannerAddressText" class="text-[9px] text-slate-400"></p>
+          <p id="bannerAddressText" class="text-[9px] text-slate-400">प्रोफाइल सेट करने के लिए ⚙️ दबाएं</p>
           <div id="bannerUPIBox" class="hidden flex items-center gap-1 mt-0.5">
             <span id="bannerUPIText" class="text-[9px] text-amber-300 font-semibold"></span>
             <button onclick="openModal('upiQRModal')" class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 rounded font-bold">QR</button>
@@ -99,7 +98,7 @@
     <!-- CARDS LIST -->
     <div id="cardsList" class="space-y-2"></div>
 
-    <!-- FOOTER -->
+    <!-- ORIGINAL FOOTER -->
     <footer class="text-center py-4 text-slate-400 space-y-1 border-t border-slate-800/80 mt-5">
       <p>Powered by <span class="text-blue-400 font-bold">Eevaan Ventures</span></p>
       <p class="text-[10px] text-slate-500 font-medium">100% सुरक्षित और स्वदेशी | Made in India 🇮🇳</p>
@@ -109,7 +108,7 @@
   <!-- (+) BUTTON -->
   <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-12 h-12 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
 
-  <!-- 1. DETAIL MODAL: LEDGER + MATERIAL + ATTACHMENT + SEPARATE VIEW & SHARE BUTTONS -->
+  <!-- 1. DETAIL MODAL: LEDGER + MATERIAL + SMART AUTO-READER + FILE SHARE -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -134,19 +133,19 @@
         <div><span class="text-slate-400 text-[9px] block font-bold" id="lbl-dNet">शुद्ध बाकी</span><span id="dNet" class="font-black text-amber-400">₹0</span></div>
       </div>
 
-      <!-- Action Buttons -->
+      <!-- Action Buttons (सामान वापसी ONLY for SHOP) -->
       <div class="grid grid-cols-3 gap-1.5 mb-2 font-semibold" id="actionBtnGrid">
         <button onclick="showSubForm('GAVE')" class="bg-rose-950/70 border border-rose-600/50 text-rose-300 py-1.5 rounded-xl shadow" id="btn-gave">🔴 दिए (बिल)</button>
         <button onclick="showSubForm('GOT')" class="bg-emerald-950/70 border border-emerald-600/50 text-emerald-300 py-1.5 rounded-xl shadow" id="btn-got">🟢 मिले (जमा)</button>
         <button id="btn-return" onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-1.5 rounded-xl shadow">🔄 सामान वापसी</button>
       </div>
 
-      <!-- SUB FORM WITH AUTO-READ EXCEL & SEPARATE ATTACHMENT -->
+      <!-- SUB FORM WITH SMART AUTO-READER -->
       <div id="subFormBox" class="hidden bg-[#0f172a] p-2.5 rounded-xl border border-blue-500/50 mb-2 space-y-1.5 max-h-72 overflow-y-auto">
         <div class="flex justify-between font-bold text-blue-400"><span id="subFormTitle">एंट्री जोड़ें</span><button onclick="closeSubForm()">&times;</button></div>
 
-        <!-- Material items table for SHOP -->
-        <div id="matItemBox" class="space-y-1">
+        <!-- Material items ONLY for SHOP category -->
+        <div id="matItemBox" class="space-y-1 hidden">
           <div class="grid grid-cols-12 gap-1 text-[9px] text-slate-400 font-semibold">
             <span class="col-span-5" id="lbl-matName">सामान</span><span class="col-span-2" id="lbl-matQty">मात्रा</span><span class="col-span-2" id="lbl-matRate">भाव</span><span class="col-span-3 text-right" id="lbl-matTot">कुल(₹)</span>
           </div>
@@ -156,9 +155,16 @@
 
         <div class="grid grid-cols-2 gap-2 pt-1">
           <div>
-            <label class="block text-[9px] text-slate-400" id="lbl-subAmt">कुल बिल रकम (Auto ₹)</label>
+            <label class="block text-[9px] text-slate-400" id="lbl-subAmt">रकम (₹) <span class="text-amber-400 text-[8px]">*ऑटो</span></label>
             <input type="number" id="subAmt" placeholder="₹ रकम" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 font-bold outline-none">
           </div>
+          <div>
+            <label class="block text-[9px] text-slate-400">तारीख (Date)</label>
+            <input type="date" id="subDate" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none text-[10px]">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-[9px] text-slate-400" id="lbl-payMode">पेमेंट माध्यम</label>
             <select id="subPayMode" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none text-[10px]">
@@ -171,31 +177,33 @@
               <option value="Bank">🏛️ बैंक ट्रांसफर</option>
             </select>
           </div>
+          <div>
+            <label class="block text-[9px] text-slate-400">विवरण / नोट</label>
+            <input type="text" id="subNote" placeholder="विवरण लिखें" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
+          </div>
         </div>
 
-        <input type="text" id="subNote" placeholder="विवरण / नोट" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
-
-        <!-- FILE / BILL ATTACHMENT WITH AUTO-READ EXCEL -->
+        <!-- ATTACHMENT WITH SMART PARSER (EXCEL, PDF, PHOTO) -->
         <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1.5">
           <div class="flex justify-between items-center">
-            <span class="block text-[10px] text-amber-300 font-bold" id="lbl-attachDoc">📎 बिल पर्चा / PDF / Excel (.xlsx) जोड़ें:</span>
-            <span class="text-[8px] text-cyan-400 font-medium">⚡ Excel ऑटो-रीड समर्थित</span>
+            <span class="block text-[10px] text-amber-300 font-bold" id="lbl-attachDoc">📎 पर्चा / फोटो / Excel / PDF जोड़ें:</span>
+            <span class="text-[8px] text-emerald-400 font-bold">⚡ ऑटो-रीडर एक्टिव</span>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
               <span class="block text-[9px] text-slate-400" id="lbl-cam">कैमरा (फोटो):</span>
-              <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="handleTxFileAttach(this)">
+              <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="smartProcessUpload(this)">
             </div>
             <div>
-              <span class="block text-[9px] text-slate-400" id="lbl-gal">गैलरी / PDF / Excel:</span>
-              <input type="file" accept="image/*,application/pdf,.xlsx,.csv,.xls" class="w-full text-[9px] text-slate-300" onchange="handleTxFileAttach(this)">
+              <span class="block text-[9px] text-slate-400" id="lbl-gal">गैलरी / Excel / PDF:</span>
+              <input type="file" accept="image/*,application/pdf,.xlsx,.csv,.xls" class="w-full text-[9px] text-slate-300" onchange="smartProcessUpload(this)">
             </div>
           </div>
           
           <div id="txAttachBox" class="hidden flex items-center justify-between p-1.5 bg-[#0f172a] rounded border border-emerald-500/40">
-            <div class="flex items-center gap-2 overflow-hidden">
-              <span id="txAttachIcon" class="text-emerald-400 text-sm">📎</span>
-              <span id="txAttachName" class="text-[10px] text-slate-200 truncate font-semibold"></span>
+            <div class="flex items-center gap-1.5 overflow-hidden">
+              <span id="txAttachIcon" class="text-sm">📎</span>
+              <span id="txAttachName" class="text-[10px] text-emerald-400 truncate font-bold"></span>
             </div>
             <button type="button" onclick="removeTxAttachment()" class="text-rose-400 font-bold px-1">&times; हटाएं</button>
           </div>
@@ -206,19 +214,19 @@
 
       <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="subList"></div>
 
-      <!-- 4 DISTINCT BUTTONS: PDF VIEW, PDF SHARE, EXCEL VIEW, EXCEL SHARE -->
+      <!-- 4 BUTTONS: REAL PDF FILE SHARE, VIEW, EXCEL FILE SHARE, VIEW -->
       <div class="pt-2 border-t border-slate-800 grid grid-cols-4 gap-1">
         <button onclick="viewLivePDF()" class="bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
-          <i class="fa-solid fa-eye"></i> <span id="btn-pdfView">PDF देखें</span>
+          <i class="fa-solid fa-eye"></i> PDF देखें
         </button>
-        <button onclick="sharePDFDirectly()" class="bg-red-700 hover:bg-red-800 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
-          <i class="fa-solid fa-share-nodes"></i> <span id="btn-pdfShare">PDF शेयर</span>
+        <button onclick="shareActualPDFFile()" class="bg-red-700 hover:bg-red-800 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
+          <i class="fa-solid fa-file-pdf"></i> PDF शेयर
         </button>
         <button onclick="viewExcelModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
-          <i class="fa-solid fa-table"></i> <span id="btn-xlView">Excel देखें</span>
+          <i class="fa-solid fa-table"></i> Excel देखें
         </button>
-        <button onclick="shareCustomerBill()" class="bg-[#22c55e] hover:bg-green-600 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
-          <i class="fa-brands fa-whatsapp"></i> <span id="btn-waShare">WA शेयर</span>
+        <button onclick="shareActualExcelFile()" class="bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
+          <i class="fa-solid fa-file-excel"></i> Excel शेयर
         </button>
       </div>
     </div>
@@ -228,7 +236,7 @@
   <div id="addModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md p-3.5 space-y-2 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
-        <h3 class="font-bold text-white" id="lbl-addTitle">नया खाता / बिल जोड़ें</h3>
+        <h3 class="font-bold text-white">नया खाता / बिल जोड़ें</h3>
         <button onclick="closeModal('addModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
@@ -237,7 +245,7 @@
       </button>
 
       <div>
-        <label class="block text-slate-400 text-[10px] mb-0.5 font-semibold" id="lbl-catSel">कैटेगरी चुनें</label>
+        <label class="block text-slate-400 text-[10px] mb-0.5 font-semibold">कैटेगरी चुनें</label>
         <select id="newCat" onchange="renderChips(this.value)" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none font-semibold">
           <option value="UDHAR">🤝 लेन-देन (उधार)</option>
           <option value="SHOP">📦 दुकान / किराना</option>
@@ -248,13 +256,14 @@
         </select>
       </div>
 
+      <!-- DYNAMIC CHIPS -->
       <div id="chipBox" class="hidden flex flex-wrap gap-1 p-1.5 bg-[#0f172a] rounded-lg border border-slate-700"></div>
 
       <input type="text" id="newTitle" placeholder="नाम / विवरण" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-100 font-bold outline-none">
 
       <!-- CUSTOMER DP -->
       <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1">
-        <span class="block text-[10px] text-amber-300 font-bold" id="lbl-custDP">📷 ग्राहक DP फोटो:</span>
+        <span class="block text-[10px] text-amber-300 font-bold">📷 ग्राहक DP फोटो:</span>
         <div class="grid grid-cols-2 gap-2">
           <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="handleCustDP(this)">
           <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="handleCustDP(this)">
@@ -277,7 +286,7 @@
         <input type="date" id="newDue" class="p-1.5 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
       </div>
 
-      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold py-2 rounded-xl shadow" id="btn-saveNew">सुरक्षित करें</button>
+      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold py-2 rounded-xl shadow">सुरक्षित करें</button>
     </div>
   </div>
 
@@ -285,7 +294,7 @@
   <div id="profileModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-sm p-3.5 space-y-2 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
-        <h3 class="font-bold text-white" id="lbl-profTitle">प्रोफाइल सेटिंग्स (आपका विवरण)</h3>
+        <h3 class="font-bold text-white">प्रोफाइल सेटिंग्स</h3>
         <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
@@ -294,7 +303,7 @@
           <img id="modalDP" class="w-full h-full object-cover hidden">
           <i id="defaultModalIcon" class="fa-solid fa-user text-lg text-slate-500"></i>
         </div>
-        <span class="block text-[10px] text-amber-300 font-bold" id="lbl-ownDP">अपनी दुकान / खुद की DP फोटो:</span>
+        <span class="block text-[10px] text-amber-300 font-bold">दुकान / मालिक की DP फोटो:</span>
         <div class="grid grid-cols-2 gap-2">
           <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="handleOwnerDP(this)">
           <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="handleOwnerDP(this)">
@@ -312,12 +321,12 @@
       <input type="email" id="setUserEmail" placeholder="ईमेल आईडी" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
       <input type="text" id="setUserUPI" placeholder="UPI आईडी (उदा: 98XXXXXXXX@paytm)" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
 
-      <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow" id="btn-saveProf">सेटिंग्स सेव करें</button>
+      <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow">सेटिंग्स सेव करें</button>
       <button type="button" onclick="clearBloatedStorage()" class="w-full bg-rose-950/60 border border-rose-600/40 text-rose-300 py-1 rounded text-[10px]">🧹 पूरा खाता रीसेट करें (Clear All)</button>
     </div>
   </div>
 
-  <!-- 4. LIVE PDF MODAL WITH DIRECT WHATSAPP & DOWNLOAD BUTTON -->
+  <!-- 4. LIVE PDF PREVIEW MODAL -->
   <div id="pdfModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-white text-slate-800 rounded-2xl w-full max-w-lg max-h-[95vh] flex flex-col overflow-hidden shadow-2xl">
       <div class="flex justify-between items-center bg-slate-900 text-white px-3 py-2">
@@ -327,11 +336,11 @@
       <div class="flex-1 overflow-y-auto p-3" id="pdfArea"></div>
       <div class="bg-slate-100 border-t border-slate-300 p-2 flex justify-between gap-1.5">
         <button onclick="closeModal('pdfModal')" class="px-3 py-1 border rounded bg-white font-semibold">बंद करें</button>
-        <button onclick="sharePDFDirectly()" class="bg-[#22c55e] hover:bg-green-600 text-white px-3 py-1 font-bold rounded shadow flex items-center gap-1">
+        <button onclick="shareActualPDFFile()" class="bg-[#22c55e] hover:bg-green-600 text-white px-3 py-1 font-bold rounded shadow flex items-center gap-1">
           <i class="fa-brands fa-whatsapp"></i> WhatsApp शेयर
         </button>
-        <button onclick="downloadPDF()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 font-bold rounded shadow flex items-center gap-1">
-          <i class="fa-solid fa-download"></i> PDF डाउनलोड
+        <button onclick="downloadPDF()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-1 font-bold rounded shadow flex items-center gap-1">
+          <i class="fa-solid fa-download"></i> डाउनलोड
         </button>
       </div>
     </div>
@@ -347,8 +356,11 @@
       <div class="flex-1 overflow-y-auto my-2" id="excelTableArea"></div>
       <div class="pt-2 border-t border-slate-700 flex justify-between gap-2">
         <button onclick="closeModal('excelViewModal')" class="bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl font-semibold">बंद करें</button>
+        <button onclick="shareActualExcelFile()" class="bg-[#22c55e] hover:bg-green-600 text-white px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 shadow">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp शेयर
+        </button>
         <button onclick="downloadCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-xl font-bold flex items-center gap-1 shadow">
-          <i class="fa-solid fa-download"></i> Excel (.CSV) डाउनलोड करें
+          <i class="fa-solid fa-download"></i> Excel डाउनलोड
         </button>
       </div>
     </div>
@@ -368,7 +380,7 @@
     </div>
   </div>
 
-  <!-- 7. BULK BROADCAST MODAL WITH CUSTOMER CHECKBOXES -->
+  <!-- 7. BULK BROADCAST MODAL -->
   <div id="bulkModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-md max-h-[92vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -423,18 +435,14 @@
         toReceive:"बाज़ार से लेने हैं", toPay:"देने हैं (डेबिट)", udhar:"लेन-देन", shop:"दुकान", card:"कार्ड", bank:"बैंक/NBFC", ins:"इंश्योरेंस",
         bulkRem:"बल्क तगादा / रिमाइंडर (Broadcast)", search:"खोजें...",
         dGave:"कुल दिया", dRec:"जमा + वापसी", dNet:"शुद्ध बाकी", btnGave:"🔴 दिए (बिल)", btnGot:"🟢 मिले (जमा)", btnRet:"🔄 सामान वापसी",
-        matName:"सामान", matQty:"मात्रा", matRate:"भाव", matTot:"कुल(₹)", addMat:"+ नया सामान जोड़ें",
-        subAmt:"कुल बिल रकम (Auto ₹)", payMode:"पेमेंट माध्यम", attachDoc:"📎 बिल पर्चा / PDF / Excel (.xlsx) जोड़ें:",
-        saveSub:"सुरक्षित करें", call:"कॉल"
+        call:"कॉल"
       },
       en: {
         share:"Share", namaste:"Hello", savings:"Savings / Net Balance", bills:"Total Bills", emi:"Total EMI", sip:"Total SIP", prem:"Premium",
         toReceive:"To Receive (Credit)", toPay:"To Pay (Debit)", udhar:"Udhar", shop:"Shop", card:"Cards", bank:"Bank/NBFC", ins:"Insurance",
         bulkRem:"Broadcast Payment Reminders", search:"Search...",
         dGave:"Total Given", dRec:"Paid + Return", dNet:"Net Balance", btnGave:"🔴 Gave (Bill)", btnGot:"🟢 Got (Jama)", btnRet:"🔄 Return",
-        matName:"Item", matQty:"Qty", matRate:"Rate", matTot:"Total(₹)", addMat:"+ Add Item",
-        subAmt:"Total Bill Amount (Auto ₹)", payMode:"Payment Mode", attachDoc:"📎 Attach Bill / PDF / Excel (.xlsx):",
-        saveSub:"Save Entry", call:"Call"
+        call:"Call"
       }
     };
 
@@ -447,7 +455,6 @@
 
     let activeFilter = 'ALL', activeId = null, subType = 'GAVE';
     let tempCustDP = "";
-    // Isolated attachment state to prevent cross-contamination
     let currentTxAttachment = null;
 
     function init() {
@@ -465,8 +472,7 @@
       try {
         localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db));
       } catch (err) {
-        // Clean bloated attachments if storage is almost full
-        db.items.forEach(it => { if(it.history) it.history.forEach(h => { if(h.attachment && h.attachment.data && h.attachment.data.length > 40000) h.attachment.data=""; }); });
+        db.items.forEach(it => { if(it.history) it.history.forEach(h => { if(h.attachment && h.attachment.data && h.attachment.data.length > 35000) h.attachment.data=""; }); });
         try { localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db)); } catch(e){}
       }
       renderCards();
@@ -493,15 +499,6 @@
       document.getElementById('btn-gave').innerText = d.btnGave;
       document.getElementById('btn-got').innerText = d.btnGot;
       document.getElementById('btn-return').innerText = d.btnRet;
-      document.getElementById('lbl-matName').innerText = d.matName;
-      document.getElementById('lbl-matQty').innerText = d.matQty;
-      document.getElementById('lbl-matRate').innerText = d.matRate;
-      document.getElementById('lbl-matTot').innerText = d.matTot;
-      document.getElementById('btn-addMat').innerText = d.addMat;
-      document.getElementById('lbl-subAmt').innerText = d.subAmt;
-      document.getElementById('lbl-payMode').innerText = d.payMode;
-      document.getElementById('lbl-attachDoc').innerText = d.attachDoc;
-      document.getElementById('btn-saveSub').innerText = d.saveSub;
       document.getElementById('lbl-call').innerText = d.call;
 
       document.getElementById('tc-udhar').innerText = d.udhar;
@@ -514,14 +511,14 @@
       renderCards();
     }
 
-    // ================= FILE ATTACHMENT & AUTO-READ EXCEL ENGINE =================
-    function handleTxFileAttach(input) {
+    // ================= SMART AUTO-READER ENGINE =================
+    function smartProcessUpload(input) {
       const file = input.files && input.files[0];
       if (!file) return;
 
       const ext = file.name.split('.').pop().toLowerCase();
 
-      // 1. If Excel / CSV: Auto-read items and calculate total!
+      // Excel / CSV: Auto-read items, amount, date!
       if (ext === 'xlsx' || ext === 'csv' || ext === 'xls') {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -530,66 +527,80 @@
             const workbook = XLSX.read(data, { type: 'array' });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-            autoParseExcelRows(json);
+            
+            autoParseExcelData(json);
 
-            // Save binary as base64 for attachment
             const b64 = arrayBufferToBase64(e.target.result);
             setAttachmentState(file.name, 'EXCEL', 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + b64);
-            alert("✅ Excel बिल सफलतापूर्वक पढ़ा गया और कुल रकम जुड़ गई!");
+            alert("✅ Excel फ़ाइल से तारीख, सामान और कुल रकम ऑटोमैटिक पढ़ ली गई है!");
           } catch(err) {
             console.error(err);
-            alert("Excel पढ़ने में त्रुटि हुई, कृपया सामान्य रूप से जोड़ें।");
+            alert("Excel पढ़ने में समस्या आई!");
           }
         };
         reader.readAsArrayBuffer(file);
       }
-      // 2. If PDF Document
+      // PDF Document
       else if (ext === 'pdf') {
         const reader = new FileReader();
         reader.onload = function(e) {
           setAttachmentState(file.name, 'PDF', e.target.result);
+          extractDateFromFileName(file.name);
         };
         reader.readAsDataURL(file);
       }
-      // 3. If Image: Compress to 220px to save storage
+      // Image: Compress & Set
       else {
         compressImg(file, 220, function(b64) {
           setAttachmentState(file.name, 'IMAGE', b64);
+          extractDateFromFileName(file.name);
         });
       }
-      input.value = ''; // Reset input
+      input.value = '';
     }
 
-    function arrayBufferToBase64(buffer) {
-      let binary = '';
-      const bytes = new Uint8Array(buffer);
-      for (let i = 0; i < bytes.byteLength; i++) {
-        binary += String.fromCharCode(bytes[i]);
+    function extractDateFromFileName(name) {
+      const match = name.match(/\d{4}[-_]\d{2}[-_]\d{2}/);
+      if (match) {
+        document.getElementById('subDate').value = match[0].replace(/_/g, '-');
       }
-      return window.btoa(binary);
     }
 
-    // Auto Parse Excel rows and populate Material Rows
-    function autoParseExcelRows(rows) {
-      if (!rows || rows.length <= 1) return;
-      document.getElementById('matRows').innerHTML = "";
+    function autoParseExcelData(rows) {
+      if (!rows || rows.length < 1) return;
+      const it = db.items.find(i => i.id === activeId);
+      const isShop = it && it.category === 'SHOP';
+      if (isShop) document.getElementById('matRows').innerHTML = "";
+      
       let sum = 0;
+      let detectedDate = "";
 
-      // Skip header, read data rows
-      for (let i = 1; i < rows.length; i++) {
+      for (let i = 0; i < rows.length; i++) {
         const r = rows[i];
         if (!r || !r.length) continue;
-        const name = r[0] || `सामान ${i}`;
-        const qty = parseFloat(r[1]) || 1;
-        const rate = parseFloat(r[2]) || (parseFloat(r[3]) ? parseFloat(r[3])/qty : 0);
-        const total = parseFloat(r[3]) || (qty * rate);
 
-        if (total > 0 || name) {
-          addMatRowWithData(name, qty, rate, total);
+        for (let cell of r) {
+          if (cell && typeof cell === 'string') {
+            const dMatch = cell.match(/\d{4}[-/.]\d{2}[-/.]\d{2}/);
+            if (dMatch) detectedDate = dMatch[0];
+          }
+        }
+
+        if (i === 0) continue; // Skip header
+
+        const name = r[0] ? String(r[0]) : '';
+        const qty = parseFloat(r[1]) || 1;
+        const rate = parseFloat(r[2]) || 0;
+        const total = parseFloat(r[3]) || (qty * rate) || parseFloat(r[1]) || 0;
+
+        if (total > 0) {
           sum += total;
+          if (isShop) addMatRowWithData(name || `आइटम ${i}`, qty, rate || (total/qty), total);
         }
       }
+
       if (sum > 0) document.getElementById('subAmt').value = sum;
+      if (detectedDate) document.getElementById('subDate').value = detectedDate;
     }
 
     function addMatRowWithData(name, qty, rate, total) {
@@ -605,6 +616,13 @@
       document.getElementById('matRows').appendChild(row);
     }
 
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+      return window.btoa(binary);
+    }
+
     function setAttachmentState(name, type, data) {
       currentTxAttachment = { name: name, type: type, data: data };
       document.getElementById('txAttachName').innerText = name;
@@ -617,12 +635,11 @@
       document.getElementById('txAttachBox').classList.add('hidden');
     }
 
-    // View Attachment in In-App Modal (Separated & Safe)
     function openAttachmentViewer(subTxId) {
       const it = db.items.find(i => i.id === activeId);
       if (!it || !it.history) return;
       const sub = it.history.find(h => h.id === subTxId);
-      if (!sub || !sub.attachment) return alert("कोई संलग्न पर्चा नहीं मिला!");
+      if (!sub || !sub.attachment) return alert("कोई अटैचमेंट नहीं मिला!");
 
       const att = sub.attachment;
       document.getElementById('viewerFileName').innerText = att.name || 'संलग्न दस्तावेज़';
@@ -634,12 +651,11 @@
       } else if (att.type === 'PDF') {
         area.innerHTML = `<iframe src="${att.data}" class="w-full h-[75vh] rounded-lg border border-slate-700 bg-white"></iframe>`;
       } else if (att.type === 'EXCEL') {
-        area.innerHTML = `<div class="text-center p-4"><p class="text-emerald-400 font-bold text-sm mb-2">📊 Excel दस्तावेज़: ${att.name}</p><a href="${att.data}" download="${att.name}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold inline-block shadow">📥 Excel डाउनलोड करें</a></div>`;
+        area.innerHTML = `<div class="text-center p-4"><p class="text-emerald-400 font-bold text-sm mb-2">📊 Excel फ़ाइल: ${att.name}</p><a href="${att.data}" download="${att.name}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold inline-block shadow">📥 Excel डाउनलोड करें</a></div>`;
       }
       openModal('attachViewerModal');
     }
 
-    // COMPRESS IMAGE HELPER
     function compressImg(file, maxD, cb) {
       const reader = new FileReader();
       reader.onload = e => {
@@ -784,8 +800,13 @@
       renderCards();
     }
 
+    // DATE-WISE AUTOMATIC SORTING & BALANCE CALCULATION
     function calcItem(it) {
       if (!it.history || !it.history.length) return { gave: it.amount||0, got: 0, ret: 0, balance: it.amount||0 };
+      
+      // Sort transactions chronologically by date
+      it.history.sort((a, b) => new Date(a.date) - new Date(b.date));
+
       let gave = 0, got = 0, ret = 0;
       it.history.forEach(h => {
         const a = parseFloat(h.amount) || 0;
@@ -928,6 +949,7 @@
       if (sum > 0) document.getElementById('subAmt').value = sum;
     }
 
+    // OPEN DETAIL (NO ITEMS FOR LENDING/BORROWING, ONLY IN SHOP)
     function openDetail(id) {
       activeId = id;
       const it = db.items.find(i => i.id === id);
@@ -945,10 +967,11 @@
         callBtn.classList.add('hidden');
       }
 
-      // Hide or show "सामान वापसी" (ONLY for SHOP category)
       const retBtn = document.getElementById('btn-return');
       const actionGrid = document.getElementById('actionBtnGrid');
       const matItemBox = document.getElementById('matItemBox');
+      
+      // Items and Sales Return ONLY for SHOP
       if (it.category === 'SHOP') {
         retBtn.classList.remove('hidden');
         actionGrid.className = "grid grid-cols-3 gap-1.5 mb-2 font-semibold";
@@ -970,6 +993,7 @@
       document.getElementById('subFormBox').classList.remove('hidden');
       document.getElementById('subAmt').value = "";
       document.getElementById('subNote').value = "";
+      document.getElementById('subDate').value = new Date().toLocaleDateString('en-CA');
       removeTxAttachment();
       document.getElementById('matRows').innerHTML = "";
       addMatRow();
@@ -986,15 +1010,19 @@
       const amt = parseFloat(document.getElementById('subAmt').value);
       if (!amt || amt <= 0) return alert("रकम दर्ज करें!");
 
+      const isShop = it.category === 'SHOP';
       const items = [];
-      document.querySelectorAll('.mat-r').forEach(r => {
-        const n = r.querySelector('.m-name').value.trim();
-        const q = parseFloat(r.querySelector('.m-qty').value) || 1;
-        const rt = parseFloat(r.querySelector('.m-rate').value) || 0;
-        if (n) items.push({ name: n, qty: q, rate: rt, total: q * rt });
-      });
+      if (isShop) {
+        document.querySelectorAll('.mat-r').forEach(r => {
+          const n = r.querySelector('.m-name').value.trim();
+          const q = parseFloat(r.querySelector('.m-qty').value) || 1;
+          const rt = parseFloat(r.querySelector('.m-rate').value) || 0;
+          if (n) items.push({ name: n, qty: q, rate: rt, total: q * rt });
+        });
+      }
 
-      // Save attachment strictly to this transaction
+      const txDate = document.getElementById('subDate').value || new Date().toLocaleDateString('en-CA');
+
       const rec = {
         id: "s_" + Date.now(),
         type: subType,
@@ -1003,7 +1031,7 @@
         note: document.getElementById('subNote').value.trim() || (subType==='GAVE'?'सामान बिल':(subType==='GOT'?'जमा':'वापसी')),
         items: items,
         attachment: currentTxAttachment ? { ...currentTxAttachment } : null,
-        date: new Date().toLocaleDateString('en-CA')
+        date: txDate
       };
 
       if (!it.history) it.history = [];
@@ -1037,7 +1065,7 @@
         let attachBtn = "";
         if (h.attachment) {
           const icon = h.attachment.type === 'PDF' ? '📄' : (h.attachment.type === 'EXCEL' ? '📊' : '📷');
-          attachBtn = `<button onclick="openAttachmentViewer('${h.id}')" class="text-[9px] text-cyan-400 block font-bold underline mt-1">${icon} ${h.attachment.name || 'संलग्न दस्तावेज़ देखें'}</button>`;
+          attachBtn = `<button onclick="openAttachmentViewer('${h.id}')" class="text-[9px] text-cyan-400 block font-bold underline mt-1">${icon} ${h.attachment.name || 'संलग्न पर्चा देखें'}</button>`;
         }
 
         div.innerHTML = `
@@ -1063,7 +1091,64 @@
       if (it && confirm("हटाएं?")) { it.history.splice(idx, 1); saveDB(); renderSubHistory(it); }
     }
 
-    // ================= DOCUMENT SHARING & VIEWING =================
+    // ================= REAL FILE SHARING (WHATSAPP NATIVE ATTACHMENT) =================
+    async function shareActualPDFFile() {
+      const it = db.items.find(i => i.id === activeId);
+      if (!it) return;
+      viewLivePDF(); // Generate template
+      
+      const el = document.getElementById('printDoc');
+      const opt = { margin: 4, filename: `${it.title}_Bill.pdf`, jsPDF: { unit: 'mm', format: 'a4' } };
+
+      try {
+        const pdfBlob = await html2pdf().set(opt).from(el).outputPdf('blob');
+        const file = new File([pdfBlob], `${it.title}_Bill.pdf`, { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `${db.profile.firmName} - बिल पर्चा`,
+            text: `नमस्ते ${it.title}, आपका खाता पर्चा संलग्न है।`
+          });
+        } else {
+          downloadPDF();
+          setTimeout(() => shareCustomerBill(), 500);
+        }
+      } catch (err) {
+        downloadPDF();
+        shareCustomerBill();
+      }
+    }
+
+    async function shareActualExcelFile() {
+      const it = db.items.find(i => i.id === activeId);
+      if (!it) return;
+
+      let csv = "तारीख,विवरण,माध्यम,प्रकार,रकम\n";
+      (it.history || []).forEach(h => {
+        csv += `"${h.date}","${h.note}","${h.payMode||'Cash'}","${h.type==='GAVE'?'दिए':(h.type==='GOT'?'मिले':'वापसी')}","${h.amount}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const file = new File([blob], `${it.title}_Statement.csv`, { type: 'text/csv' });
+
+      try {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `${it.title} Statement`,
+            text: `नमस्ते ${it.title}, आपका Excel खाता स्टेटमेंट संलग्न है।`
+          });
+        } else {
+          downloadCSV();
+          setTimeout(() => shareCustomerBill(), 500);
+        }
+      } catch (err) {
+        downloadCSV();
+        shareCustomerBill();
+      }
+    }
+
     function shareCustomerBill() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
@@ -1093,7 +1178,6 @@
       }
     }
 
-    // LIVE PDF PREVIEW (STRICT SEPARATION: ONLY SHOWS THIS CUSTOMER'S FILES)
     function viewLivePDF() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
@@ -1110,7 +1194,6 @@
         </tr>
       `).join('');
 
-      // Show ONLY image attachments strictly belonging to this customer
       let photos = (it.history || []).filter(h => h.attachment && h.attachment.type === 'IMAGE').map(h => `
         <div style="margin-top:6px; text-align:center;">
           <p style="font-size:8px; margin:0; color:#64748b;">संलग्न पर्चा (${h.attachment.name || h.date}):</p>
@@ -1172,16 +1255,6 @@
       html2pdf().set({ margin: 4, filename: `${it?it.title:'Bill'}_Receipt.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(document.getElementById('printDoc')).save();
     }
 
-    function sharePDFDirectly() {
-      const it = db.items.find(i => i.id === activeId);
-      if (!it) return;
-      downloadPDF();
-      setTimeout(() => {
-        shareCustomerBill();
-      }, 800);
-    }
-
-    // In-App Interactive Excel Statement Viewer
     function viewExcelModal() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
@@ -1198,7 +1271,7 @@
 
       document.getElementById('excelTableArea').innerHTML = `
         <div class="p-2 bg-[#0f172a] rounded-xl border border-slate-700">
-          <p class="font-bold text-white mb-1">खाता: ${it.title} (मोबाइल: ${it.phone||'N/A'})</p>
+          <p class="font-bold text-white mb-1">खाता: ${it.title} (मो: ${it.phone||'N/A'})</p>
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-slate-600 text-slate-400 bg-slate-900">
@@ -1244,12 +1317,11 @@
         db.items.forEach(i => csv += `"${i.id}","${i.title}","${i.phone}","${i.type}","${calcItem(i).balance}","${i.dueDate}"\n`);
       }
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
       a.download = `${it ? it.title : 'Report'}_Statement_${new Date().toLocaleDateString('en-CA')}.csv`;
       a.click();
     }
 
-    // BULK REMINDERS WITH SELECT ALL / INDIVIDUAL CHECKBOXES
     function openBulkModal() { renderBulkList(); openModal('bulkModal'); }
 
     function renderBulkList() {
@@ -1333,4 +1405,4 @@
     window.onload = init;
   </script>
 </body>
-  </html>
+</html>
