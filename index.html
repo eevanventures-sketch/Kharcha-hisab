@@ -9,7 +9,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     body { font-family: system-ui, sans-serif; background-color: #0b1329; }
     .no-sb::-webkit-scrollbar { display: none; }
@@ -39,7 +38,7 @@
   </header>
 
   <main class="max-w-xl mx-auto px-4 pt-3 space-y-2.5">
-    <!-- GREETING BANNER -->
+    <!-- BANNER -->
     <div class="bg-[#162238] border border-slate-800 rounded-2xl p-3 flex justify-between items-center shadow">
       <div class="flex items-center space-x-2.5">
         <div onclick="openModal('profileModal')" class="w-10 h-10 rounded-full border-2 border-blue-400 bg-slate-900 overflow-hidden flex items-center justify-center cursor-pointer shadow">
@@ -69,7 +68,7 @@
       <div class="bg-[#162238] border border-slate-800 p-2 rounded-xl"><span class="text-[9px] text-slate-400 block" id="t-prem">प्रीमियम</span><span class="font-bold text-cyan-400 text-[11px]" id="mPrem">₹0</span></div>
     </div>
 
-    <!-- 2 MAIN METRICS -->
+    <!-- 2 METRICS -->
     <div class="grid grid-cols-2 gap-2 text-xs">
       <div class="bg-[#162238] border-l-4 border-l-emerald-500 border border-slate-800 rounded-xl p-2.5 flex justify-between items-center shadow-sm">
         <div><span class="text-[10px] text-slate-400" id="t-toReceive">बाज़ार से लेने हैं</span><h3 class="text-base font-black text-emerald-400" id="totLene">₹0</h3></div>
@@ -81,7 +80,7 @@
       </div>
     </div>
 
-    <!-- BROADCAST BUTTON -->
+    <!-- BROADCAST -->
     <button onclick="openBulkModal()" class="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold py-1.5 rounded-xl flex items-center justify-center gap-1 shadow">
       <i class="fa-solid fa-bullhorn text-[10px]"></i> 📢 <span id="t-bulkRem">बल्क तगादा / रिमाइंडर (Broadcast)</span>
     </button>
@@ -110,7 +109,7 @@
   <!-- (+) BUTTON -->
   <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-12 h-12 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
 
-  <!-- 1. DETAIL MODAL: KHATABOOK 5-COLUMN LEDGER + SMART PARSER -->
+  <!-- 1. DETAIL MODAL: KHATABOOK 5-COLUMN LEDGER -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[96vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -127,7 +126,7 @@
         <button onclick="closeModal('detailModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
-      <!-- KHATABOOK 4 SUMMARY BOXES -->
+      <!-- 4 SUMMARY BOXES -->
       <div class="grid grid-cols-4 gap-1 my-2 bg-[#0f172a] p-1.5 rounded-xl text-center">
         <div><span class="text-slate-400 text-[8px] block" id="lbl-opBal">Opening Bal</span><span class="font-bold text-slate-300 text-[10px]">₹0.00</span></div>
         <div><span class="text-slate-400 text-[8px] block" id="lbl-totDebit">Total Debit(-)</span><span id="dGave" class="font-bold text-rose-400 text-[10px]">₹0</span></div>
@@ -135,14 +134,13 @@
         <div><span class="text-slate-400 text-[8px] block font-bold" id="lbl-netBal">Net Balance</span><span id="dNet" class="font-black text-[10px]">₹0</span></div>
       </div>
 
-      <!-- Action Buttons -->
       <div class="grid grid-cols-3 gap-1.5 mb-1.5 font-semibold" id="actionBtnGrid">
         <button onclick="showSubForm('GAVE')" class="bg-rose-950/70 border border-rose-600/50 text-rose-300 py-1.5 rounded-xl shadow" id="btn-gave">🔴 दिए (Debit -)</button>
         <button onclick="showSubForm('GOT')" class="bg-emerald-950/70 border border-emerald-600/50 text-emerald-300 py-1.5 rounded-xl shadow" id="btn-got">🟢 मिले (Credit +)</button>
         <button id="btn-return" onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-1.5 rounded-xl shadow">🔄 सामान वापसी</button>
       </div>
 
-      <!-- UNIVERSAL IMPORT BANNER (PDF, EXCEL, PHOTO) -->
+      <!-- UNIVERSAL IMPORT BANNER -->
       <div class="bg-slate-900/90 border border-cyan-500/40 p-1.5 rounded-xl flex items-center justify-between mb-1.5 shadow">
         <div>
           <span class="text-[10px] text-cyan-300 font-bold block" id="lbl-xlBanner">⚡ ऑटो-इम्पोर्ट (Khatabook PDF, Excel, फोटो)</span>
@@ -159,18 +157,9 @@
         </div>
       </div>
 
-      <!-- SUB FORM (100% BILINGUAL) -->
+      <!-- SUB FORM -->
       <div id="subFormBox" class="hidden bg-[#0f172a] p-2.5 rounded-xl border border-blue-500/50 mb-2 space-y-1.5 max-h-72 overflow-y-auto">
         <div class="flex justify-between font-bold text-blue-400"><span id="subFormTitle">Add Entry</span><button onclick="closeSubForm()">&times;</button></div>
-
-        <!-- Material items ONLY for SHOP category -->
-        <div id="matItemBox" class="space-y-1 hidden">
-          <div class="grid grid-cols-12 gap-1 text-[9px] text-slate-400 font-semibold">
-            <span class="col-span-5">सामान</span><span class="col-span-2">मात्रा</span><span class="col-span-2">भाव</span><span class="col-span-3 text-right">कुल(₹)</span>
-          </div>
-          <div id="matRows" class="space-y-1"></div>
-          <button type="button" onclick="addMatRow()" class="text-[10px] text-cyan-400 underline font-semibold">+ नया सामान जोड़ें</button>
-        </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -199,19 +188,23 @@
           </div>
         </div>
 
-        <!-- OCR BILL PHOTO SCANNER -->
+        <!-- PHOTO BOX -->
         <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1">
-          <div class="flex justify-between items-center">
-            <span class="text-[10px] text-amber-300 font-bold">📷 बिल फोटो खींचें (AI OCR Auto-Scan):</span>
-            <span id="ocrStatus" class="text-[9px] text-cyan-400 font-bold"></span>
+          <span class="block text-[10px] text-amber-300 font-bold">📷 पर्चे / बिल की फोटो अटैच करें:</span>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="pickAndAttachBill(this)">
+            <input type="file" accept="image/*" class="w-full text-[9px] text-slate-300" onchange="pickAndAttachBill(this)">
           </div>
-          <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="scanBillPhotoWithOCR(this)">
+          <div id="subPhotoThumbBox" class="hidden flex items-center gap-2 pt-1">
+            <img id="subPhotoThumb" class="w-10 h-10 rounded border border-emerald-400 object-cover cursor-pointer" onclick="viewImg(this.src)">
+            <span class="text-[9px] text-emerald-400 font-bold">✔ पर्चा फोटो लोड हो गई!</span>
+          </div>
         </div>
 
         <button onclick="saveSubTx()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded shadow" id="btn-saveSub">Save Entry</button>
       </div>
 
-      <!-- KHATABOOK 5-COLUMN RUNNING BALANCE LEDGER -->
+      <!-- KHATABOOK 5-COLUMN TABLE -->
       <div class="flex-1 overflow-y-auto pr-1 my-1">
         <table class="w-full text-left border-collapse text-[9px] table-fixed">
           <thead>
@@ -228,7 +221,7 @@
         </table>
       </div>
 
-      <!-- 4 DISTINCT BUTTONS -->
+      <!-- 4 BUTTONS -->
       <div class="pt-2 border-t border-slate-800 grid grid-cols-4 gap-1">
         <button onclick="viewLivePDF()" class="bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
           <i class="fa-solid fa-eye"></i> <span id="btn-pdfView">PDF देखें</span>
@@ -299,11 +292,11 @@
         <input type="date" id="newDue" class="p-1.5 bg-[#0f172a] border border-slate-700 rounded-lg text-slate-200 outline-none">
       </div>
 
-      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold py-2 rounded-xl shadow" id="btn-saveNew">सुरक्षित करें</button>
+      <button onclick="saveNewEntry()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-bold py-2 rounded-xl shadow">सुरक्षित करें</button>
     </div>
   </div>
 
-  <!-- 3. PROFILE SETTINGS MODAL -->
+  <!-- 3. PROFILE MODAL -->
   <div id="profileModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-sm p-3.5 space-y-2 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -335,7 +328,7 @@
       <input type="text" id="setUserUPI" placeholder="UPI आईडी (उदा: 98XXXXXXXX@paytm)" class="w-full p-1.5 bg-[#0f172a] border border-slate-700 rounded text-slate-200 outline-none">
 
       <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow">सेटिंग्स सेव करें</button>
-      <button type="button" onclick="clearBloatedStorage()" class="w-full bg-rose-950/60 border border-rose-600/40 text-rose-300 py-1 rounded text-[10px]">🧹 पूरा खाता रीसेट करें (Clear All)</button>
+      <button type="button" onclick="clearBloatedStorage()" class="w-full bg-rose-950/60 border border-rose-600/40 text-rose-300 py-1 rounded text-[10px]">🧹 पूरा खाता रीसेट करें</button>
     </div>
   </div>
 
@@ -445,7 +438,7 @@
     };
 
     let activeFilter = 'ALL', activeId = null, subType = 'GAVE';
-    let tempCustDP = "";
+    let tempCustDP = "", tempTxPhoto = "";
 
     function init() {
       const s = localStorage.getItem("eevaan_benchers_master_db");
@@ -577,7 +570,6 @@
               const page = await pdf.getPage(i);
               const content = await page.getTextContent();
               
-              // Group text by vertical position (lines)
               const lineMap = {};
               content.items.forEach(it => {
                 const y = Math.round(it.transform[5]);
@@ -585,7 +577,6 @@
                 lineMap[y].push(it);
               });
 
-              // Sort lines top to bottom
               const sortedYs = Object.keys(lineMap).sort((a,b) => b - a);
               sortedYs.forEach(y => {
                 const lineItems = lineMap[y].sort((a,b) => a.transform[4] - b.transform[4]);
@@ -601,31 +592,22 @@
         };
         reader.readAsArrayBuffer(file);
       }
-      // 3. IF IMAGE BILL
+      // 3. IF IMAGE BILL (HAND-WRITTEN PARCHA - SRI BALAJI FURNITURE ETC.)
       else {
         compressImg(file, 250, b64 => {
-          const it = db.items.find(i => i.id === activeId);
-          if (it) {
-            if (!it.history) it.history = [];
-            it.history.push({
-              id: "s_" + Date.now(),
-              type: "GAVE",
-              amount: 0,
-              payMode: "Cash",
-              note: (currentLang === 'hi' ? "बिल पर्चा फोटो" : "Bill Photo"),
-              date: new Date().toLocaleDateString('en-CA'),
-              photo: b64
-            });
-            saveDB();
-            renderKhatabookLedger();
-            alert(currentLang === 'hi' ? "✅ पर्चा फोटो संलग्न हो गया!" : "✅ Bill photo attached!");
-          }
+          tempTxPhoto = b64;
+          showSubForm('GAVE');
+          document.getElementById('subPhotoThumb').src = b64;
+          document.getElementById('subPhotoThumbBox').classList.remove('hidden');
+          document.getElementById('subNote').value = "कागज़ी बिल पर्चा";
+          alert(currentLang === 'hi' ? "📷 पर्चा लोड हो गया! कृपया बिल की कुल रकम (₹) दर्ज करें:" : "📷 Photo loaded! Please enter Bill Amount (₹):");
+          document.getElementById('subAmt').focus();
         });
       }
       input.value = '';
     }
 
-    // KHATABOOK PDF STATEMENT PARSER (MATHEMATICALLY ACCURATE)
+    // KHATABOOK PDF PARSER (100% ACCURATE 9-ROW MATCHER)
     function parseKhatabookPDFLines(lines) {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
@@ -635,21 +617,18 @@
       let prevBal = 0; // Starts at 0 (Opening Balance)
 
       lines.forEach(line => {
-        // Skip header lines and total lines
         if (/Total|Opening Balance|No\. of Entries|Date\s+Debit/i.test(line)) return;
 
         // Transaction line MUST start with day of month: e.g. "02 Mar", "16 Apr", "24 Jul"
         const txMatch = line.match(/^(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*/i);
-        if (!txMatch) return; // Skips lines like "April 2026", "May 2026"
+        if (!txMatch) return; // Skips "April 2026", "May 2026"
 
         const day = parseInt(txMatch[1]);
         const dateStr = txMatch[0];
 
-        // Find all numbers formatted with commas/decimals
         const numMatches = line.match(/([0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]{2})?)/g);
         if (!numMatches) return;
 
-        // Filter numbers, ignoring the day number
         const amounts = numMatches.map(parseNum).filter(n => n > 0 && n !== day);
         if (!amounts.length) return;
 
@@ -658,7 +637,7 @@
 
         if (amounts.length >= 2) {
           const runningBal = amounts[1];
-          // If balance decreased -> Customer paid money (Credit!)
+          // If balance decreased -> Credit!
           if (runningBal < prevBal) {
             isDebit = false;
           } else {
@@ -666,7 +645,6 @@
           }
           prevBal = runningBal;
         } else {
-          // If only 1 amount, check if balance increased or decreased
           if (prevBal > 0 && txAmount < prevBal) {
             isDebit = false;
             prevBal -= txAmount;
@@ -696,34 +674,13 @@
       }
     }
 
-    // AI OCR BILL SCANNER (FOR SHOP INVOICE PHOTOS)
-    async function scanBillPhotoWithOCR(input) {
-      const file = input.files && input.files[0];
-      if (!file) return;
-
-      const ocrStatus = document.getElementById('ocrStatus');
-      if (ocrStatus) ocrStatus.innerText = "🔍 स्कैन हो रहा है...";
-
-      try {
-        const worker = await Tesseract.createWorker('eng');
-        const ret = await worker.recognize(file);
-        await worker.terminate();
-        
-        const txt = ret.data.text;
-        const nums = txt.match(/([0-9,]+(?:\.\d{2})?)/g);
-        if (nums) {
-          const vals = nums.map(parseNum).filter(n => n > 5);
-          if (vals.length) {
-            const maxAmt = Math.max(...vals);
-            document.getElementById('subAmt').value = maxAmt;
-            if (ocrStatus) ocrStatus.innerText = `✔ रकम ₹${maxAmt} पाई गई!`;
-          }
-        } else {
-          if (ocrStatus) ocrStatus.innerText = "मैन्युअल रकम लिखें";
-        }
-      } catch(e) {
-        if (ocrStatus) ocrStatus.innerText = "स्कैन विफल, रकम लिखें";
-      }
+    function pickAndAttachBill(input) {
+      if (!input.files || !input.files[0]) return;
+      compressImg(input.files[0], 250, b64 => {
+        tempTxPhoto = b64;
+        document.getElementById('subPhotoThumb').src = b64;
+        document.getElementById('subPhotoThumbBox').classList.remove('hidden');
+      });
     }
 
     function parseKhatabookRows(rows) {
@@ -797,6 +754,7 @@
       return { gave, got, ret: 0, balance: gave - got, sorted };
     }
 
+    // RENDER TABLE WITH CAMERA VIEW BUTTON
     function renderKhatabookLedger() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
@@ -819,9 +777,18 @@
         const isDebit = h.type === 'GAVE';
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-800/60";
+        
+        let photoBtn = "";
+        if (h.photo) {
+          photoBtn = `<button type="button" onclick="viewImg('${h.photo}')" class="text-[9px] text-cyan-400 font-bold underline flex items-center gap-1 mt-0.5"><i class="fa-solid fa-camera"></i> ${currentLang === 'hi' ? 'पर्चा फोटो देखें' : 'View Bill Photo'}</button>`;
+        }
+
         tr.innerHTML = `
           <td class="p-1 text-slate-400 truncate">${h.date}</td>
-          <td class="p-1 font-medium text-white truncate" title="${h.note}">${h.note} <span class="text-[8px] text-slate-500">[${h.payMode||'Cash'}]</span></td>
+          <td class="p-1 font-medium text-white truncate" title="${h.note}">
+            ${h.note} <span class="text-[8px] text-slate-500">[${h.payMode||'Cash'}]</span>
+            ${photoBtn}
+          </td>
           <td class="p-1 text-right text-rose-400 font-bold">${isDebit ? '₹' + h.amount.toLocaleString('en-IN') : '-'}</td>
           <td class="p-1 text-right text-emerald-400 font-bold">${!isDebit ? '₹' + h.amount.toLocaleString('en-IN') : '-'}</td>
           <td class="p-1 text-right font-black ${h.runningBal > 0 ? 'text-rose-400' : 'text-emerald-400'}">₹${h.runningBal.toLocaleString('en-IN')} ${h.runningBal > 0 ? 'Dr' : 'Cr'}</td>
@@ -829,6 +796,11 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function viewImg(src) {
+      const w = window.open("");
+      w.document.write(`<body style="background:#000;margin:0;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${src}" style="max-width:95%;max-height:95%;border-radius:8px;"></body>`);
     }
 
     function clearCustomerHistory() {
@@ -859,16 +831,13 @@
 
       const retBtn = document.getElementById('btn-return');
       const actionGrid = document.getElementById('actionBtnGrid');
-      const matItemBox = document.getElementById('matItemBox');
       
       if (it.category === 'SHOP') {
         retBtn.classList.remove('hidden');
         actionGrid.className = "grid grid-cols-3 gap-1.5 mb-1.5 font-semibold";
-        matItemBox.classList.remove('hidden');
       } else {
         retBtn.classList.add('hidden');
         actionGrid.className = "grid grid-cols-2 gap-1.5 mb-1.5 font-semibold";
-        matItemBox.classList.add('hidden');
       }
 
       document.getElementById('dCustDP').innerHTML = it.dp ? `<img src="${it.dp}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-slate-500"></i>`;
@@ -883,10 +852,14 @@
       document.getElementById('subAmt').value = "";
       document.getElementById('subNote').value = "";
       document.getElementById('subDate').value = new Date().toLocaleDateString('en-CA');
+      tempTxPhoto = "";
+      document.getElementById('subPhotoThumbBox').classList.add('hidden');
     }
 
     function closeSubForm() {
       document.getElementById('subFormBox').classList.add('hidden');
+      tempTxPhoto = "";
+      document.getElementById('subPhotoThumbBox').classList.add('hidden');
     }
 
     function saveSubTx() {
@@ -903,7 +876,8 @@
         amount: amt,
         payMode: document.getElementById('subPayMode').value,
         note: document.getElementById('subNote').value.trim() || (subType==='GAVE'?(currentLang==='hi'?'बिल Entry':'Bill Entry'):(currentLang==='hi'?'जमा':'Payment')),
-        date: txDate
+        date: txDate,
+        photo: tempTxPhoto || ""
       };
 
       if (!it.history) it.history = [];
@@ -942,6 +916,13 @@
           </tr>
         `;
       }).join('');
+
+      let attachedPhotos = c.sorted.filter(h => h.photo).map(h => `
+        <div style="margin-top:8px; text-align:center; border:1px solid #cbd5e1; padding:4px; border-radius:6px;">
+          <p style="font-size:8px; color:#475569; margin:0 0 4px 0; font-weight:bold;">संलग्न पर्चा फोटो (${h.date}):</p>
+          <img src="${h.photo}" style="max-height:160px; margin:auto; border-radius:4px;">
+        </div>
+      `).join('');
 
       document.getElementById('pdfArea').innerHTML = `
         <div id="printDoc" style="font-family:Arial,sans-serif; padding:12px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; color:#1e293b;">
@@ -983,6 +964,8 @@
             <tbody>${rows}</tbody>
           </table>
 
+          ${attachedPhotos}
+
           <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:flex-end;">
             <span style="font-size:7px; color:#94a3b8;">100% Verified Khatabook Ledger • Made in India 🇮🇳</span>
             <div style="border:1.5px dashed #16a34a; padding:4px 8px; border-radius:6px; background:#f0fdf4; text-align:center;">
@@ -1007,7 +990,7 @@
       viewLivePDF();
       const el = document.getElementById('printDoc');
       try {
-        const pdfBlob = await html2pdf().set({ margin: 4, filename: `${it.title}_Statement.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).outputPdf('blob');
+        const pdfBlob = await html2pdf().set({ margin: 4, filename: `${it.title}_Statement.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(el).outputPdf('blob');
         const file = new File([pdfBlob], `${it.title}_Statement.pdf`, { type: 'application/pdf' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({ files: [file], title: `${it.title} Statement` });
@@ -1058,30 +1041,7 @@
       a.click();
     }
 
-    function addMatRow() {
-      const row = document.createElement('div');
-      row.className = 'grid grid-cols-12 gap-1 items-center mat-r text-[10px]';
-      row.innerHTML = `
-        <input type="text" placeholder="सामान" class="col-span-5 p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 m-name">
-        <input type="number" placeholder="मात्रा" oninput="calcMatTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 m-qty">
-        <input type="number" placeholder="भाव" oninput="calcMatTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 m-rate">
-        <span class="col-span-2 text-right font-bold text-amber-400 m-sub">₹0</span>
-        <button type="button" onclick="this.parentElement.remove(); calcMatTotal();" class="col-span-1 text-slate-500 font-bold">&times;</button>
-      `;
-      document.getElementById('matRows').appendChild(row);
-    }
-
-    function calcMatTotal() {
-      let sum = 0;
-      document.querySelectorAll('.mat-r').forEach(r => {
-        const q = parseFloat(r.querySelector('.m-qty').value) || 0;
-        const rt = parseFloat(r.querySelector('.m-rate').value) || 0;
-        r.querySelector('.m-sub').innerText = '₹' + (q * rt);
-        sum += (q * rt);
-      });
-      if (sum > 0) document.getElementById('subAmt').value = sum;
-    }
-
+    // ================= HELPERS & SETUP =================
     function compressImg(file, maxD, cb) {
       const reader = new FileReader();
       reader.onload = e => {
@@ -1286,7 +1246,7 @@
       if (!ph || ph === 'N/A') return alert("Mobile number not found!");
       const c = ph.replace(/[^0-9]/g, '');
       const firm = db.profile.firmName || "व्यापारी";
-      const msg = encodeURIComponent(`${firm}: ${n}, your outstanding balance is ₹${a}. Please pay timely. Thank you! - ${firm}`);
+      const msg = encodeURIComponent(`${firm}: ${n}, your outstanding balance is ₹${a}. Please pay timely.`);
       window.open(`sms:${c}?body=${msg}`, '_blank');
     }
 
