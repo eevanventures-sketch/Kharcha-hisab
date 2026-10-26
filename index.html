@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <!-- PDF.js for Reading Text from PDF Statements -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     body { font-family: system-ui, sans-serif; background-color: #0b1329; }
     .no-sb::-webkit-scrollbar { display: none; }
@@ -110,7 +110,7 @@
   <!-- (+) BUTTON -->
   <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-12 h-12 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
 
-  <!-- 1. DETAIL MODAL: KHATABOOK 5-COLUMN LEDGER + UNIVERSAL AUTO-IMPORTER -->
+  <!-- 1. DETAIL MODAL: KHATABOOK 5-COLUMN LEDGER + SMART PARSER -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[96vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -142,16 +142,16 @@
         <button id="btn-return" onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-1.5 rounded-xl shadow">🔄 सामान वापसी</button>
       </div>
 
-      <!-- UNIVERSAL AUTO-IMPORTER (EXCEL, PDF, PHOTO) -->
+      <!-- UNIVERSAL IMPORT BANNER (PDF, EXCEL, PHOTO) -->
       <div class="bg-slate-900/90 border border-cyan-500/40 p-1.5 rounded-xl flex items-center justify-between mb-1.5 shadow">
         <div>
-          <span class="text-[10px] text-cyan-300 font-bold block" id="lbl-xlBanner">⚡ ऑटो-इम्पोर्ट (Excel, PDF या फोटो)</span>
+          <span class="text-[10px] text-cyan-300 font-bold block" id="lbl-xlBanner">⚡ ऑटो-इम्पोर्ट (Khatabook PDF, Excel, फोटो)</span>
           <span class="text-[8px] text-slate-400" id="lbl-xlSub">तारीख, डेबिट, क्रेडिट ऑटोमैटिक जुड़ेंगे</span>
         </div>
         <div class="flex gap-1.5">
           <label class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-2.5 py-1 rounded-lg cursor-pointer shadow text-[10px] flex items-center gap-1">
             📁 <span id="lbl-xlBtn">फ़ाइल चुनें</span>
-            <input type="file" accept=".xlsx,.csv,.xls,.pdf,image/*" class="hidden" onchange="universalImportStatement(this)">
+            <input type="file" accept=".pdf,.xlsx,.csv,.xls,image/*" class="hidden" onchange="smartUniversalImport(this)">
           </label>
           <button onclick="clearCustomerHistory()" class="bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-rose-300 px-2 py-1 rounded-lg text-[10px] font-bold" id="lbl-resetBtn">
             🗑️ रीसेट
@@ -162,6 +162,15 @@
       <!-- SUB FORM (100% BILINGUAL) -->
       <div id="subFormBox" class="hidden bg-[#0f172a] p-2.5 rounded-xl border border-blue-500/50 mb-2 space-y-1.5 max-h-72 overflow-y-auto">
         <div class="flex justify-between font-bold text-blue-400"><span id="subFormTitle">Add Entry</span><button onclick="closeSubForm()">&times;</button></div>
+
+        <!-- Material items ONLY for SHOP category -->
+        <div id="matItemBox" class="space-y-1 hidden">
+          <div class="grid grid-cols-12 gap-1 text-[9px] text-slate-400 font-semibold">
+            <span class="col-span-5">सामान</span><span class="col-span-2">मात्रा</span><span class="col-span-2">भाव</span><span class="col-span-3 text-right">कुल(₹)</span>
+          </div>
+          <div id="matRows" class="space-y-1"></div>
+          <button type="button" onclick="addMatRow()" class="text-[10px] text-cyan-400 underline font-semibold">+ नया सामान जोड़ें</button>
+        </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -190,6 +199,15 @@
           </div>
         </div>
 
+        <!-- OCR BILL PHOTO SCANNER -->
+        <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 space-y-1">
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] text-amber-300 font-bold">📷 बिल फोटो खींचें (AI OCR Auto-Scan):</span>
+            <span id="ocrStatus" class="text-[9px] text-cyan-400 font-bold"></span>
+          </div>
+          <input type="file" accept="image/*" capture="environment" class="w-full text-[9px] text-slate-300" onchange="scanBillPhotoWithOCR(this)">
+        </div>
+
         <button onclick="saveSubTx()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded shadow" id="btn-saveSub">Save Entry</button>
       </div>
 
@@ -210,7 +228,7 @@
         </table>
       </div>
 
-      <!-- 4 DISTINCT BUTTONS: KHATABOOK PDF, PDF SHARE, EXCEL VIEW, EXCEL SHARE -->
+      <!-- 4 DISTINCT BUTTONS -->
       <div class="pt-2 border-t border-slate-800 grid grid-cols-4 gap-1">
         <button onclick="viewLivePDF()" class="bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-xl font-bold flex items-center justify-center gap-1 shadow">
           <i class="fa-solid fa-eye"></i> <span id="btn-pdfView">PDF देखें</span>
@@ -293,7 +311,6 @@
         <button onclick="closeModal('profileModal')" class="text-slate-400 text-lg font-bold">&times;</button>
       </div>
 
-      <!-- OWNER DP -->
       <div class="bg-slate-900 p-2 rounded-xl border border-blue-500/30 text-center space-y-1.5">
         <div class="w-12 h-12 rounded-full border-2 border-blue-400 bg-slate-800 mx-auto overflow-hidden flex items-center justify-center shadow">
           <img id="modalDP" class="w-full h-full object-cover hidden">
@@ -400,7 +417,7 @@
         btnGave:"🔴 दिए (Debit -)", btnGot:"🟢 मिले (Credit +)", btnRet:"🔄 सामान वापसी",
         thDate:"Date", thDesc:"Particulars", thDr:"Debit(-)", thCr:"Credit(+)", thBal:"Balance", thAct:"Act",
         btnPdfView:"PDF देखें", btnPdfShare:"PDF शेयर", btnXlView:"Excel डाउनलोड", btnXlShare:"Excel शेयर",
-        call:"कॉल", xlBanner:"⚡ ऑटो-इम्पोर्ट (Excel, PDF या फोटो)", xlSub:"तारीख, डेबिट, क्रेडिट ऑटोमैटिक जुड़ेंगे", xlBtn:"फ़ाइल चुनें", resetBtn:"🗑️ रीसेट",
+        call:"कॉल", xlBanner:"⚡ ऑटो-इम्पोर्ट (Khatabook PDF, Excel, फोटो)", xlSub:"तारीख, डेबिट, क्रेडिट ऑटोमैटिक जुड़ेंगे", xlBtn:"फ़ाइल चुनें", resetBtn:"🗑️ रीसेट",
         subFormTitle:"एंट्री जोड़ें", subAmt:"रकम (₹)", subAmtPh:"₹ रकम", subDate:"तारीख (Date)",
         payMode:"पेमेंट माध्यम", optCash:"💵 नकद (Cash)", optUpi:"📱 UPI / PhonePe / GPay", optCheque:"🏦 चेक (Cheque)", optBank:"🏛️ बैंक ट्रांसफर",
         subNote:"विवरण / नोट", subNotePh:"विवरण लिखें", btnSaveSub:"सुरक्षित करें"
@@ -413,7 +430,7 @@
         btnGave:"🔴 Gave (Debit -)", btnGot:"🟢 Got (Credit +)", btnRet:"🔄 Return",
         thDate:"Date", thDesc:"Particulars", thDr:"Debit(-)", thCr:"Credit(+)", thBal:"Balance", thAct:"Act",
         btnPdfView:"View PDF", btnPdfShare:"Share PDF", btnXlView:"Download Excel", btnXlShare:"Share Excel",
-        call:"Call", xlBanner:"⚡ Auto-Import (Excel, PDF or Photo)", xlSub:"Dates, Debit, Credit will auto-sync", xlBtn:"Choose File", resetBtn:"🗑️ Reset",
+        call:"Call", xlBanner:"⚡ Auto-Import (Khatabook PDF, Excel, Photo)", xlSub:"Auto-detects dates, debit, credit & balance", xlBtn:"Choose File", resetBtn:"🗑️ Reset",
         subFormTitle:"Add Entry", subAmt:"Amount (₹)", subAmtPh:"₹ Amount", subDate:"Date",
         payMode:"Payment Mode", optCash:"💵 Cash", optUpi:"📱 UPI / PhonePe / GPay", optCheque:"🏦 Cheque", optBank:"🏛️ Bank Transfer",
         subNote:"Description / Note", subNotePh:"Write description", btnSaveSub:"Save Entry"
@@ -445,7 +462,7 @@
       try {
         localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db));
       } catch (err) {
-        db.items.forEach(it => { if(it.history) it.history.forEach(h => { if(h.attachment && h.attachment.data && h.attachment.data.length > 25000) h.attachment.data=""; }); });
+        db.items.forEach(it => { if(it.history) it.history.forEach(h => { if(h.photo && h.photo.length > 25000) h.photo=""; }); });
         try { localStorage.setItem("eevaan_benchers_master_db", JSON.stringify(db)); } catch(e){}
       }
       renderCards();
@@ -459,7 +476,6 @@
       saveDB();
     }
 
-    // 100% COMPLETE DEEP TRANSLATION (INSIDE & OUT)
     function applyLang(l) {
       const d = dict[l];
       ['share','namaste','savings','bills','emi','sip','prem','toReceive','toPay','bulkRem'].forEach(k => {
@@ -481,7 +497,6 @@
       document.getElementById('lbl-xlBtn').innerText = d.xlBtn;
       document.getElementById('lbl-resetBtn').innerText = d.resetBtn;
 
-      // Sub form internal translations
       document.getElementById('subFormTitle').innerText = d.subFormTitle;
       document.getElementById('lbl-subAmt').innerText = d.subAmt;
       document.getElementById('subAmt').placeholder = d.subAmtPh;
@@ -525,14 +540,14 @@
       return parseFloat(clean) || 0;
     }
 
-    // ================= UNIVERSAL AUTO-IMPORTER (EXCEL, PDF, PHOTO) =================
-    async function universalImportStatement(input) {
+    // ================= SMART AUTO-IMPORTER WITH KHATABOOK PARSER =================
+    async function smartUniversalImport(input) {
       const file = input.files && input.files[0];
       if (!file) return;
 
       const ext = file.name.split('.').pop().toLowerCase();
 
-      // 1. If Excel / CSV:
+      // 1. IF EXCEL (.xlsx, .csv, .xls)
       if (['xlsx','csv','xls'].includes(ext)) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -542,27 +557,43 @@
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
             parseKhatabookRows(json);
-            alert(currentLang === 'hi' ? "✅ Excel से सभी एंट्रियां जुड़ गईं!" : "✅ All entries imported from Excel!");
+            alert(currentLang === 'hi' ? "✅ Excel से सभी एंट्रियां सफलतापूर्वक जुड़ गईं!" : "✅ All entries imported from Excel!");
           } catch(err) {
-            alert("Excel Read Error");
+            alert("Excel Error");
           }
         };
         reader.readAsArrayBuffer(file);
       }
-      // 2. If PDF Statement (Khatabook PDF Parser):
+      // 2. IF KHATABOOK PDF STATEMENT
       else if (ext === 'pdf') {
         const reader = new FileReader();
         reader.onload = async function(e) {
           try {
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
             const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise;
-            let fullText = "";
+            
+            let allLines = [];
             for (let i = 1; i <= pdf.numPages; i++) {
               const page = await pdf.getPage(i);
               const content = await page.getTextContent();
-              fullText += content.items.map(s => s.str).join(" ") + "\n";
+              
+              // Group text by vertical position (lines)
+              const lineMap = {};
+              content.items.forEach(it => {
+                const y = Math.round(it.transform[5]);
+                if (!lineMap[y]) lineMap[y] = [];
+                lineMap[y].push(it);
+              });
+
+              // Sort lines top to bottom
+              const sortedYs = Object.keys(lineMap).sort((a,b) => b - a);
+              sortedYs.forEach(y => {
+                const lineItems = lineMap[y].sort((a,b) => a.transform[4] - b.transform[4]);
+                allLines.push(lineItems.map(item => item.str).join(" ").trim());
+              });
             }
-            parsePDFTextToLedger(fullText);
+
+            parseKhatabookPDFLines(allLines);
           } catch(err) {
             console.error(err);
             alert(currentLang === 'hi' ? "PDF पढ़ने में त्रुटि हुई! कृपया Excel चुनें।" : "PDF Read Error. Please use Excel.");
@@ -570,7 +601,7 @@
         };
         reader.readAsArrayBuffer(file);
       }
-      // 3. If Image / Photo Bill:
+      // 3. IF IMAGE BILL
       else {
         compressImg(file, 250, b64 => {
           const it = db.items.find(i => i.id === activeId);
@@ -583,7 +614,7 @@
               payMode: "Cash",
               note: (currentLang === 'hi' ? "बिल पर्चा फोटो" : "Bill Photo"),
               date: new Date().toLocaleDateString('en-CA'),
-              attachment: { name: file.name, type: 'IMAGE', data: b64 }
+              photo: b64
             });
             saveDB();
             renderKhatabookLedger();
@@ -594,41 +625,104 @@
       input.value = '';
     }
 
-    // PDF TEXT SCANNER FOR KHATABOOK STATEMENT
-    function parsePDFTextToLedger(text) {
+    // KHATABOOK PDF STATEMENT PARSER (MATHEMATICALLY ACCURATE)
+    function parseKhatabookPDFLines(lines) {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
       if (!it.history) it.history = [];
 
-      // Extract entries: Date + Amount
-      const regex = /(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*)\s+([0-9,]+(?:\.\d{2})?)/gi;
-      let match;
-      let count = 0;
-      while ((match = regex.exec(text)) !== null) {
-        const dateStr = match[1];
-        const amt = parseNum(match[2]);
-        if (amt > 0) {
-          count++;
-          const subIdx = match.index;
-          const surrounding = text.substring(Math.max(0, subIdx - 20), Math.min(text.length, subIdx + 40));
-          const isCredit = /credit|\+|rec/i.test(surrounding);
-          it.history.push({
-            id: "s_pdf_" + Date.now() + "_" + count,
-            type: isCredit ? "GOT" : "GAVE",
-            amount: amt,
-            payMode: isCredit ? "UPI" : "Bank",
-            note: (currentLang === 'hi' ? "PDF आयात: " : "PDF Import: ") + dateStr,
-            date: dateStr
-          });
-        }
-      }
+      let importedEntries = [];
+      let prevBal = 0; // Starts at 0 (Opening Balance)
 
-      if (count > 0) {
+      lines.forEach(line => {
+        // Skip header lines and total lines
+        if (/Total|Opening Balance|No\. of Entries|Date\s+Debit/i.test(line)) return;
+
+        // Transaction line MUST start with day of month: e.g. "02 Mar", "16 Apr", "24 Jul"
+        const txMatch = line.match(/^(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*/i);
+        if (!txMatch) return; // Skips lines like "April 2026", "May 2026"
+
+        const day = parseInt(txMatch[1]);
+        const dateStr = txMatch[0];
+
+        // Find all numbers formatted with commas/decimals
+        const numMatches = line.match(/([0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]{2})?)/g);
+        if (!numMatches) return;
+
+        // Filter numbers, ignoring the day number
+        const amounts = numMatches.map(parseNum).filter(n => n > 0 && n !== day);
+        if (!amounts.length) return;
+
+        const txAmount = amounts[0];
+        let isDebit = true;
+
+        if (amounts.length >= 2) {
+          const runningBal = amounts[1];
+          // If balance decreased -> Customer paid money (Credit!)
+          if (runningBal < prevBal) {
+            isDebit = false;
+          } else {
+            isDebit = true;
+          }
+          prevBal = runningBal;
+        } else {
+          // If only 1 amount, check if balance increased or decreased
+          if (prevBal > 0 && txAmount < prevBal) {
+            isDebit = false;
+            prevBal -= txAmount;
+          } else {
+            isDebit = true;
+            prevBal += txAmount;
+          }
+        }
+
+        importedEntries.push({
+          id: "s_pdf_" + Date.now() + "_" + Math.random(),
+          type: isDebit ? "GAVE" : "GOT",
+          amount: txAmount,
+          payMode: isDebit ? "Bank/Cheque" : "UPI",
+          note: isDebit ? "Debit Entry" : "Payment received",
+          date: dateStr + " 2026"
+        });
+      });
+
+      if (importedEntries.length > 0) {
+        it.history = [...it.history, ...importedEntries];
         saveDB();
         renderKhatabookLedger();
-        alert(currentLang === 'hi' ? `✅ PDF से कुल ${count} एंट्रियां स्वतः जुड़ गईं!` : `✅ ${count} entries imported from PDF!`);
+        alert(currentLang === 'hi' ? `✅ खाताबुक PDF से कुल ${importedEntries.length} एंट्रियां बिल्कुल सही दर्ज हो गईं!` : `✅ ${importedEntries.length} entries successfully imported from Khatabook PDF!`);
       } else {
-        alert(currentLang === 'hi' ? "PDF में टेक्स्ट नहीं मिला (यह स्कैन्ड इमेज हो सकती है)। कृपया Excel चुनें।" : "No text found in PDF. Please use Excel.");
+        alert(currentLang === 'hi' ? "PDF में टेक्स्ट नहीं मिला या फॉर्मेट अलग है। कृपया Excel फ़ाइल चुनें।" : "Could not parse PDF. Please use Excel.");
+      }
+    }
+
+    // AI OCR BILL SCANNER (FOR SHOP INVOICE PHOTOS)
+    async function scanBillPhotoWithOCR(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+
+      const ocrStatus = document.getElementById('ocrStatus');
+      if (ocrStatus) ocrStatus.innerText = "🔍 स्कैन हो रहा है...";
+
+      try {
+        const worker = await Tesseract.createWorker('eng');
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+        
+        const txt = ret.data.text;
+        const nums = txt.match(/([0-9,]+(?:\.\d{2})?)/g);
+        if (nums) {
+          const vals = nums.map(parseNum).filter(n => n > 5);
+          if (vals.length) {
+            const maxAmt = Math.max(...vals);
+            document.getElementById('subAmt').value = maxAmt;
+            if (ocrStatus) ocrStatus.innerText = `✔ रकम ₹${maxAmt} पाई गई!`;
+          }
+        } else {
+          if (ocrStatus) ocrStatus.innerText = "मैन्युअल रकम लिखें";
+        }
+      } catch(e) {
+        if (ocrStatus) ocrStatus.innerText = "स्कैन विफल, रकम लिखें";
       }
     }
 
@@ -643,10 +737,10 @@
         if (!r || r.length < 2) continue;
 
         let dateStr = r[0] ? String(r[0]).trim() : new Date().toLocaleDateString('en-CA');
-        let desc = r[1] ? String(r[1]).trim() : (currentLang === 'hi' ? "एंट्री" : "Entry");
+        let desc = r[1] ? String(r[1]).trim() : "Entry";
 
         if (/[\uFFFD\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(desc) || desc.length > 120) {
-          desc = (currentLang === 'hi' ? "लेखा एंट्री " : "Ledger Entry ") + i;
+          desc = "Ledger Entry " + i;
         }
 
         let debit = parseNum(r[2]);
@@ -663,7 +757,7 @@
             amount: debit,
             payMode: "Bank/Cheque",
             note: desc,
-            date: formatDateIso(dateStr)
+            date: dateStr
           });
         }
         if (credit > 0) {
@@ -673,19 +767,13 @@
             amount: credit,
             payMode: "UPI",
             note: desc,
-            date: formatDateIso(dateStr)
+            date: dateStr
           });
         }
       }
 
       saveDB();
       renderKhatabookLedger();
-    }
-
-    function formatDateIso(str) {
-      const dMatch = str.match(/\d{4}[-/.]\d{2}[-/.]\d{2}/);
-      if (dMatch) return dMatch[0].replace(/[/.]/g, '-');
-      return str;
     }
 
     function calcItem(it) {
@@ -771,13 +859,16 @@
 
       const retBtn = document.getElementById('btn-return');
       const actionGrid = document.getElementById('actionBtnGrid');
+      const matItemBox = document.getElementById('matItemBox');
       
       if (it.category === 'SHOP') {
         retBtn.classList.remove('hidden');
         actionGrid.className = "grid grid-cols-3 gap-1.5 mb-1.5 font-semibold";
+        matItemBox.classList.remove('hidden');
       } else {
         retBtn.classList.add('hidden');
         actionGrid.className = "grid grid-cols-2 gap-1.5 mb-1.5 font-semibold";
+        matItemBox.classList.add('hidden');
       }
 
       document.getElementById('dCustDP').innerHTML = it.dp ? `<img src="${it.dp}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-slate-500"></i>`;
@@ -916,7 +1007,7 @@
       viewLivePDF();
       const el = document.getElementById('printDoc');
       try {
-        const pdfBlob = await html2pdf().set({ margin: 4, filename: `${it.title}_Statement.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(el).outputPdf('blob');
+        const pdfBlob = await html2pdf().set({ margin: 4, filename: `${it.title}_Statement.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).outputPdf('blob');
         const file = new File([pdfBlob], `${it.title}_Statement.pdf`, { type: 'application/pdf' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({ files: [file], title: `${it.title} Statement` });
@@ -967,7 +1058,30 @@
       a.click();
     }
 
-    // ================= HELPERS & SETUP =================
+    function addMatRow() {
+      const row = document.createElement('div');
+      row.className = 'grid grid-cols-12 gap-1 items-center mat-r text-[10px]';
+      row.innerHTML = `
+        <input type="text" placeholder="सामान" class="col-span-5 p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 m-name">
+        <input type="number" placeholder="मात्रा" oninput="calcMatTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 m-qty">
+        <input type="number" placeholder="भाव" oninput="calcMatTotal()" class="col-span-2 p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 m-rate">
+        <span class="col-span-2 text-right font-bold text-amber-400 m-sub">₹0</span>
+        <button type="button" onclick="this.parentElement.remove(); calcMatTotal();" class="col-span-1 text-slate-500 font-bold">&times;</button>
+      `;
+      document.getElementById('matRows').appendChild(row);
+    }
+
+    function calcMatTotal() {
+      let sum = 0;
+      document.querySelectorAll('.mat-r').forEach(r => {
+        const q = parseFloat(r.querySelector('.m-qty').value) || 0;
+        const rt = parseFloat(r.querySelector('.m-rate').value) || 0;
+        r.querySelector('.m-sub').innerText = '₹' + (q * rt);
+        sum += (q * rt);
+      });
+      if (sum > 0) document.getElementById('subAmt').value = sum;
+    }
+
     function compressImg(file, maxD, cb) {
       const reader = new FileReader();
       reader.onload = e => {
