@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- PDF.js for Reading Text from PDF Statements -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     body { font-family: system-ui, sans-serif; background-color: #0b1329; }
     .no-sb::-webkit-scrollbar { display: none; }
@@ -108,7 +110,7 @@
   <!-- (+) BUTTON -->
   <button onclick="openAddEntryModal()" class="fixed right-5 bottom-5 w-12 h-12 bg-cyan-400 hover:bg-cyan-300 text-slate-900 rounded-full flex items-center justify-center text-2xl font-black shadow-2xl z-40">+</button>
 
-  <!-- 1. DETAIL MODAL: KHATABOOK 5-COLUMN LEDGER + RESET BUTTON -->
+  <!-- 1. DETAIL MODAL: KHATABOOK 5-COLUMN LEDGER + UNIVERSAL AUTO-IMPORTER -->
   <div id="detailModal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3">
     <div class="bg-[#162238] border border-slate-700 rounded-2xl w-full max-w-lg max-h-[96vh] flex flex-col p-3 overflow-hidden">
       <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
@@ -140,58 +142,58 @@
         <button id="btn-return" onclick="showSubForm('RETURN')" class="bg-amber-950/70 border border-amber-600/50 text-amber-300 py-1.5 rounded-xl shadow">🔄 सामान वापसी</button>
       </div>
 
-      <!-- EXCEL AUTO-IMPORT + RESET BUTTONS -->
+      <!-- UNIVERSAL AUTO-IMPORTER (EXCEL, PDF, PHOTO) -->
       <div class="bg-slate-900/90 border border-cyan-500/40 p-1.5 rounded-xl flex items-center justify-between mb-1.5 shadow">
         <div>
-          <span class="text-[10px] text-cyan-300 font-bold block" id="lbl-xlBanner">⚡ खाताबुक Excel/CSV ऑटो-इम्पोर्ट</span>
-          <span class="text-[8px] text-slate-400">तारीख, डेबिट, क्रेडिट सही से जुड़ेंगे</span>
+          <span class="text-[10px] text-cyan-300 font-bold block" id="lbl-xlBanner">⚡ ऑटो-इम्पोर्ट (Excel, PDF या फोटो)</span>
+          <span class="text-[8px] text-slate-400" id="lbl-xlSub">तारीख, डेबिट, क्रेडिट ऑटोमैटिक जुड़ेंगे</span>
         </div>
         <div class="flex gap-1.5">
-          <label class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-2.5 py-1 rounded-lg cursor-pointer shadow text-[10px]">
-            📥 Excel चुनें
-            <input type="file" accept=".xlsx,.csv,.xls" class="hidden" onchange="bulkImportExcel(this)">
+          <label class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-2.5 py-1 rounded-lg cursor-pointer shadow text-[10px] flex items-center gap-1">
+            📁 <span id="lbl-xlBtn">फ़ाइल चुनें</span>
+            <input type="file" accept=".xlsx,.csv,.xls,.pdf,image/*" class="hidden" onchange="universalImportStatement(this)">
           </label>
-          <button onclick="clearCustomerHistory()" class="bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-rose-300 px-2 py-1 rounded-lg text-[10px] font-bold" title="गलत एंट्रियां हटाएं">
+          <button onclick="clearCustomerHistory()" class="bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-rose-300 px-2 py-1 rounded-lg text-[10px] font-bold" id="lbl-resetBtn">
             🗑️ रीसेट
           </button>
         </div>
       </div>
 
-      <!-- SUB FORM -->
+      <!-- SUB FORM (100% BILINGUAL) -->
       <div id="subFormBox" class="hidden bg-[#0f172a] p-2.5 rounded-xl border border-blue-500/50 mb-2 space-y-1.5 max-h-72 overflow-y-auto">
-        <div class="flex justify-between font-bold text-blue-400"><span id="subFormTitle">एंट्री जोड़ें</span><button onclick="closeSubForm()">&times;</button></div>
+        <div class="flex justify-between font-bold text-blue-400"><span id="subFormTitle">Add Entry</span><button onclick="closeSubForm()">&times;</button></div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-[9px] text-slate-400" id="lbl-subAmt">रकम (₹)</label>
-            <input type="number" id="subAmt" placeholder="₹ रकम" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 font-bold outline-none">
+            <label class="block text-[9px] text-slate-400" id="lbl-subAmt">Amount (₹)</label>
+            <input type="number" id="subAmt" placeholder="₹ Amount" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 font-bold outline-none">
           </div>
           <div>
-            <label class="block text-[9px] text-slate-400" id="lbl-subDate">तारीख (Date)</label>
+            <label class="block text-[9px] text-slate-400" id="lbl-subDate">Date</label>
             <input type="date" id="subDate" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none text-[10px]">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-[9px] text-slate-400" id="lbl-payMode">पेमेंट माध्यम</label>
+            <label class="block text-[9px] text-slate-400" id="lbl-payMode">Payment Mode</label>
             <select id="subPayMode" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none text-[10px]">
-              <option value="Cash">💵 नकद (Cash)</option>
-              <option value="UPI">📱 UPI / PhonePe / GPay</option>
-              <option value="Cheque">🏦 चेक (Cheque)</option>
-              <option value="Bank">🏛️ बैंक ट्रांसफर (NEFT)</option>
+              <option value="Cash" id="opt-cash">💵 Cash</option>
+              <option value="UPI" id="opt-upi">📱 UPI / PhonePe / GPay</option>
+              <option value="Cheque" id="opt-cheque">🏦 Cheque</option>
+              <option value="Bank" id="opt-bank">🏛️ Bank Transfer</option>
             </select>
           </div>
           <div>
-            <label class="block text-[9px] text-slate-400" id="lbl-subNote">विवरण / नोट</label>
-            <input type="text" id="subNote" placeholder="विवरण लिखें" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
+            <label class="block text-[9px] text-slate-400" id="lbl-subNote">Description / Note</label>
+            <input type="text" id="subNote" placeholder="Write description" class="w-full p-1 bg-[#162238] border border-slate-700 rounded text-slate-100 outline-none">
           </div>
         </div>
 
-        <button onclick="saveSubTx()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded shadow" id="btn-saveSub">सुरक्षित करें</button>
+        <button onclick="saveSubTx()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded shadow" id="btn-saveSub">Save Entry</button>
       </div>
 
-      <!-- KHATABOOK 5-COLUMN RUNNING BALANCE LEDGER (WITH PER-ROW DELETE) -->
+      <!-- KHATABOOK 5-COLUMN RUNNING BALANCE LEDGER -->
       <div class="flex-1 overflow-y-auto pr-1 my-1">
         <table class="w-full text-left border-collapse text-[9px] table-fixed">
           <thead>
@@ -398,8 +400,10 @@
         btnGave:"🔴 दिए (Debit -)", btnGot:"🟢 मिले (Credit +)", btnRet:"🔄 सामान वापसी",
         thDate:"Date", thDesc:"Particulars", thDr:"Debit(-)", thCr:"Credit(+)", thBal:"Balance", thAct:"Act",
         btnPdfView:"PDF देखें", btnPdfShare:"PDF शेयर", btnXlView:"Excel डाउनलोड", btnXlShare:"Excel शेयर",
-        call:"कॉल", xlBanner:"⚡ खाताबुक Excel/CSV ऑटो-इम्पोर्ट",
-        subAmt:"रकम (₹)", subDate:"तारीख (Date)", payMode:"पेमेंट माध्यम", subNote:"विवरण / नोट"
+        call:"कॉल", xlBanner:"⚡ ऑटो-इम्पोर्ट (Excel, PDF या फोटो)", xlSub:"तारीख, डेबिट, क्रेडिट ऑटोमैटिक जुड़ेंगे", xlBtn:"फ़ाइल चुनें", resetBtn:"🗑️ रीसेट",
+        subFormTitle:"एंट्री जोड़ें", subAmt:"रकम (₹)", subAmtPh:"₹ रकम", subDate:"तारीख (Date)",
+        payMode:"पेमेंट माध्यम", optCash:"💵 नकद (Cash)", optUpi:"📱 UPI / PhonePe / GPay", optCheque:"🏦 चेक (Cheque)", optBank:"🏛️ बैंक ट्रांसफर",
+        subNote:"विवरण / नोट", subNotePh:"विवरण लिखें", btnSaveSub:"सुरक्षित करें"
       },
       en: {
         share:"Share", namaste:"Hello", savings:"Savings / Net Balance", bills:"Total Bills", emi:"Total EMI", sip:"Total SIP", prem:"Premium",
@@ -409,8 +413,10 @@
         btnGave:"🔴 Gave (Debit -)", btnGot:"🟢 Got (Credit +)", btnRet:"🔄 Return",
         thDate:"Date", thDesc:"Particulars", thDr:"Debit(-)", thCr:"Credit(+)", thBal:"Balance", thAct:"Act",
         btnPdfView:"View PDF", btnPdfShare:"Share PDF", btnXlView:"Download Excel", btnXlShare:"Share Excel",
-        call:"Call", xlBanner:"⚡ Auto-Import Khatabook Excel/CSV",
-        subAmt:"Amount (₹)", subDate:"Date", payMode:"Payment Mode", subNote:"Description / Note"
+        call:"Call", xlBanner:"⚡ Auto-Import (Excel, PDF or Photo)", xlSub:"Dates, Debit, Credit will auto-sync", xlBtn:"Choose File", resetBtn:"🗑️ Reset",
+        subFormTitle:"Add Entry", subAmt:"Amount (₹)", subAmtPh:"₹ Amount", subDate:"Date",
+        payMode:"Payment Mode", optCash:"💵 Cash", optUpi:"📱 UPI / PhonePe / GPay", optCheque:"🏦 Cheque", optBank:"🏛️ Bank Transfer",
+        subNote:"Description / Note", subNotePh:"Write description", btnSaveSub:"Save Entry"
       }
     };
 
@@ -453,6 +459,7 @@
       saveDB();
     }
 
+    // 100% COMPLETE DEEP TRANSLATION (INSIDE & OUT)
     function applyLang(l) {
       const d = dict[l];
       ['share','namaste','savings','bills','emi','sip','prem','toReceive','toPay','bulkRem'].forEach(k => {
@@ -468,12 +475,25 @@
       document.getElementById('btn-got').innerText = d.btnGot;
       document.getElementById('btn-return').innerText = d.btnRet;
       document.getElementById('lbl-call').innerText = d.call;
+      
       document.getElementById('lbl-xlBanner').innerText = d.xlBanner;
+      document.getElementById('lbl-xlSub').innerText = d.xlSub;
+      document.getElementById('lbl-xlBtn').innerText = d.xlBtn;
+      document.getElementById('lbl-resetBtn').innerText = d.resetBtn;
 
+      // Sub form internal translations
+      document.getElementById('subFormTitle').innerText = d.subFormTitle;
       document.getElementById('lbl-subAmt').innerText = d.subAmt;
+      document.getElementById('subAmt').placeholder = d.subAmtPh;
       document.getElementById('lbl-subDate').innerText = d.subDate;
       document.getElementById('lbl-payMode').innerText = d.payMode;
+      document.getElementById('opt-cash').innerText = d.optCash;
+      document.getElementById('opt-upi').innerText = d.optUpi;
+      document.getElementById('opt-cheque').innerText = d.optCheque;
+      document.getElementById('opt-bank').innerText = d.optBank;
       document.getElementById('lbl-subNote').innerText = d.subNote;
+      document.getElementById('subNote').placeholder = d.subNotePh;
+      document.getElementById('btn-saveSub').innerText = d.btnSaveSub;
 
       document.getElementById('th-date').innerText = d.thDate;
       document.getElementById('th-desc').innerText = d.thDesc;
@@ -498,7 +518,6 @@
       if (activeId) renderKhatabookLedger();
     }
 
-    // ROBUST NUMBER PARSER (STRIPS COMMAS, e.g. "4,27,536.00" -> 427536)
     function parseNum(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'number') return val;
@@ -506,35 +525,111 @@
       return parseFloat(clean) || 0;
     }
 
-    // ================= BULK IMPORT KHATABOOK / EXCEL STATEMENT =================
-    function bulkImportExcel(input) {
+    // ================= UNIVERSAL AUTO-IMPORTER (EXCEL, PDF, PHOTO) =================
+    async function universalImportStatement(input) {
       const file = input.files && input.files[0];
       if (!file) return;
 
       const ext = file.name.split('.').pop().toLowerCase();
-      if (ext !== 'xlsx' && ext !== 'csv' && ext !== 'xls') {
-        alert("⚠️ कृपया केवल Excel (.xlsx) या (.csv) फाइल ही चुनें!");
-        input.value = '';
-        return;
+
+      // 1. If Excel / CSV:
+      if (['xlsx','csv','xls'].includes(ext)) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            parseKhatabookRows(json);
+            alert(currentLang === 'hi' ? "✅ Excel से सभी एंट्रियां जुड़ गईं!" : "✅ All entries imported from Excel!");
+          } catch(err) {
+            alert("Excel Read Error");
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+      // 2. If PDF Statement (Khatabook PDF Parser):
+      else if (ext === 'pdf') {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          try {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise;
+            let fullText = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const content = await page.getTextContent();
+              fullText += content.items.map(s => s.str).join(" ") + "\n";
+            }
+            parsePDFTextToLedger(fullText);
+          } catch(err) {
+            console.error(err);
+            alert(currentLang === 'hi' ? "PDF पढ़ने में त्रुटि हुई! कृपया Excel चुनें।" : "PDF Read Error. Please use Excel.");
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+      // 3. If Image / Photo Bill:
+      else {
+        compressImg(file, 250, b64 => {
+          const it = db.items.find(i => i.id === activeId);
+          if (it) {
+            if (!it.history) it.history = [];
+            it.history.push({
+              id: "s_" + Date.now(),
+              type: "GAVE",
+              amount: 0,
+              payMode: "Cash",
+              note: (currentLang === 'hi' ? "बिल पर्चा फोटो" : "Bill Photo"),
+              date: new Date().toLocaleDateString('en-CA'),
+              attachment: { name: file.name, type: 'IMAGE', data: b64 }
+            });
+            saveDB();
+            renderKhatabookLedger();
+            alert(currentLang === 'hi' ? "✅ पर्चा फोटो संलग्न हो गया!" : "✅ Bill photo attached!");
+          }
+        });
+      }
+      input.value = '';
+    }
+
+    // PDF TEXT SCANNER FOR KHATABOOK STATEMENT
+    function parsePDFTextToLedger(text) {
+      const it = db.items.find(i => i.id === activeId);
+      if (!it) return;
+      if (!it.history) it.history = [];
+
+      // Extract entries: Date + Amount
+      const regex = /(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*)\s+([0-9,]+(?:\.\d{2})?)/gi;
+      let match;
+      let count = 0;
+      while ((match = regex.exec(text)) !== null) {
+        const dateStr = match[1];
+        const amt = parseNum(match[2]);
+        if (amt > 0) {
+          count++;
+          const subIdx = match.index;
+          const surrounding = text.substring(Math.max(0, subIdx - 20), Math.min(text.length, subIdx + 40));
+          const isCredit = /credit|\+|rec/i.test(surrounding);
+          it.history.push({
+            id: "s_pdf_" + Date.now() + "_" + count,
+            type: isCredit ? "GOT" : "GAVE",
+            amount: amt,
+            payMode: isCredit ? "UPI" : "Bank",
+            note: (currentLang === 'hi' ? "PDF आयात: " : "PDF Import: ") + dateStr,
+            date: dateStr
+          });
+        }
       }
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-          
-          parseKhatabookRows(json);
-          alert("✅ खाताबुक की सभी पुरानी एंट्रियां सही रकम के साथ जुड़ गई हैं!");
-        } catch(err) {
-          console.error(err);
-          alert("फ़ाइल पढ़ने में समस्या आई!");
-        }
-      };
-      reader.readAsArrayBuffer(file);
-      input.value = '';
+      if (count > 0) {
+        saveDB();
+        renderKhatabookLedger();
+        alert(currentLang === 'hi' ? `✅ PDF से कुल ${count} एंट्रियां स्वतः जुड़ गईं!` : `✅ ${count} entries imported from PDF!`);
+      } else {
+        alert(currentLang === 'hi' ? "PDF में टेक्स्ट नहीं मिला (यह स्कैन्ड इमेज हो सकती है)। कृपया Excel चुनें।" : "No text found in PDF. Please use Excel.");
+      }
     }
 
     function parseKhatabookRows(rows) {
@@ -548,17 +643,15 @@
         if (!r || r.length < 2) continue;
 
         let dateStr = r[0] ? String(r[0]).trim() : new Date().toLocaleDateString('en-CA');
-        let desc = r[1] ? String(r[1]).trim() : "पुरानी एंट्री";
+        let desc = r[1] ? String(r[1]).trim() : (currentLang === 'hi' ? "एंट्री" : "Entry");
 
-        // Filter out binary garbage text if corrupted
         if (/[\uFFFD\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(desc) || desc.length > 120) {
-          desc = "लेखा एंट्री " + i;
+          desc = (currentLang === 'hi' ? "लेखा एंट्री " : "Ledger Entry ") + i;
         }
 
         let debit = parseNum(r[2]);
         let credit = parseNum(r[3]);
 
-        // If only 1 amount column provided
         if (!debit && !credit && parseNum(r[2])) {
           debit = parseNum(r[2]);
         }
@@ -595,7 +688,6 @@
       return str;
     }
 
-    // ================= CALCULATE KHATABOOK RUNNING BALANCE =================
     function calcItem(it) {
       if (!it.history || !it.history.length) return { gave: it.amount||0, got: 0, ret: 0, balance: it.amount||0, sorted: [] };
       
@@ -617,7 +709,6 @@
       return { gave, got, ret: 0, balance: gave - got, sorted };
     }
 
-    // RENDER IN-APP KHATABOOK 5-COLUMN TABLE
     function renderKhatabookLedger() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
@@ -632,7 +723,7 @@
       tbody.innerHTML = "";
 
       if (!c.sorted.length) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">कोई लेन-देन नहीं है। ऊपर दिए गए बटन या Excel से जोड़ें।</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">${currentLang === 'hi' ? 'कोई लेन-देन नहीं है। ऊपर फ़ाइल चुनें से जोड़ें।' : 'No transactions recorded. Import file above.'}</td></tr>`;
         return;
       }
 
@@ -652,15 +743,13 @@
       });
     }
 
-    // RESET / CLEAR ALL ENTRIES FOR THIS CUSTOMER
     function clearCustomerHistory() {
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
-      if (confirm(`क्या आप ${it.title} की सभी पुरानी/गलत एंट्रियां साफ़ करना चाहते हैं?`)) {
+      if (confirm(currentLang === 'hi' ? `क्या आप ${it.title} का पूरा हिसाब साफ़ करना चाहते हैं?` : `Clear all ledger history for ${it.title}?`)) {
         it.history = [];
         saveDB();
         renderKhatabookLedger();
-        alert("सभी एंट्रियां साफ़ कर दी गई हैं!");
       }
     }
 
@@ -713,7 +802,7 @@
       const it = db.items.find(i => i.id === activeId);
       if (!it) return;
       const amt = parseFloat(document.getElementById('subAmt').value);
-      if (!amt || amt <= 0) return alert("रकम दर्ज करें!");
+      if (!amt || amt <= 0) return alert(currentLang === 'hi' ? "रकम दर्ज करें!" : "Enter amount!");
 
       const txDate = document.getElementById('subDate').value || new Date().toLocaleDateString('en-CA');
 
@@ -722,7 +811,7 @@
         type: subType,
         amount: amt,
         payMode: document.getElementById('subPayMode').value,
-        note: document.getElementById('subNote').value.trim() || (subType==='GAVE'?'बिल Entry':(subType==='GOT'?'जमा':'वापसी')),
+        note: document.getElementById('subNote').value.trim() || (subType==='GAVE'?(currentLang==='hi'?'बिल Entry':'Bill Entry'):(currentLang==='hi'?'जमा':'Payment')),
         date: txDate
       };
 
@@ -735,7 +824,7 @@
 
     function delSub(subId) {
       const it = db.items.find(i => i.id === activeId);
-      if (it && confirm("क्या आप यह एंट्री हटाना चाहते हैं?")) {
+      if (it && confirm(currentLang === 'hi' ? "क्या आप यह एंट्री हटाना चाहते हैं?" : "Delete this entry?")) {
         it.history = it.history.filter(h => h.id !== subId);
         saveDB();
         renderKhatabookLedger();
@@ -827,7 +916,7 @@
       viewLivePDF();
       const el = document.getElementById('printDoc');
       try {
-        const pdfBlob = await html2pdf().set({ margin: 4, filename: `${it.title}_Statement.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).outputPdf('blob');
+        const pdfBlob = await html2pdf().set({ margin: 4, filename: `${it.title}_Statement.pdf`, jsPDF: { unit: 'mm', format: 'a4' } }).from(el).outputPdf('blob');
         const file = new File([pdfBlob], `${it.title}_Statement.pdf`, { type: 'application/pdf' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({ files: [file], title: `${it.title} Statement` });
@@ -915,7 +1004,7 @@
         db.profile.logo = b64;
         updateDPUI(b64);
         saveDB();
-        alert("✅ DP सेट हो गई!");
+        alert(currentLang === 'hi' ? "✅ DP सेट हो गई!" : "✅ DP Updated!");
       });
       input.value = '';
     }
@@ -965,7 +1054,7 @@
       saveDB();
       applyProfile();
       closeModal('profileModal');
-      alert("प्रोफाइल सुरक्षित हो गई!");
+      alert(currentLang === 'hi' ? "प्रोफाइल सुरक्षित हो गई!" : "Profile Saved!");
     }
 
     function applyProfile() {
@@ -994,7 +1083,7 @@
     }
 
     function clearBloatedStorage() {
-      if (confirm("क्या आप अपना सारा खाता और मेमोरी साफ़ करके नया शुरू करना चाहते हैं?")) {
+      if (confirm(currentLang === 'hi' ? "क्या आप अपना सारा खाता और मेमोरी साफ़ करके नया शुरू करना चाहते हैं?" : "Clear all ledger data and restart?")) {
         localStorage.removeItem("eevaan_benchers_master_db");
         location.reload();
       }
@@ -1009,7 +1098,7 @@
             if (res[0].tel) document.getElementById('newPhone').value = res[0].tel[0].replace(/[^0-9]/g, '');
           }
         } catch(e){}
-      } else alert("फोन बुक सपोर्ट नहीं है। कृपया नाम व नंबर लिखें।");
+      } else alert(currentLang === 'hi' ? "फोन बुक सपोर्ट नहीं है। नाम लिखें।" : "Phonebook not supported.");
     }
 
     function setFilter(cat) {
@@ -1028,7 +1117,7 @@
 
       const list = db.items.filter(i => (activeFilter === 'ALL' || i.category === activeFilter) && (i.title.toLowerCase().includes(q) || (i.phone && i.phone.includes(q))));
       if (!list.length) { 
-        cont.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">खाता खाली है। नीचे (+) बटन दबाकर पहला ग्राहक या बिल जोड़ें।</div>`; 
+        cont.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">${currentLang === 'hi' ? 'खाता खाली है। नीचे (+) दबाकर पहला खाता जोड़ें।' : 'No accounts. Tap (+) to add.'}</div>`; 
         return; 
       }
 
@@ -1050,18 +1139,18 @@
                 <h4 class="font-bold text-white text-xs">${i.title}</h4>
                 <p class="text-[9px] text-slate-400 flex items-center gap-1">
                   <span>📅 ${i.date}</span>
-                  ${cleanPhone ? `<span>• 📞 ${i.phone}</span><a href="tel:${cleanPhone}" class="bg-blue-600 hover:bg-blue-500 text-white px-1 rounded font-bold">कॉल</a>` : ''}
+                  ${cleanPhone ? `<span>• 📞 ${i.phone}</span><a href="tel:${cleanPhone}" class="bg-blue-600 hover:bg-blue-500 text-white px-1 rounded font-bold">${currentLang==='hi'?'कॉल':'Call'}</a>` : ''}
                 </p>
                 ${i.address ? `<p class="text-[9px] text-slate-400">📍 ${i.address}</p>` : ''}
               </div>
             </div>
             <div class="text-right">
-              <span class="text-[9px] block font-semibold ${isL?'text-emerald-400':'text-rose-400'}">${isL ? 'लेने हैं' : 'देने हैं'}</span>
+              <span class="text-[9px] block font-semibold ${isL?'text-emerald-400':'text-rose-400'}">${isL ? (currentLang==='hi'?'लेने हैं':'To Receive') : (currentLang==='hi'?'देने हैं':'To Pay')}</span>
               <span class="text-xs font-black ${isL?'text-emerald-400':'text-rose-400'}">₹${c.balance.toLocaleString('en-IN')}</span>
             </div>
           </div>
           <div class="flex justify-between items-center pt-1 border-t border-slate-800 text-[9px]">
-            <div>${i.dueDate ? `<span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold">Due: ${i.dueDate}</span>` : `<span class="text-slate-500">लेजर देखें</span>`}</div>
+            <div>${i.dueDate ? `<span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold">Due: ${i.dueDate}</span>` : `<span class="text-slate-500">${currentLang==='hi'?'लेजर देखें':'View Ledger'}</span>`}</div>
             <div class="flex items-center space-x-1">
               <button onclick="sendWA('${i.phone}','${i.title}',${c.balance})" class="bg-[#22c55e] text-white px-2 py-0.5 rounded font-bold shadow">💬 WA</button>
               <button onclick="sendSMS('${i.phone}','${i.title}',${c.balance})" class="bg-[#0ea5e9] text-white px-2 py-0.5 rounded font-bold shadow">✉️ SMS</button>
@@ -1075,22 +1164,22 @@
 
     function sendWA(ph, n, a) {
       const firm = db.profile.firmName || "व्यापारी";
-      const txt = `*${firm}*\nनमस्ते ${n},\nआपका कुल बकाया राशि: *₹${a}* है।\nकृपया समय पर भुगतान करें। धन्यवाद!\n— ${firm}`;
+      const txt = `*${firm}*\n${currentLang==='hi'?'नमस्ते':'Hello'} ${n},\n${currentLang==='hi'?'आपका कुल बकाया राशि':'Total outstanding balance'}: *₹${a}*.\n${currentLang==='hi'?'कृपया समय पर भुगतान करें। धन्यवाद!':'Please clear the dues. Thank you!'}\n— ${firm}`;
       window.open(`https://wa.me/${ph?ph.replace(/[^0-9]/g,''):''}?text=${encodeURIComponent(txt)}`, '_blank');
     }
 
     function sendSMS(ph, n, a) {
-      if (!ph || ph === 'N/A') return alert("मोबाइल नंबर नहीं मिला!");
+      if (!ph || ph === 'N/A') return alert("Mobile number not found!");
       const c = ph.replace(/[^0-9]/g, '');
       const firm = db.profile.firmName || "व्यापारी";
-      const msg = encodeURIComponent(`नमस्ते ${n},\n\n${firm} पर आपका कुल बकाया: ₹${a} है।\nकृपया समय पर भुगतान करें।\nधन्यवाद!\n— ${firm}`);
+      const msg = encodeURIComponent(`${firm}: ${n}, your outstanding balance is ₹${a}. Please pay timely. Thank you! - ${firm}`);
       window.open(`sms:${c}?body=${msg}`, '_blank');
     }
 
     function shareApp() {
-      const firm = db.profile.firmName || "डिजिटल खाता";
+      const firm = db.profile.firmName || "लेखा जोखा";
       if (navigator.share) navigator.share({ title: firm, url: window.location.href });
-      else { navigator.clipboard.writeText(window.location.href); alert("लिंक कॉपी हो गया!"); }
+      else { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }
     }
 
     function updateMetrics() {
@@ -1121,7 +1210,7 @@
 
     function saveNewEntry() {
       const t = document.getElementById('newTitle').value.trim();
-      if (!t) return alert("कृपया नाम दर्ज करें!");
+      if (!t) return alert(currentLang === 'hi' ? "कृपया नाम दर्ज करें!" : "Enter name!");
       const amt = parseFloat(document.getElementById('newAmt').value) || 0;
       const newItem = {
         id: "it_" + Date.now(), title: t, category: document.getElementById('newCat').value,
@@ -1129,7 +1218,7 @@
         phone: document.getElementById('newPhone').value.trim(), dp: tempCustDP,
         amount: amt, type: document.getElementById('newType').value,
         date: new Date().toLocaleDateString('en-CA'), dueDate: document.getElementById('newDue').value,
-        history: [{ id: "s_" + Date.now(), type: "GAVE", amount: amt, payMode: "Cash", note: "आरंभिक बिल", date: new Date().toLocaleDateString('en-CA') }]
+        history: [{ id: "s_" + Date.now(), type: "GAVE", amount: amt, payMode: "Cash", note: (currentLang==='hi'?"आरंभिक बिल":"Initial Balance"), date: new Date().toLocaleDateString('en-CA') }]
       };
       db.items.unshift(newItem);
       saveDB();
@@ -1137,10 +1226,9 @@
     }
 
     function deleteItem(id) {
-      if (confirm("हटाना चाहते हैं?")) { db.items = db.items.filter(i => i.id !== id); saveDB(); }
+      if (confirm(currentLang === 'hi' ? "हटाना चाहते हैं?" : "Delete item?")) { db.items = db.items.filter(i => i.id !== id); saveDB(); }
     }
 
-    // BULK BROADCAST
     function openBulkModal() { renderBulkList(); openModal('bulkModal'); }
 
     function renderBulkList() {
@@ -1149,8 +1237,8 @@
       l.innerHTML = "";
       const eligible = db.items.filter(i => i.type === 'LENE' && calcItem(i).balance >= min);
       if(!eligible.length) { 
-        l.innerHTML = `<div class="text-center py-2 text-slate-500">कोई ग्राहक नहीं मिला</div>`; 
-        document.getElementById('bulkCountBadge').innerText = "0 चुने गए";
+        l.innerHTML = `<div class="text-center py-2 text-slate-500">${currentLang==='hi'?'कोई ग्राहक नहीं मिला':'No accounts found'}</div>`; 
+        document.getElementById('bulkCountBadge').innerText = "0";
         return; 
       }
 
@@ -1180,12 +1268,12 @@
 
     function updateBulkCounter() {
       const cnt = document.querySelectorAll('.bulk-cb:checked').length;
-      document.getElementById('bulkCountBadge').innerText = `${cnt} चुने गए`;
+      document.getElementById('bulkCountBadge').innerText = `${cnt} ${currentLang==='hi'?'चुने गए':'selected'}`;
     }
 
     function sendBulkWA() {
       const selected = Array.from(document.querySelectorAll('.bulk-cb:checked'));
-      if(!selected.length) return alert("कृपया कम से कम एक ग्राहक चुनें!");
+      if(!selected.length) return alert("Select at least 1 person!");
       const firm = db.profile.firmName || "व्यापारी";
 
       selected.forEach((cb, idx) => {
@@ -1195,7 +1283,7 @@
         if (ph && ph !== 'N/A') {
           setTimeout(() => {
             const clean = ph.replace(/[^0-9]/g, '');
-            const txt = `*${firm}*\nनमस्ते ${name},\nआपका कुल बकाया: *₹${amt}* है।\nकृपया समय पर भुगतान करें। धन्यवाद!\n— ${firm}`;
+            const txt = `*${firm}*\n${currentLang==='hi'?'नमस्ते':'Hello'} ${name},\n${currentLang==='hi'?'आपका कुल बकाया':'Outstanding balance'}: *₹${amt}*.\n— ${firm}`;
             window.open(`https://wa.me/${clean}?text=${encodeURIComponent(txt)}`, '_blank');
           }, idx * 1200);
         }
@@ -1204,7 +1292,7 @@
 
     function sendBulkSMS() {
       const selected = Array.from(document.querySelectorAll('.bulk-cb:checked'));
-      if(!selected.length) return alert("कृपया कम से कम एक ग्राहक चुनें!");
+      if(!selected.length) return alert("Select at least 1 person!");
       const firm = db.profile.firmName || "व्यापारी";
 
       selected.forEach((cb, idx) => {
@@ -1214,7 +1302,7 @@
         if (ph && ph !== 'N/A') {
           setTimeout(() => {
             const clean = ph.replace(/[^0-9]/g, '');
-            const msg = encodeURIComponent(`नमस्ते ${name}, ${firm} पर आपका कुल बकाया ₹${amt} है। कृपया भुगतान करें। — ${firm}`);
+            const msg = encodeURIComponent(`${firm}: ${name}, your outstanding balance is ₹${amt}. Please pay timely.`);
             window.open(`sms:${clean}?body=${msg}`, '_blank');
           }, idx * 1200);
         }
@@ -1224,4 +1312,4 @@
     window.onload = init;
   </script>
 </body>
-          </html>
+</html>
